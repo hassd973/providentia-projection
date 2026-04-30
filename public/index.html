@@ -615,6 +615,7 @@
   .map-key-title { font: 10px "Share Tech Mono", monospace; letter-spacing: 2px; color: rgba(0,212,255,0.7); margin-bottom: 8px; }
   .map-key-item { display:flex; align-items:center; gap:8px; color: rgba(232,240,247,0.85); font: 10px "Share Tech Mono", monospace; margin: 4px 0; }
   .map-swatch { width: 18px; height: 2px; }
+  .map-chip{position:absolute;z-index:15;pointer-events:none;transform:translate(-50%,-120%);padding:6px 8px;border:1px solid rgba(0,212,255,.45);background:rgba(4,10,20,.95);font:10px "Share Tech Mono", monospace;letter-spacing:1px;color:#d8ebff;opacity:0;transition:opacity .2s}
   .map-details {
     position: absolute; left: 24px; top: 90px; z-index: 3;
     width: min(360px, 86vw);
@@ -922,6 +923,16 @@
   .media-mockups{position:absolute;top:14px;left:14px;right:14px;z-index:11;display:grid;grid-template-columns:1fr 1fr;gap:8px;pointer-events:none}
   .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
   .mock-card strong{color:#ff9bb0}
+  
+  .media-conversation{position:absolute;top:14px;left:14px;right:14px;z-index:12;display:grid;gap:8px;pointer-events:none}
+  .msg{display:grid;gap:4px;max-width:min(92%,520px);padding:10px 12px;border:1px solid rgba(255,45,85,.35);background:rgba(8,12,20,.9);backdrop-filter:blur(2px);opacity:0;animation:msg-loop 9s linear infinite}
+  .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#ff8fa7;text-transform:uppercase}
+  .msg-text{font:clamp(11px,1.2vw,14px) 'Share Tech Mono';line-height:1.45;color:#dbe6ef}
+  .msg-in{justify-self:start;border-color:rgba(0,212,255,.35)}
+  .msg-out{justify-self:end}
+  .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:2s}.msg:nth-child(3){animation-delay:4s}.msg:nth-child(4){animation-delay:6s}
+  @keyframes msg-loop{0%,8%{opacity:0;transform:translateY(6px)}12%,35%{opacity:1;transform:translateY(0)}50%,100%{opacity:0;transform:translateY(-4px)}}
+
   .upload-panel{margin-top:20px;border:1px dashed rgba(200,180,150,.45);padding:12px}
   .upload-panel label{display:block;font:11px 'Share Tech Mono';letter-spacing:2px;color:rgba(212,200,180,.75);margin-bottom:8px}
   .upload-panel input{width:100%;color:#d4c8b4;background:#181614;border:1px solid rgba(200,180,150,.25);padding:8px}
@@ -938,7 +949,7 @@
     .map-details{top:72px;left:10px;width:94vw;font-size:9px;max-height:42vh}
     .map-key{right:10px;bottom:10px;min-width:170px;padding:8px}
     .media-wall{grid-template-columns:1fr 1fr}
-    .media-mockups{grid-template-columns:1fr;top:8px;left:8px;right:8px}
+    .media-conversation{top:8px;left:8px;right:8px}.msg{max-width:100%}
     .s16-profiles{flex-direction:column;gap:20px}
     .slide-16{padding:20px}
   }
@@ -958,7 +969,13 @@
     .s4-pipeline{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:14px;width:min(95vw,540px)}
     .s4-arrow{display:none}
     .s4-step{flex:initial}
-    .s4-label{font-size:clamp(15px,4.6vw,24px)}
+    .s4-label{font-size:clamp(13px,4.2vw,22px)}
+    .s2-word{font-size:clamp(22px,8.2vw,38px)}
+    .s4-step{min-height:88px;display:flex;align-items:center;justify-content:center;text-align:center}
+    .map-overlay{left:10px;right:10px}
+    .map-title{font-size:10px;line-height:1.4}
+    .map-key{max-width:calc(100vw - 20px)}
+    .media-wall{margin-top:170px;grid-template-columns:1fr}
   }
 @media (max-aspect-ratio: 4/5){
     .s1-title{letter-spacing:0.1em}
@@ -1191,6 +1208,7 @@
       <strong>LOCATION FUNCTIONS</strong><br>
       Select a node to view routing, labour type, and infrastructure role.
     </div>
+    <div class="map-chip" id="map-chip"></div>
     <div class="map-key">
       <div class="map-key-title">MAP KEY</div>
       <div class="map-key-item"><span class="map-swatch" style="background:#f0b429"></span> Capital routing</div>
@@ -1217,9 +1235,11 @@
 
   <!-- SLIDE 15 — MEDIA WALL -->
   <div class="slide slide-15" data-slide="15" data-phase="PHASE 04 — MEDIA">
-    <div class="media-mockups">
-      <div class="mock-card"><strong>Social Feed:</strong> “Seen this clip? They call it security. This is targeted deportation.”</div>
-      <div class="mock-card"><strong>Mock Article:</strong> “Data-led migration policy praised as neutral tool despite rights concerns.”</div>
+    <div class="media-conversation" aria-label="Live social conversation">
+      <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">Watching CLIP_01 now. This rollout mirrors the Atlas Nexus route data from Phase 03.</span></div>
+      <div class="msg msg-in"><span class="msg-name">Simon Day</span><span class="msg-text">My district feed is amplifying fear headlines every 20 minutes. Sentiment just spiked.</span></div>
+      <div class="msg msg-out"><span class="msg-name">Selam Tesfae</span><span class="msg-text">Port Meridian mentions are rising too. They are framing labour transfer as protection.</span></div>
+      <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Archive everything. We need the timeline before tonight's policy briefing.</span></div>
     </div>
     <div class="media-wall" id="media-wall">
       <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
@@ -1593,21 +1613,47 @@ function initMap() {
   }
 
   if (detailsEl) {
-    detailsEl.innerHTML = "<strong>LOCATION FUNCTIONS</strong><br>Tap/click any red node for operational details.";
+    detailsEl.innerHTML = "<strong>LOCATION FUNCTIONS</strong><br>Tap/click any node to inspect route intelligence.";
   }
 
-  canvas.onclick = (e) => {
-    const r = canvas.getBoundingClientRect();
-    const mx = e.clientX - r.left, my = e.clientY - r.top;
-    let selected = null, best = 16;
+  const chip = document.getElementById('map-chip');
+  const pickCity = (mx,my,threshold=16) => {
+    let selected = null, best = threshold;
     charterCities.forEach(city => {
       const p = project(city.lat, city.lon);
       const d = Math.hypot(mx-p.x,my-p.y);
-      if (d < best) { best = d; selected = city; }
+      if (d < best) { best = d; selected = {...city, px:p.x, py:p.y}; }
     });
+    return selected;
+  };
+
+  const updateSelection = (mx,my,showChip=true) => {
+    const selected = pickCity(mx,my,20);
     if (selected && detailsEl) {
       detailsEl.innerHTML = `<strong>${selected.label}</strong><br>${selected.sublabel}<br><br><strong>FUNCTION:</strong> ${selected.function}<br><strong>ROUTE:</strong> UK/Europe origin → ${selected.label}`;
-    }
+      if (chip && showChip) {
+        chip.style.left = `${selected.px}px`;
+        chip.style.top = `${selected.py}px`;
+        chip.textContent = `${selected.label} · ${selected.sublabel}`;
+        chip.style.opacity = '1';
+      }
+    } else if (chip) chip.style.opacity = '0';
+  };
+
+  canvas.onclick = (e) => {
+    const r = canvas.getBoundingClientRect();
+    updateSelection(e.clientX-r.left,e.clientY-r.top,true);
+  };
+
+  canvas.onmousemove = (e) => {
+    const r = canvas.getBoundingClientRect();
+    updateSelection(e.clientX-r.left,e.clientY-r.top,true);
+  };
+
+  canvas.ontouchstart = (e) => {
+    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect();
+    updateSelection(t.clientX-r.left,t.clientY-r.top,true);
   };
 
   window.addEventListener('resize', () => {
