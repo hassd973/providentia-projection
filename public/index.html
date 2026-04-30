@@ -302,7 +302,6 @@
   .slide-4.active .s4-step:nth-child(2) { animation: col-fade 0.6s ease 0.4s both; }
   .slide-4.active .s4-step:nth-child(3) { animation: col-fade 0.6s ease 0.7s both; }
   .slide-4.active .s4-step:nth-child(4) { animation: col-fade 0.6s ease 1.0s both; }
-  .slide-4.active .s4-step:nth-child(5) { animation: col-fade 0.6s ease 1.3s both; }
   .s4-arrow {
     width: clamp(20px, 3.2vw, 40px); height: 1px;
     background: var(--corp-accent);
@@ -488,26 +487,57 @@
     max-width: 500px;
   }
 
-  /* SLIDE 8B — CLASSIFICATION LADDER */
+  /* SLIDE 8B — CLASSIFICATION LADDER BAR GRAPH */
   .s8b-ladder {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-top: 20px;
+    gap: 14px;
+    margin-top: 24px;
+    width: min(92vw, 1120px);
   }
   .s8b-rung {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(36px, 6vw, 80px);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0,212,255,0.08);
+    display: grid;
+    grid-template-columns: 88px minmax(280px, 1fr);
+    align-items: center;
+    gap: 14px;
     opacity: 0;
-    color: var(--sys-text);
-    transition: color 0.3s;
   }
-  .s8b-rung:hover { color: var(--sys-cyan); }
+  .s8b-rung-label {
+    font: 11px 'Share Tech Mono', monospace;
+    color: rgba(200,216,232,0.72);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .s8b-track {
+    position: relative;
+    height: 26px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    overflow: hidden;
+  }
+  .s8b-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    font: 700 11px 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    color: rgba(5,8,16,0.9);
+    text-transform: uppercase;
+  }
+  .s8b-fill.level-1 { width: 99%; background: linear-gradient(90deg, #8d949d, #646c77); color: #f2f5f8; }
+  .s8b-fill.level-2 { width: 75%; background: linear-gradient(90deg, #b8bdc4, #8f97a3); color: #0b1017; }
+  .s8b-fill.level-3 { width: 50%; background: linear-gradient(90deg, #00d4ff, #00f0ff); color: #041018; }
+  .s8b-fill.level-4 { width: 25%; background: linear-gradient(90deg, #ff2d55, #ff546f); color: #13060a; }
+  .s8b-status {
+    margin-top: 16px;
+    font: 11px 'Share Tech Mono', monospace;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sys-cyan);
+    text-align: center;
+  }
   .slide-sys.active .s8b-rung:nth-child(1) { animation: list-in 0.5s ease 0.1s both; }
   .slide-sys.active .s8b-rung:nth-child(2) { animation: list-in 0.5s ease 0.3s both; }
   .slide-sys.active .s8b-rung:nth-child(3) { animation: list-in 0.5s ease 0.5s both; }
@@ -621,6 +651,8 @@
   #map-canvas {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
+    image-rendering: auto;
+    touch-action: none;
   }
   .map-overlay {
     position: absolute; top: 40px; left: 50%;
@@ -978,12 +1010,12 @@
   .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
   .mock-card strong{color:#ff9bb0}
   
-  .media-conversation{position:absolute;left:14px;right:14px;bottom:70px;z-index:12;display:grid;gap:10px;pointer-events:none;align-content:end;max-height:min(46vh,360px);overflow:hidden}
-  .msg{display:grid;gap:4px;max-width:min(92%,560px);padding:10px 12px;border:1px solid rgba(255,45,85,.35);background:rgba(8,12,20,.9);backdrop-filter:blur(2px);opacity:0;animation:msg-loop 12s linear infinite}
-  .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#ff8fa7;text-transform:uppercase}
-  .msg-text{font:clamp(11px,1.2vw,14px) 'Share Tech Mono';line-height:1.45;color:#dbe6ef;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
+  .media-conversation{position:absolute;left:16px;top:16px;z-index:20;display:grid;gap:8px;pointer-events:none;align-content:start;max-height:min(52vh,420px);width:min(34vw,480px);padding:10px;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:linear-gradient(140deg,rgba(32,38,50,.42),rgba(9,14,26,.66));backdrop-filter:blur(14px) saturate(140%);box-shadow:0 16px 42px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.22);overflow:hidden}
+  .msg{display:grid;gap:4px;max-width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:rgba(20,27,40,.58);backdrop-filter:blur(8px);opacity:0;animation:msg-loop 12s linear infinite}
+  .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#9ddcff;text-transform:uppercase}
+  .msg-text{font:clamp(11px,1.1vw,13px) 'Share Tech Mono';line-height:1.45;color:#ecf4ff;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
   .msg-in{justify-self:start;border-color:rgba(0,212,255,.35)}
-  .msg-out{justify-self:end}
+  .msg-out{justify-self:start;border-color:rgba(255,255,255,.22)}
   .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:3s}.msg:nth-child(3){animation-delay:6s}.msg:nth-child(4){animation-delay:9s}
   .msg:nth-child(1) .msg-text{animation-delay:0s}.msg:nth-child(2) .msg-text{animation-delay:3s}.msg:nth-child(3) .msg-text{animation-delay:6s}.msg:nth-child(4) .msg-text{animation-delay:9s}
   @keyframes msg-loop{0%,6%{opacity:0;transform:translateY(8px)}9%,32%{opacity:1;transform:translateY(0)}45%,100%{opacity:0;transform:translateY(-4px)}}
@@ -1005,7 +1037,7 @@
     .map-details{top:72px;left:10px;width:94vw;font-size:9px;max-height:42vh}
     .map-key{right:10px;bottom:10px;min-width:170px;padding:8px}
     .media-wall{grid-template-columns:1fr 1fr}
-    .media-conversation{left:8px;right:8px;bottom:74px}.msg{max-width:100%}
+    .media-conversation{left:8px;top:8px;width:min(92vw,420px)}
     .s16-profiles{flex-direction:column;gap:20px}
     .slide-16{padding:20px}
   }
@@ -1035,7 +1067,7 @@
     .map-title{font-size:10px;line-height:1.4}
     .map-key{max-width:calc(100vw - 20px)}
     .media-wall{margin-top:20px;grid-template-columns:1fr}
-    .media-conversation{left:8px;right:8px;bottom:74px;max-height:42vh}
+    .media-conversation{left:8px;top:8px;width:min(94vw,400px);max-height:42vh}
     .msg{max-width:100%;padding:9px 10px}
   }
 @media (max-aspect-ratio: 4/5){
@@ -1222,11 +1254,12 @@
     <div class="sys-content">
       <div class="sys-header">RISK CLASSIFICATION // OPERATIONAL ESCALATION LADDER</div>
       <div class="s8b-ladder">
-        <div class="s8b-rung">MONITOR <span style="font-size:13px;opacity:.65;letter-spacing:1px;">— Passive observation</span></div>
-        <div class="s8b-rung">RESTRICT <span style="font-size:13px;opacity:.65;letter-spacing:1px;">— Access constraints</span></div>
-        <div class="s8b-rung">DETAIN <span style="font-size:13px;opacity:.65;letter-spacing:1px;">— Custodial hold</span></div>
-        <div class="s8b-rung" style="color:var(--sys-red);">REMOVE <span style="font-size:13px;opacity:.75;letter-spacing:1px;">— Forced transfer</span></div>
+        <div class="s8b-rung"><div class="s8b-rung-label">MONITOR</div><div class="s8b-track"><div class="s8b-fill level-1">LEVEL 1</div></div></div>
+        <div class="s8b-rung"><div class="s8b-rung-label">RESTRICT</div><div class="s8b-track"><div class="s8b-fill level-2">LEVEL 2</div></div></div>
+        <div class="s8b-rung"><div class="s8b-rung-label">DETAIN</div><div class="s8b-track"><div class="s8b-fill level-3">LEVEL 3</div></div></div>
+        <div class="s8b-rung"><div class="s8b-rung-label">REMOVE</div><div class="s8b-track"><div class="s8b-fill level-4">LEVEL 4</div></div></div>
       </div>
+      <div class="s8b-status">[ STATUS: ACTIVE PROTOCOL ]</div>
     </div>
   </div>
 
@@ -1488,11 +1521,14 @@ async function initMap() {
   const canvas = document.getElementById('map-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  canvas.width = Math.floor(rect.width * dpr);
+  canvas.height = Math.floor(rect.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   
-  const W = canvas.width;
-  const H = canvas.height;
+  const W = rect.width;
+  const H = rect.height;
 
   // Convert lat/lon to canvas coords (simple equirectangular)
   function project(lat, lon) {
@@ -1749,10 +1785,15 @@ async function initMap() {
     const r = canvas.getBoundingClientRect();
     updateSelection(t.clientX-r.left,t.clientY-r.top,true);
   };
+  canvas.ontouchmove = (e) => {
+    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect();
+    updateSelection(t.clientX-r.left,t.clientY-r.top,true);
+  };
 
   window.addEventListener('resize', () => {
     if (document.querySelector('.slide-12.active')) initMap();
-  }, { once: true });
+  });
 
   animate();
 }
