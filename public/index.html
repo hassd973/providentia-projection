@@ -877,12 +877,37 @@
     letter-spacing: 2px;
     z-index: 100;
   }
+
+  .corp-to-system-wipe{position:fixed;inset:0;z-index:300;pointer-events:none;opacity:0;background:linear-gradient(120deg,rgba(107,155,184,.35),rgba(0,212,255,.15) 40%,rgba(255,45,85,.18));mix-blend-mode:screen}
+  .corp-to-system-wipe.active{animation:corpToSystem .9s ease both}
+  @keyframes corpToSystem{0%{opacity:0;transform:translateX(-100%)}30%{opacity:.9}100%{opacity:0;transform:translateX(100%)}}
+  .redacted-strip{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .redacted-file{border:1px solid rgba(255,45,85,.3);background:rgba(255,45,85,.08);padding:10px;min-height:72px}
+  .redacted-line{height:8px;background:linear-gradient(90deg,#000 20%,#300);margin:6px 0}
+  .social-chip{position:absolute;top:16px;right:16px;font:10px 'Share Tech Mono';color:#ff6c86;letter-spacing:2px}
+  .upload-panel{margin-top:20px;border:1px dashed rgba(200,180,150,.45);padding:12px}
+  .upload-panel label{display:block;font:11px 'Share Tech Mono';letter-spacing:2px;color:rgba(212,200,180,.75);margin-bottom:8px}
+  .upload-panel input{width:100%;color:#d4c8b4;background:#181614;border:1px solid rgba(200,180,150,.25);padding:8px}
+  @media (max-width: 900px){
+    #nav,#key-hint,#slide-counter{font-size:10px;bottom:14px}
+    #phase-label{left:14px;top:10px;font-size:9px}
+    .slide-sys{padding:20px}
+    .s4-pipeline{width:96%;flex-wrap:wrap;justify-content:center}
+    .s4-arrow{width:24px}
+    .s6-split{grid-template-columns:1fr}
+    .map-labour-types{left:10px;bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .media-wall{grid-template-columns:1fr 1fr}
+    .s16-profiles{flex-direction:column;gap:20px}
+    .slide-16{padding:20px}
+  }
+
 </style>
 </head>
 <body>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-dot" id="cursorDot"></div>
+<div class="corp-to-system-wipe" id="corpToSystemWipe"></div>
 
 <div id="phase-label">PHASE 01 — CORPORATE</div>
 <div id="slide-counter">01 / 17</div>
@@ -961,6 +986,11 @@
       <div class="sys-title">MECHANISM // THRESHOLD MANAGEMENT</div>
       <div class="sys-main">RISK THRESHOLD<br>ADJUSTMENT</div>
       <div class="sys-sub">THRESHOLD LOWERED FOR:<br>HIGH ELASTICITY STATUS</div>
+          <div class="redacted-strip">
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
+      </div>
     </div>
   </div>
 
@@ -1099,7 +1129,7 @@
   <!-- SLIDE 15 — MEDIA WALL -->
   <div class="slide slide-15" data-slide="15" data-phase="PHASE 04 — MEDIA">
     <div class="media-wall" id="media-wall">
-      <div class="headline-cell"><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
+      <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
       <div class="headline-cell"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
       <div class="headline-cell"><div class="headline-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div><div class="headline-source">DAILY POST</div></div>
       <div class="headline-cell"><div class="headline-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div><div class="headline-source">THE OBSERVER</div></div>
@@ -1133,6 +1163,10 @@
         <div class="s16-name">Ibrahim Musa</div>
         <div class="s16-caption">Held in immigration removal centre for 9 months. Denied visits & legal representation.</div>
       </div>
+        </div>
+    <div class="upload-panel">
+      <label>UPLOAD REAL PHOTOS / REPLACE MOCKUPS</label>
+      <input type="file" accept="image/*" multiple>
     </div>
   </div>
 
@@ -1174,6 +1208,7 @@ let isAnimating = false;
 const counter = document.getElementById('slide-counter');
 const phaseLabel = document.getElementById('phase-label');
 const nav = document.getElementById('nav');
+const corpToSystemWipe = document.getElementById('corpToSystemWipe');
 
 // Build nav dots
 slides.forEach((_, i) => {
@@ -1208,6 +1243,13 @@ function goTo(index) {
     d.classList.toggle('active', i === index);
   });
   
+  if (current===4 && prev.dataset.slide==='4' && next.dataset.slide==='5') {
+    corpToSystemWipe.classList.remove('active');
+    void corpToSystemWipe.offsetWidth;
+    corpToSystemWipe.classList.add('active');
+    setTimeout(()=>corpToSystemWipe.classList.remove('active'),920);
+  }
+
   // Map slide
   if (next.dataset.slide === '13') {
     setTimeout(initMap, 200);
