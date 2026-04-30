@@ -1137,35 +1137,35 @@
     </div>
     <div class="s4-copy">
       <div class="s4-copy-card">
-        <div class="s4-copy-title">DATA — ROBUST INGESTION</div>
+        <div class="s4-copy-title">DATA — INGESTION</div>
         <ul>
-          <li>Ingest border, compliance, and behavioral signals in one governed stream.</li>
-          <li>Unify fragmented records into a single resilient identity timeline.</li>
-          <li>Apply source-weighted normalization with automated quality controls.</li>
+          <li>Merge border, civil, and digital records.</li>
+          <li>Build one identity timeline per person.</li>
+          <li>Flag missing/conflicting data for review.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">RISK SCORE — ROBUST MODELING</div>
+        <div class="s4-copy-title">RISK SCORE — MODELING</div>
         <ul>
-          <li>Model weighted indicators against adaptive threshold bands.</li>
-          <li>Blend recency, network context, and anomaly detection layers.</li>
-          <li>Publish 0–100 confidence with transparent audit provenance.</li>
+          <li>Score likelihood of removability (0–100).</li>
+          <li>Adjust by network links and recent events.</li>
+          <li>Log each score change for audit trails.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">CLASSIFICATION — ROBUST TRIAGE</div>
+        <div class="s4-copy-title">CLASSIFICATION — TRIAGE</div>
         <ul>
-          <li>Route outcomes to Monitor, Restrict, Detain, or Remove classes.</li>
-          <li>Attach legal posture, elasticity flags, and review windows.</li>
-          <li>Escalate edge cases through mandatory analyst verification gates.</li>
+          <li>Assign Monitor / Restrict / Detain / Remove.</li>
+          <li>Attach legal status + review window.</li>
+          <li>Send edge cases to human analyst checks.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">ACTION* — ROBUST EXECUTION</div>
+        <div class="s4-copy-title">ACTION* — EXECUTION</div>
         <ul>
-          <li>Activate watchlists, mobility controls, and detention workflows.</li>
-          <li>Dispatch synchronized cross-agency alerts and tasking.</li>
-          <li>Continuously re-evaluate outcomes to recalibrate intervention level.</li>
+          <li>Trigger watchlists and movement controls.</li>
+          <li>Dispatch cross-agency enforcement tasks.</li>
+          <li>Re-score continuously as new data arrives.</li>
         </ul>
       </div>
     </div>
@@ -1297,18 +1297,13 @@
     <canvas id="map-canvas"></canvas>
     <div class="map-overlay">
       <div class="map-title">
-        POPULATION REDISTRIBUTION<br>BASED ON LABOUR REQUIREMENTS
+        GLOBAL EXTRACTION NETWORK<br>CAPITAL • CONTROL • LABOUR
       </div>
     </div>
-    <div class="map-labour-types">
-      <div class="labour-tag">AGRICULTURE</div>
-      <div class="labour-tag">LOGISTICS</div>
-      <div class="labour-tag">MANUFACTURING</div>
-      <div class="labour-tag">DATA PROCESSING</div>
-    </div>
+    
     <div class="map-details" id="map-details">
       <strong>LOCATION FUNCTIONS</strong><br>
-      Select a node to view routing, labour type, and infrastructure role.
+      Tap a red node to inspect site role and labour corridor.
     </div>
     <div class="map-chip" id="map-chip"></div>
     <div class="map-key">
@@ -1337,12 +1332,7 @@
 
   <!-- SLIDE 15 — MEDIA WALL -->
   <div class="slide slide-15" data-slide="15" data-phase="PHASE 04 — MEDIA">
-    <div class="media-conversation" aria-label="Live social conversation">
-      <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">Watching CLIP_01 now. This rollout mirrors the Atlas Nexus route data from Phase 03.</span></div>
-      <div class="msg msg-in"><span class="msg-name">Simon Day</span><span class="msg-text">My district feed is amplifying fear headlines every 20 minutes. Sentiment just spiked.</span></div>
-      <div class="msg msg-out"><span class="msg-name">Selam Tesfae</span><span class="msg-text">Port Meridian mentions are rising too. They are framing labour transfer as protection.</span></div>
-      <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Archive everything. We need the timeline before tonight's policy briefing.</span></div>
-    </div>
+    <div class="media-overlay-text" style="top:7%;bottom:auto;font-size:clamp(15px,2.4vw,30px);letter-spacing:.3em;opacity:.65;">SENTIMENT ALIGNMENT</div>
     <div class="media-wall" id="media-wall">
       <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
       <div class="headline-cell"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
@@ -1535,13 +1525,13 @@ function initMap() {
 
   const detailsEl = document.getElementById('map-details');
   const charterCities = [
-    { lat: 20.9, lon: -17.0, label: 'PORT MERIDIAN', sublabel: 'Nouadhibou', function: 'Agriculture sorting + intake processing' },
-    { lat: 72.0, lon: -40.0, label: 'AURORA DELTA', sublabel: 'Greenland', function: 'Cold-chain storage + resource extraction' },
-    { lat: 35.8, lon: -5.8, label: 'ATLAS NEXUS', sublabel: 'Tangier', function: 'Logistics relay + customs bypass handling' },
-    { lat: -22.0, lon: 17.0, label: 'NEW TYRE', sublabel: 'Namibia', function: 'Manufacturing + bonded industrial labour' },
-    { lat: 7.5, lon: 126.0, label: 'PACIFICA BIOPORT', sublabel: 'Mindanao', function: 'Data labeling + biotech trial support' },
-    { lat: -35.0, lon: -72.0, label: 'CASCADIA GRID', sublabel: 'Chile', function: 'Energy generation + mineral transit' },
-    { lat: 31.5, lon: 34.5, label: 'LEVANT GATEWAY', sublabel: 'Gaza', function: 'Emergency housing + ID verification corridor' },
+    { lat: 20.9, lon: -17.0, label: 'PORT MERIDIAN', sublabel: 'Nouadhibou', function: 'Pharmaceutical packaging · vaccine logistics · medical export' },
+    { lat: 72.0, lon: -40.0, label: 'AURORA DELTA', sublabel: 'Greenland', function: 'Climate engineering · Arctic mining · carbon capture systems' },
+    { lat: 35.8, lon: -5.8, label: 'ATLAS NEXUS', sublabel: 'Tangier', function: 'AI hardware · semiconductor assembly · robotics manufacturing' },
+    { lat: -22.0, lon: 17.0, label: 'NEW TYRE', sublabel: 'Namibia', function: 'Lithium extraction · rare-earth refining · battery materials' },
+    { lat: 7.5, lon: 126.0, label: 'PACIFICA BIOPORT', sublabel: 'Mindanao', function: 'Pharmaceutical testing · biotech experimentation · genetic research' },
+    { lat: -35.0, lon: -72.0, label: 'CASCADIA GRID', sublabel: 'Chile', function: 'Autonomous shipping · drone freight · supply-chain AI logistics' },
+    { lat: 31.5, lon: 34.5, label: 'LEVANT GATEWAY', sublabel: 'Gaza', function: 'Reconstruction · surveillance systems testing · urban security infrastructure' },
   ];
 
   // UK/Europe origin
@@ -1717,7 +1707,7 @@ function initMap() {
   }
 
   if (detailsEl) {
-    detailsEl.innerHTML = "<strong>LOCATION FUNCTIONS</strong><br>Tap/click any node to inspect route intelligence.";
+    detailsEl.innerHTML = "<strong>CHARTER CITY DOSSIERS</strong><br>Tap/click a red node to inspect the labour route.";
   }
 
   const chip = document.getElementById('map-chip');
@@ -1734,7 +1724,7 @@ function initMap() {
   const updateSelection = (mx,my,showChip=true) => {
     const selected = pickCity(mx,my,20);
     if (selected && detailsEl) {
-      detailsEl.innerHTML = `<strong>${selected.label}</strong><br>${selected.sublabel}<br><br><strong>FUNCTION:</strong> ${selected.function}<br><strong>ROUTE:</strong> UK/Europe origin → ${selected.label}`;
+      detailsEl.innerHTML = `<strong>${selected.label}</strong><br>${selected.sublabel}<br><br><strong>INDUSTRY:</strong> ${selected.function}<br><strong>LABOUR FLOW:</strong> UK/Europe → ${selected.label}`;
       if (chip && showChip) {
         chip.style.left = `${selected.px}px`;
         chip.style.top = `${selected.py}px`;
