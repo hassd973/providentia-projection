@@ -943,7 +943,24 @@
     .slide-16{padding:20px}
   }
 
-  @media (max-aspect-ratio: 4/5){
+  
+  @media (max-width: 700px){
+    .s1-logo{width:clamp(96px,26vw,130px);height:clamp(96px,26vw,130px)}
+    .s1-title{font-size:clamp(34px,11vw,60px);letter-spacing:0.09em;margin-top:14px}
+    .s1-subtitle{font-size:clamp(10px,3.5vw,14px);letter-spacing:0.3em;margin-top:10px}
+    .s2-text{font-size:clamp(24px,9vw,44px);max-width:94%;line-height:1.1}
+    .s3-cols{flex-direction:column;width:min(95vw,520px)}
+    .s3-col{padding:20px 14px;border-right:none;border-bottom:1px solid rgba(107,155,184,0.2)}
+    .s3-col:last-child{border-bottom:none}
+    .s3-icon{height:34px;margin-bottom:14px}
+    .s3-label{font-size:clamp(22px,8vw,36px);letter-spacing:0.08em}
+    .slide-4{gap:24px}
+    .s4-pipeline{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:14px;width:min(95vw,540px)}
+    .s4-arrow{display:none}
+    .s4-step{flex:initial}
+    .s4-label{font-size:clamp(15px,4.6vw,24px)}
+  }
+@media (max-aspect-ratio: 4/5){
     .s1-title{letter-spacing:0.1em}
     .s3-col{padding:36px 18px}
     .s4-step{flex-basis:45%}
@@ -1327,7 +1344,7 @@ function goTo(index) {
   }
 
   // Map slide
-  if (next.dataset.slide === '13') {
+  if (next.dataset.slide === '12') {
     setTimeout(initMap, 200);
   }
   
@@ -1412,13 +1429,13 @@ function initMap() {
   let particleOffset = 0;
 
   const countryShapes = [
-    {name:'North America', points:[[71,-165],[68,-140],[60,-120],[53,-105],[49,-95],[45,-84],[30,-81],[20,-98],[26,-110],[32,-118],[45,-130],[58,-150]]},
-    {name:'South America', points:[[12,-81],[7,-76],[-4,-78],[-20,-72],[-35,-68],[-55,-66],[-50,-75],[-30,-76],[-8,-79]]},
-    {name:'Europe', points:[[71,-25],[60,-10],[56,4],[52,16],[45,30],[40,22],[43,10],[48,0],[55,-8]]},
-    {name:'Africa', points:[[37,-17],[33,8],[26,20],[12,29],[2,34],[-12,33],[-24,24],[-35,18],[-33,6],[-20,-8],[-2,-16],[16,-17]]},
-    {name:'Asia', points:[[75,35],[67,60],[58,92],[52,122],[46,138],[34,142],[24,126],[17,108],[8,95],[15,72],[24,56],[36,45],[50,40],[62,38]]},
-    {name:'Australia', points:[[-11,113],[-20,127],[-25,140],[-35,150],[-43,145],[-38,125],[-27,114]]},
-    {name:'Greenland', points:[[83,-73],[82,-28],[74,-20],[61,-44],[59,-62]]}
+    {name:'North America', points:[[72,-168],[68,-160],[64,-150],[61,-140],[58,-132],[56,-125],[54,-118],[50,-112],[48,-106],[45,-100],[42,-96],[38,-92],[32,-88],[27,-84],[22,-82],[19,-90],[21,-98],[25,-106],[30,-114],[35,-120],[43,-128],[50,-138],[58,-150],[66,-160]]},
+    {name:'South America', points:[[12,-81],[8,-78],[3,-77],[-3,-79],[-10,-78],[-18,-75],[-26,-72],[-35,-70],[-44,-72],[-54,-69],[-54,-61],[-44,-58],[-32,-60],[-20,-64],[-8,-69],[1,-74],[8,-78]]},
+    {name:'Europe', points:[[71,-10],[66,-6],[62,0],[59,8],[56,14],[53,22],[49,30],[45,34],[42,28],[43,20],[45,13],[49,8],[52,2],[56,-2],[61,-6],[66,-8]]},
+    {name:'Africa', points:[[37,-17],[34,-8],[32,2],[30,10],[26,20],[20,25],[13,30],[6,34],[-2,36],[-10,34],[-20,30],[-28,22],[-34,16],[-35,8],[-33,0],[-28,-8],[-20,-12],[-10,-16],[0,-17],[11,-14],[20,-10],[28,-8],[34,-12]]},
+    {name:'Asia', points:[[75,35],[72,48],[68,60],[64,72],[58,84],[54,96],[50,108],[46,122],[42,134],[36,142],[30,138],[24,130],[18,118],[12,104],[8,92],[12,80],[18,70],[26,60],[34,52],[44,46],[54,42],[63,38],[70,36]]},
+    {name:'Australia', points:[[-11,113],[-16,120],[-20,128],[-24,136],[-30,145],[-36,151],[-42,146],[-42,136],[-38,126],[-31,118],[-24,114],[-17,112]]},
+    {name:'Greenland', points:[[83,-73],[82,-60],[80,-46],[76,-35],[72,-28],[68,-34],[64,-45],[60,-54],[61,-65],[67,-72],[75,-74]]}
   ];
 
   function drawContinents(ctx, W, H, project) {
