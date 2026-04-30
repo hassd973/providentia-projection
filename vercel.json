@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "public",
+  "buildCommand": null,
+  "devCommand": "npx serve public -l 3000",
+  "framework": null
+}
