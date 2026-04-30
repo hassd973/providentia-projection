@@ -615,7 +615,7 @@
   .map-key-title { font: 10px "Share Tech Mono", monospace; letter-spacing: 2px; color: rgba(0,212,255,0.7); margin-bottom: 8px; }
   .map-key-item { display:flex; align-items:center; gap:8px; color: rgba(232,240,247,0.85); font: 10px "Share Tech Mono", monospace; margin: 4px 0; }
   .map-swatch { width: 18px; height: 2px; }
-  .map-chip{position:absolute;z-index:15;pointer-events:none;transform:translate(-50%,-120%);padding:6px 8px;border:1px solid rgba(0,212,255,.45);background:rgba(4,10,20,.95);font:10px "Share Tech Mono", monospace;letter-spacing:1px;color:#d8ebff;opacity:0;transition:opacity .2s}
+  .map-chip{position:absolute;z-index:15;pointer-events:none;transform:translate(-50%,-120%);padding:6px 8px;border:1px solid rgba(0,212,255,.45);border-radius:999px;background:rgba(4,10,20,.95);font:10px "Share Tech Mono", monospace;letter-spacing:1px;color:#d8ebff;opacity:0;transition:opacity .2s;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.35)}
   .map-details {
     position: absolute; left: 24px; top: 90px; z-index: 3;
     width: min(360px, 86vw);
@@ -924,14 +924,16 @@
   .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
   .mock-card strong{color:#ff9bb0}
   
-  .media-conversation{position:absolute;top:14px;left:14px;right:14px;z-index:12;display:grid;gap:8px;pointer-events:none}
-  .msg{display:grid;gap:4px;max-width:min(92%,520px);padding:10px 12px;border:1px solid rgba(255,45,85,.35);background:rgba(8,12,20,.9);backdrop-filter:blur(2px);opacity:0;animation:msg-loop 9s linear infinite}
+  .media-conversation{position:absolute;left:14px;right:14px;bottom:70px;z-index:12;display:grid;gap:10px;pointer-events:none;align-content:end;max-height:min(46vh,360px);overflow:hidden}
+  .msg{display:grid;gap:4px;max-width:min(92%,560px);padding:10px 12px;border:1px solid rgba(255,45,85,.35);background:rgba(8,12,20,.9);backdrop-filter:blur(2px);opacity:0;animation:msg-loop 12s linear infinite}
   .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#ff8fa7;text-transform:uppercase}
-  .msg-text{font:clamp(11px,1.2vw,14px) 'Share Tech Mono';line-height:1.45;color:#dbe6ef}
+  .msg-text{font:clamp(11px,1.2vw,14px) 'Share Tech Mono';line-height:1.45;color:#dbe6ef;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
   .msg-in{justify-self:start;border-color:rgba(0,212,255,.35)}
   .msg-out{justify-self:end}
-  .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:2s}.msg:nth-child(3){animation-delay:4s}.msg:nth-child(4){animation-delay:6s}
-  @keyframes msg-loop{0%,8%{opacity:0;transform:translateY(6px)}12%,35%{opacity:1;transform:translateY(0)}50%,100%{opacity:0;transform:translateY(-4px)}}
+  .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:3s}.msg:nth-child(3){animation-delay:6s}.msg:nth-child(4){animation-delay:9s}
+  .msg:nth-child(1) .msg-text{animation-delay:0s}.msg:nth-child(2) .msg-text{animation-delay:3s}.msg:nth-child(3) .msg-text{animation-delay:6s}.msg:nth-child(4) .msg-text{animation-delay:9s}
+  @keyframes msg-loop{0%,6%{opacity:0;transform:translateY(8px)}9%,32%{opacity:1;transform:translateY(0)}45%,100%{opacity:0;transform:translateY(-4px)}}
+  @keyframes typing{0%,9%{width:0}20%,32%{width:100%}100%{width:100%}}
 
   .upload-panel{margin-top:20px;border:1px dashed rgba(200,180,150,.45);padding:12px}
   .upload-panel label{display:block;font:11px 'Share Tech Mono';letter-spacing:2px;color:rgba(212,200,180,.75);margin-bottom:8px}
@@ -949,7 +951,7 @@
     .map-details{top:72px;left:10px;width:94vw;font-size:9px;max-height:42vh}
     .map-key{right:10px;bottom:10px;min-width:170px;padding:8px}
     .media-wall{grid-template-columns:1fr 1fr}
-    .media-conversation{top:8px;left:8px;right:8px}.msg{max-width:100%}
+    .media-conversation{left:8px;right:8px;bottom:74px}.msg{max-width:100%}
     .s16-profiles{flex-direction:column;gap:20px}
     .slide-16{padding:20px}
   }
@@ -975,7 +977,9 @@
     .map-overlay{left:10px;right:10px}
     .map-title{font-size:10px;line-height:1.4}
     .map-key{max-width:calc(100vw - 20px)}
-    .media-wall{margin-top:170px;grid-template-columns:1fr}
+    .media-wall{margin-top:20px;grid-template-columns:1fr}
+    .media-conversation{left:8px;right:8px;bottom:74px;max-height:42vh}
+    .msg{max-width:100%;padding:9px 10px}
   }
 @media (max-aspect-ratio: 4/5){
     .s1-title{letter-spacing:0.1em}
@@ -1065,7 +1069,7 @@
       <div class="s4-arrow" style="opacity:1;animation:none;"></div>
       <div class="s4-step">
         <div class="s4-node"></div>
-        <div class="s4-label">ACTION</div>
+        <div class="s4-label">ACTION*</div>
       </div>
     </div>
   </div>
@@ -1460,9 +1464,11 @@ function initMap() {
 
   function drawContinents(ctx, W, H, project) {
     ctx.save();
-    ctx.fillStyle = "rgba(107,155,184,0.07)";
-    ctx.strokeStyle = "rgba(107,155,184,0.25)";
-    ctx.lineWidth = 0.8;
+    ctx.fillStyle = "rgba(107,155,184,0.12)";
+    ctx.strokeStyle = "rgba(0,212,255,0.4)";
+    ctx.lineWidth = 1.1;
+    ctx.shadowColor = 'rgba(0,212,255,0.2)';
+    ctx.shadowBlur = 8;
     countryShapes.forEach(country => {
       ctx.beginPath();
       country.points.forEach(([lat,lon],i)=>{ const p=project(lat,lon); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
