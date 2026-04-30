@@ -279,7 +279,7 @@
     border: 1px solid rgba(107,155,184,0.25);
     background: rgba(30,37,48,0.5);
     padding: 14px 16px;
-    min-height: 108px;
+    min-height: 92px;
     opacity: 0;
     transform: translateY(10px);
   }
@@ -293,12 +293,10 @@
     letter-spacing: 2px;
     margin-bottom: 8px;
   }
-  .s4-copy-card ul { list-style: square; margin-left: 16px; }
-  .s4-copy-card li {
+  .s4-copy-card p {
     color: rgba(232,240,247,0.88);
-    font-size: clamp(11px, 1.1vw, 14px);
+    font-size: clamp(11px, 1.2vw, 15px);
     line-height: 1.45;
-    margin-bottom: 6px;
   }
   .slide-4.active .s4-step:nth-child(1) { animation: col-fade 0.6s ease 0.1s both; }
   .slide-4.active .s4-step:nth-child(2) { animation: col-fade 0.6s ease 0.4s both; }
@@ -1032,8 +1030,7 @@
     .s4-step{min-height:88px;display:flex;align-items:center;justify-content:center;text-align:center}
     .s4-copy{grid-template-columns:1fr; width:min(95vw,540px)}
     .s4-copy-card{min-height:0;padding:12px}
-    .s4-copy-card ul{margin-left:13px}
-    .s4-copy-card li{font-size:12px;line-height:1.4}
+    .s4-copy-card p{font-size:12px;line-height:1.4}
     .map-overlay{left:10px;right:10px}
     .map-title{font-size:10px;line-height:1.4}
     .map-key{max-width:calc(100vw - 20px)}
@@ -1137,36 +1134,20 @@
     </div>
     <div class="s4-copy">
       <div class="s4-copy-card">
-        <div class="s4-copy-title">DATA — ROBUST INGESTION</div>
-        <ul>
-          <li>Ingest border, compliance, and behavioral signals in one governed stream.</li>
-          <li>Unify fragmented records into a single resilient identity timeline.</li>
-          <li>Apply source-weighted normalization with automated quality controls.</li>
-        </ul>
+        <div class="s4-copy-title">DATA</div>
+        <p>Ingest border, compliance, and behavioral signals into one governed stream.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">RISK SCORE — ROBUST MODELING</div>
-        <ul>
-          <li>Model weighted indicators against adaptive threshold bands.</li>
-          <li>Blend recency, network context, and anomaly detection layers.</li>
-          <li>Publish 0–100 confidence with transparent audit provenance.</li>
-        </ul>
+        <div class="s4-copy-title">RISK SCORE</div>
+        <p>Model weighted indicators and publish a transparent confidence score.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">CLASSIFICATION — ROBUST TRIAGE</div>
-        <ul>
-          <li>Route outcomes to Monitor, Restrict, Detain, or Remove classes.</li>
-          <li>Attach legal posture, elasticity flags, and review windows.</li>
-          <li>Escalate edge cases through mandatory analyst verification gates.</li>
-        </ul>
+        <div class="s4-copy-title">CLASSIFICATION</div>
+        <p>Route outcomes into clear monitor, restrict, detain, or remove classes.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">ACTION* — ROBUST EXECUTION</div>
-        <ul>
-          <li>Activate watchlists, mobility controls, and detention workflows.</li>
-          <li>Dispatch synchronized cross-agency alerts and tasking.</li>
-          <li>Continuously re-evaluate outcomes to recalibrate intervention level.</li>
-        </ul>
+        <div class="s4-copy-title">ACTION*</div>
+        <p>Trigger cross-agency alerts and continuously re-evaluate interventions.</p>
       </div>
     </div>
   </div>
@@ -1503,7 +1484,7 @@ document.addEventListener('touchend', e => {
 // ═══════════════════════════════════
 // MAP CANVAS
 // ═══════════════════════════════════
-function initMap() {
+async function initMap() {
   const canvas = document.getElementById('map-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -1550,15 +1531,14 @@ function initMap() {
   let frame = 0;
   let particleOffset = 0;
 
-  const countryShapes = [
-    {name:'North America', points:[[72,-168],[70,-156],[68,-146],[64,-136],[60,-128],[56,-124],[51,-126],[48,-125],[46,-120],[44,-112],[42,-106],[38,-102],[34,-98],[30,-94],[26,-90],[23,-86],[20,-84],[18,-88],[19,-95],[22,-103],[26,-110],[31,-116],[37,-122],[44,-132],[53,-145],[61,-156],[68,-164]]},
-    {name:'South America', points:[[12,-81],[9,-79],[4,-78],[-2,-79],[-8,-79],[-14,-77],[-20,-75],[-27,-73],[-34,-71],[-41,-70],[-49,-68],[-55,-64],[-54,-58],[-48,-56],[-39,-58],[-30,-60],[-22,-63],[-14,-67],[-6,-71],[1,-75],[7,-78]]},
-    {name:'Europe', points:[[71,-11],[67,-9],[63,-4],[60,1],[57,6],[55,12],[53,17],[50,22],[48,28],[46,34],[43,30],[42,24],[43,17],[45,10],[48,5],[52,1],[57,-3],[62,-7],[67,-9]]},
-    {name:'Africa', points:[[37,-17],[36,-9],[34,-2],[32,7],[29,14],[25,20],[20,25],[15,30],[8,34],[1,36],[-7,35],[-15,32],[-23,27],[-30,21],[-34,14],[-35,6],[-34,-2],[-31,-9],[-26,-13],[-20,-16],[-12,-17],[-3,-16],[6,-13],[15,-10],[24,-8],[32,-10]]},
-    {name:'Asia', points:[[76,36],[73,48],[70,60],[67,71],[63,82],[58,94],[54,105],[50,116],[46,126],[42,136],[37,146],[32,142],[28,134],[23,124],[18,114],[13,103],[10,92],[12,81],[16,71],[21,62],[27,54],[34,48],[42,43],[50,40],[58,38],[66,37],[72,36]]},
-    {name:'Australia', points:[[-11,113],[-15,119],[-19,126],[-23,133],[-27,140],[-32,147],[-38,151],[-42,146],[-42,138],[-39,130],[-34,122],[-28,116],[-21,113],[-15,112]]},
-    {name:'Greenland', points:[[83,-73],[82,-64],[80,-54],[77,-45],[73,-38],[69,-36],[65,-42],[62,-49],[61,-58],[63,-66],[67,-71],[74,-74],[80,-74]]}
-  ];
+  let worldFeatures = [];
+  try {
+    const res = await fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson');
+    const world = await res.json();
+    worldFeatures = world.features || [];
+  } catch (err) {
+    worldFeatures = [];
+  }
 
   function drawContinents(ctx, W, H, project) {
     ctx.save();
@@ -1567,12 +1547,22 @@ function initMap() {
     ctx.lineWidth = 1.1;
     ctx.shadowColor = 'rgba(0,212,255,0.2)';
     ctx.shadowBlur = 8;
-    countryShapes.forEach(country => {
-      ctx.beginPath();
-      country.points.forEach(([lat,lon],i)=>{ const p=project(lat,lon); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
+    worldFeatures.forEach((feature) => {
+      const polygons = feature.geometry.type === 'Polygon'
+        ? [feature.geometry.coordinates]
+        : feature.geometry.coordinates;
+      polygons.forEach((poly) => {
+        poly.forEach((ring) => {
+          ctx.beginPath();
+          ring.forEach(([lon, lat], i) => {
+            const p = project(lat, lon);
+            i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y);
+          });
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        });
+      });
     });
     ctx.restore();
   }
