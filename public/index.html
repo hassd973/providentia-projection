@@ -651,7 +651,7 @@
   #map-canvas {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
-    image-rendering: auto;
+    image-rendering: optimizeQuality;
     touch-action: none;
   }
   .map-overlay {
@@ -815,7 +815,7 @@
     padding: 2px;
   }
   .headline-cell {
-    background: #111;
+    background: radial-gradient(circle at 80% 12%, rgba(255,45,85,.08), rgba(17,17,17,.96));
     display: flex; align-items: center; justify-content: center;
     padding: 20px;
     border: 1px solid rgba(255,45,85,0.1);
@@ -852,6 +852,7 @@
     letter-spacing: 2px;
     text-transform: uppercase;
   }
+  .headline-sponsor{position:absolute;top:10px;right:10px;width:22px;height:22px;opacity:.8;filter:drop-shadow(0 0 6px rgba(255,45,85,.35))}
   .media-overlay-text {
     position: absolute; bottom: 40px; left: 50%;
     transform: translateX(-50%);
@@ -1010,12 +1011,13 @@
   .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
   .mock-card strong{color:#ff9bb0}
   
-  .media-conversation{position:absolute;left:16px;top:16px;z-index:20;display:grid;gap:8px;pointer-events:none;align-content:start;max-height:min(52vh,420px);width:min(34vw,480px);padding:10px;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:linear-gradient(140deg,rgba(32,38,50,.42),rgba(9,14,26,.66));backdrop-filter:blur(14px) saturate(140%);box-shadow:0 16px 42px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.22);overflow:hidden}
-  .msg{display:grid;gap:4px;max-width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:rgba(20,27,40,.58);backdrop-filter:blur(8px);opacity:0;animation:msg-loop 12s linear infinite}
+  .media-conversation{position:absolute;left:18px;top:18px;z-index:20;display:grid;gap:8px;pointer-events:none;align-content:start;max-height:min(56vh,460px);width:min(36vw,520px);padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:20px;background:linear-gradient(160deg,rgba(41,48,67,.56),rgba(11,16,28,.76));backdrop-filter:blur(18px) saturate(150%);box-shadow:0 20px 52px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.24);overflow:hidden}
+  .media-conversation::before{content:'# ops-board  •  live';font:700 10px 'Share Tech Mono';letter-spacing:2px;color:rgba(186,215,255,.75);padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:4px}
+  .msg{display:grid;gap:4px;max-width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:linear-gradient(140deg,rgba(43,54,76,.62),rgba(24,31,45,.62));backdrop-filter:blur(10px);opacity:0;animation:msg-loop 12s linear infinite}
   .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#9ddcff;text-transform:uppercase}
   .msg-text{font:clamp(11px,1.1vw,13px) 'Share Tech Mono';line-height:1.45;color:#ecf4ff;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
-  .msg-in{justify-self:start;border-color:rgba(0,212,255,.35)}
-  .msg-out{justify-self:start;border-color:rgba(255,255,255,.22)}
+  .msg-in{justify-self:start;border-color:rgba(0,212,255,.45);box-shadow:0 0 0 1px rgba(0,212,255,.12)}
+  .msg-out{justify-self:start;border-color:rgba(255,255,255,.26)}
   .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:3s}.msg:nth-child(3){animation-delay:6s}.msg:nth-child(4){animation-delay:9s}
   .msg:nth-child(1) .msg-text{animation-delay:0s}.msg:nth-child(2) .msg-text{animation-delay:3s}.msg:nth-child(3) .msg-text{animation-delay:6s}.msg:nth-child(4) .msg-text{animation-delay:9s}
   @keyframes msg-loop{0%,6%{opacity:0;transform:translateY(8px)}9%,32%{opacity:1;transform:translateY(0)}45%,100%{opacity:0;transform:translateY(-4px)}}
@@ -1358,10 +1360,10 @@
       <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Archive everything. We need the timeline before tonight's policy briefing.</span></div>
     </div>
     <div class="media-wall" id="media-wall">
-      <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
-      <div class="headline-cell"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
-      <div class="headline-cell"><div class="headline-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div><div class="headline-source">DAILY POST</div></div>
-      <div class="headline-cell"><div class="headline-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div><div class="headline-source">THE OBSERVER</div></div>
+      <div class="headline-cell"><div class="social-chip">CLIP_01</div><img class="headline-sponsor" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23232762'/%3E%3Cpath d='M6 10h28l-5 6H11z' fill='%23ffffff' fill-opacity='.92'/%3E%3Cpath d='M6 16h28l-5 6H11z' fill='%23d3202e'/%3E%3Ctext x='20' y='32' text-anchor='middle' font-size='8' font-family='Arial' font-weight='700' fill='%23fff'%3ENF%3C/text%3E%3C/svg%3E" alt="Nation First sponsor"><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
+      <div class="headline-cell"><img class="headline-sponsor" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23232762'/%3E%3Cpath d='M6 10h28l-5 6H11z' fill='%23ffffff' fill-opacity='.92'/%3E%3Cpath d='M6 16h28l-5 6H11z' fill='%23d3202e'/%3E%3Ctext x='20' y='32' text-anchor='middle' font-size='8' font-family='Arial' font-weight='700' fill='%23fff'%3ENF%3C/text%3E%3C/svg%3E" alt="Nation First sponsor"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
+      <div class="headline-cell"><img class="headline-sponsor" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23232762'/%3E%3Cpath d='M6 10h28l-5 6H11z' fill='%23ffffff' fill-opacity='.92'/%3E%3Cpath d='M6 16h28l-5 6H11z' fill='%23d3202e'/%3E%3Ctext x='20' y='32' text-anchor='middle' font-size='8' font-family='Arial' font-weight='700' fill='%23fff'%3ENF%3C/text%3E%3C/svg%3E" alt="Nation First sponsor"><div class="headline-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div><div class="headline-source">DAILY POST</div></div>
+      <div class="headline-cell"><img class="headline-sponsor" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23232762'/%3E%3Cpath d='M6 10h28l-5 6H11z' fill='%23ffffff' fill-opacity='.92'/%3E%3Cpath d='M6 16h28l-5 6H11z' fill='%23d3202e'/%3E%3Ctext x='20' y='32' text-anchor='middle' font-size='8' font-family='Arial' font-weight='700' fill='%23fff'%3ENF%3C/text%3E%3C/svg%3E" alt="Nation First sponsor"><div class="headline-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div><div class="headline-source">THE OBSERVER</div></div>
       <div class="headline-cell" style="grid-column:2;grid-row:2;border:1px solid rgba(255,45,85,0.3);background:#1a0a0a;">
         <div class="headline-text" style="font-size:clamp(16px,2.5vw,28px);color:#ff2d55;">SENTIMENT ALIGNMENT</div>
       </div>
@@ -1522,7 +1524,7 @@ async function initMap() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const rect = canvas.getBoundingClientRect();
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
   canvas.width = Math.floor(rect.width * dpr);
   canvas.height = Math.floor(rect.height * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1794,6 +1796,11 @@ async function initMap() {
   window.addEventListener('resize', () => {
     if (document.querySelector('.slide-12.active')) initMap();
   });
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => {
+      if (document.querySelector('.slide-12.active')) initMap();
+    }).observe(canvas);
+  }
 
   animate();
 }
@@ -1811,7 +1818,7 @@ function animateMediaWall() {
 }
 
 // Init map if starting on that slide
-if (slides[current].dataset.slide === '13') initMap();
+if (slides[current].dataset.slide === '12') initMap();
 </script>
 </body>
 </html>
