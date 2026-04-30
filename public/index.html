@@ -278,9 +278,15 @@
   .s4-copy-card {
     border: 1px solid rgba(107,155,184,0.25);
     background: rgba(30,37,48,0.5);
-    padding: 12px 14px;
+    padding: 14px 16px;
     min-height: 108px;
+    opacity: 0;
+    transform: translateY(10px);
   }
+  .slide-4.active .s4-copy-card:nth-child(1) { animation: col-fade 0.55s ease 0.25s both; }
+  .slide-4.active .s4-copy-card:nth-child(2) { animation: col-fade 0.55s ease 0.45s both; }
+  .slide-4.active .s4-copy-card:nth-child(3) { animation: col-fade 0.55s ease 0.65s both; }
+  .slide-4.active .s4-copy-card:nth-child(4) { animation: col-fade 0.55s ease 0.85s both; }
   .s4-copy-title {
     color: var(--corp-accent);
     font: 600 11px 'Share Tech Mono', monospace;
@@ -291,7 +297,8 @@
   .s4-copy-card li {
     color: rgba(232,240,247,0.88);
     font-size: clamp(11px, 1.1vw, 14px);
-    line-height: 1.35;
+    line-height: 1.45;
+    margin-bottom: 6px;
   }
   .slide-4.active .s4-step:nth-child(1) { animation: col-fade 0.6s ease 0.1s both; }
   .slide-4.active .s4-step:nth-child(2) { animation: col-fade 0.6s ease 0.4s both; }
@@ -1024,6 +1031,9 @@
     .s2-word{font-size:clamp(22px,8.2vw,38px)}
     .s4-step{min-height:88px;display:flex;align-items:center;justify-content:center;text-align:center}
     .s4-copy{grid-template-columns:1fr; width:min(95vw,540px)}
+    .s4-copy-card{min-height:0;padding:12px}
+    .s4-copy-card ul{margin-left:13px}
+    .s4-copy-card li{font-size:12px;line-height:1.4}
     .map-overlay{left:10px;right:10px}
     .map-title{font-size:10px;line-height:1.4}
     .map-key{max-width:calc(100vw - 20px)}
@@ -1127,35 +1137,35 @@
     </div>
     <div class="s4-copy">
       <div class="s4-copy-card">
-        <div class="s4-copy-title">DATA — AGGREGATION</div>
+        <div class="s4-copy-title">DATA — ROBUST INGESTION</div>
         <ul>
-          <li>Merge immigration, compliance, and behavioral telemetry feeds.</li>
-          <li>Resolve identity to one longitudinal subject profile.</li>
-          <li>Normalize for timestamp, source confidence, and missing fields.</li>
+          <li>Ingest border, compliance, and behavioral signals in one governed stream.</li>
+          <li>Unify fragmented records into a single resilient identity timeline.</li>
+          <li>Apply source-weighted normalization with automated quality controls.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">RISK SCORE — ASSESSMENT</div>
+        <div class="s4-copy-title">RISK SCORE — ROBUST MODELING</div>
         <ul>
-          <li>Score weighted indicators against dynamic threshold bands.</li>
-          <li>Apply recency multipliers and cluster-level anomaly checks.</li>
-          <li>Output 0–100 risk confidence with audit trace metadata.</li>
+          <li>Model weighted indicators against adaptive threshold bands.</li>
+          <li>Blend recency, network context, and anomaly detection layers.</li>
+          <li>Publish 0–100 confidence with transparent audit provenance.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">CLASSIFICATION — CATEGORIZATION</div>
+        <div class="s4-copy-title">CLASSIFICATION — ROBUST TRIAGE</div>
         <ul>
-          <li>Map score to Monitor, Restrict, Detain, or Remove classes.</li>
-          <li>Tag with legal status, elasticity flag, and review horizon.</li>
-          <li>Route edge cases to analyst validation before escalation.</li>
+          <li>Route outcomes to Monitor, Restrict, Detain, or Remove classes.</li>
+          <li>Attach legal posture, elasticity flags, and review windows.</li>
+          <li>Escalate edge cases through mandatory analyst verification gates.</li>
         </ul>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">ACTION* — INTERVENTION</div>
+        <div class="s4-copy-title">ACTION* — ROBUST EXECUTION</div>
         <ul>
-          <li>Trigger watchlists, mobility controls, or detention workflows.</li>
-          <li>Issue cross-agency notifications and task assignments.</li>
-          <li>Continuously re-score outcomes to update intervention level.</li>
+          <li>Activate watchlists, mobility controls, and detention workflows.</li>
+          <li>Dispatch synchronized cross-agency alerts and tasking.</li>
+          <li>Continuously re-evaluate outcomes to recalibrate intervention level.</li>
         </ul>
       </div>
     </div>
@@ -1541,13 +1551,13 @@ function initMap() {
   let particleOffset = 0;
 
   const countryShapes = [
-    {name:'North America', points:[[72,-168],[68,-160],[64,-150],[61,-140],[58,-132],[56,-125],[54,-118],[50,-112],[48,-106],[45,-100],[42,-96],[38,-92],[32,-88],[27,-84],[22,-82],[19,-90],[21,-98],[25,-106],[30,-114],[35,-120],[43,-128],[50,-138],[58,-150],[66,-160]]},
-    {name:'South America', points:[[12,-81],[8,-78],[3,-77],[-3,-79],[-10,-78],[-18,-75],[-26,-72],[-35,-70],[-44,-72],[-54,-69],[-54,-61],[-44,-58],[-32,-60],[-20,-64],[-8,-69],[1,-74],[8,-78]]},
-    {name:'Europe', points:[[71,-10],[66,-6],[62,0],[59,8],[56,14],[53,22],[49,30],[45,34],[42,28],[43,20],[45,13],[49,8],[52,2],[56,-2],[61,-6],[66,-8]]},
-    {name:'Africa', points:[[37,-17],[34,-8],[32,2],[30,10],[26,20],[20,25],[13,30],[6,34],[-2,36],[-10,34],[-20,30],[-28,22],[-34,16],[-35,8],[-33,0],[-28,-8],[-20,-12],[-10,-16],[0,-17],[11,-14],[20,-10],[28,-8],[34,-12]]},
-    {name:'Asia', points:[[75,35],[72,48],[68,60],[64,72],[58,84],[54,96],[50,108],[46,122],[42,134],[36,142],[30,138],[24,130],[18,118],[12,104],[8,92],[12,80],[18,70],[26,60],[34,52],[44,46],[54,42],[63,38],[70,36]]},
-    {name:'Australia', points:[[-11,113],[-16,120],[-20,128],[-24,136],[-30,145],[-36,151],[-42,146],[-42,136],[-38,126],[-31,118],[-24,114],[-17,112]]},
-    {name:'Greenland', points:[[83,-73],[82,-60],[80,-46],[76,-35],[72,-28],[68,-34],[64,-45],[60,-54],[61,-65],[67,-72],[75,-74]]}
+    {name:'North America', points:[[72,-168],[70,-156],[68,-146],[64,-136],[60,-128],[56,-124],[51,-126],[48,-125],[46,-120],[44,-112],[42,-106],[38,-102],[34,-98],[30,-94],[26,-90],[23,-86],[20,-84],[18,-88],[19,-95],[22,-103],[26,-110],[31,-116],[37,-122],[44,-132],[53,-145],[61,-156],[68,-164]]},
+    {name:'South America', points:[[12,-81],[9,-79],[4,-78],[-2,-79],[-8,-79],[-14,-77],[-20,-75],[-27,-73],[-34,-71],[-41,-70],[-49,-68],[-55,-64],[-54,-58],[-48,-56],[-39,-58],[-30,-60],[-22,-63],[-14,-67],[-6,-71],[1,-75],[7,-78]]},
+    {name:'Europe', points:[[71,-11],[67,-9],[63,-4],[60,1],[57,6],[55,12],[53,17],[50,22],[48,28],[46,34],[43,30],[42,24],[43,17],[45,10],[48,5],[52,1],[57,-3],[62,-7],[67,-9]]},
+    {name:'Africa', points:[[37,-17],[36,-9],[34,-2],[32,7],[29,14],[25,20],[20,25],[15,30],[8,34],[1,36],[-7,35],[-15,32],[-23,27],[-30,21],[-34,14],[-35,6],[-34,-2],[-31,-9],[-26,-13],[-20,-16],[-12,-17],[-3,-16],[6,-13],[15,-10],[24,-8],[32,-10]]},
+    {name:'Asia', points:[[76,36],[73,48],[70,60],[67,71],[63,82],[58,94],[54,105],[50,116],[46,126],[42,136],[37,146],[32,142],[28,134],[23,124],[18,114],[13,103],[10,92],[12,81],[16,71],[21,62],[27,54],[34,48],[42,43],[50,40],[58,38],[66,37],[72,36]]},
+    {name:'Australia', points:[[-11,113],[-15,119],[-19,126],[-23,133],[-27,140],[-32,147],[-38,151],[-42,146],[-42,138],[-39,130],[-34,122],[-28,116],[-21,113],[-15,112]]},
+    {name:'Greenland', points:[[83,-73],[82,-64],[80,-54],[77,-45],[73,-38],[69,-36],[65,-42],[62,-49],[61,-58],[63,-66],[67,-71],[74,-74],[80,-74]]}
   ];
 
   function drawContinents(ctx, W, H, project) {
