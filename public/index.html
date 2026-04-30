@@ -908,11 +908,17 @@
   .redacted-strip{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .redacted-file{border:1px solid rgba(255,45,85,.3);background:rgba(255,45,85,.08);padding:10px;min-height:72px}
   .redacted-line{height:8px;background:linear-gradient(90deg,#000 20%,#300);margin:6px 0}
+  .redacted-file::after{content:"CLASSIFIED";display:block;font:9px 'Share Tech Mono';letter-spacing:2px;color:rgba(255,45,85,.65);margin-top:10px}
+  .sys-doc-note{margin-top:10px;font:10px 'Share Tech Mono';color:rgba(0,212,255,.45);letter-spacing:2px}
   .social-chip{position:absolute;top:16px;right:16px;font:10px 'Share Tech Mono';color:#ff6c86;letter-spacing:2px}
+  .media-mockups{position:absolute;top:14px;left:14px;right:14px;z-index:11;display:grid;grid-template-columns:1fr 1fr;gap:8px;pointer-events:none}
+  .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
+  .mock-card strong{color:#ff9bb0}
   .upload-panel{margin-top:20px;border:1px dashed rgba(200,180,150,.45);padding:12px}
   .upload-panel label{display:block;font:11px 'Share Tech Mono';letter-spacing:2px;color:rgba(212,200,180,.75);margin-bottom:8px}
   .upload-panel input{width:100%;color:#d4c8b4;background:#181614;border:1px solid rgba(200,180,150,.25);padding:8px}
   @media (max-width: 900px){
+    .cursor,.cursor-dot{display:none}
     #nav,#key-hint,#slide-counter{font-size:10px;bottom:14px}
     #phase-label{left:14px;top:10px;font-size:9px}
     .slide-sys{padding:20px}
@@ -923,6 +929,7 @@
     .map-details{top:72px;left:10px;width:94vw;font-size:9px;max-height:42vh}
     .map-key{right:10px;bottom:10px;min-width:170px;padding:8px}
     .media-wall{grid-template-columns:1fr 1fr}
+    .media-mockups{grid-template-columns:1fr;top:8px;left:8px;right:8px}
     .s16-profiles{flex-direction:column;gap:20px}
     .slide-16{padding:20px}
   }
@@ -1012,11 +1019,15 @@
       <div class="sys-title">MECHANISM // THRESHOLD MANAGEMENT</div>
       <div class="sys-main">RISK THRESHOLD<br>ADJUSTMENT</div>
       <div class="sys-sub">THRESHOLD LOWERED FOR:<br>HIGH ELASTICITY STATUS</div>
-          <div class="redacted-strip">
+      <div class="redacted-strip">
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
+        <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
         <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
         <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
         <div class="redacted-file"><div class="redacted-line"></div><div class="redacted-line"></div><div class="redacted-line"></div></div>
       </div>
+      <div class="sys-doc-note">// INTERNAL ATTACHMENTS: 06 REDACTED FILES LINKED</div>
     </div>
   </div>
 
@@ -1165,6 +1176,10 @@
 
   <!-- SLIDE 15 — MEDIA WALL -->
   <div class="slide slide-15" data-slide="15" data-phase="PHASE 04 — MEDIA">
+    <div class="media-mockups">
+      <div class="mock-card"><strong>Social Feed:</strong> “Seen this clip? They call it security. This is targeted deportation.”</div>
+      <div class="mock-card"><strong>Mock Article:</strong> “Data-led migration policy praised as neutral tool despite rights concerns.”</div>
+    </div>
     <div class="media-wall" id="media-wall">
       <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
       <div class="headline-cell"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
@@ -1373,16 +1388,13 @@ function initMap() {
   let particleOffset = 0;
 
   const countryShapes = [
-    {name:'United States', points:[[49,-124],[48,-95],[31,-81],[25,-97],[32,-114],[42,-124]]},
-    {name:'United Kingdom', points:[[58,-8],[58,2],[50,2],[50,-6]]},
-    {name:'Singapore', points:[[1.5,103.6],[1.5,104.0],[1.2,104.0],[1.2,103.6]]},
-    {name:'UAE', points:[[26.5,51.5],[26.5,56.5],[22.5,56.5],[22.5,51.5]]},
-    {name:'Mauritania', points:[[27,-17],[27,-4],[16,-4],[16,-17]]},
-    {name:'Morocco', points:[[36,-13],[36,-1],[28,-1],[28,-13]]},
-    {name:'Namibia', points:[[-17,11],[-17,26],[-29,26],[-29,11]]},
-    {name:'Philippines', points:[[19,118],[19,127],[6,127],[6,118]]},
-    {name:'Chile', points:[[-17,-75],[-17,-67],[-56,-67],[-56,-75]]},
-    {name:'Greenland', points:[[83,-73],[83,-12],[59,-12],[59,-73]]}
+    {name:'North America', points:[[71,-165],[68,-140],[60,-120],[53,-105],[49,-95],[45,-84],[30,-81],[20,-98],[26,-110],[32,-118],[45,-130],[58,-150]]},
+    {name:'South America', points:[[12,-81],[7,-76],[-4,-78],[-20,-72],[-35,-68],[-55,-66],[-50,-75],[-30,-76],[-8,-79]]},
+    {name:'Europe', points:[[71,-25],[60,-10],[56,4],[52,16],[45,30],[40,22],[43,10],[48,0],[55,-8]]},
+    {name:'Africa', points:[[37,-17],[33,8],[26,20],[12,29],[2,34],[-12,33],[-24,24],[-35,18],[-33,6],[-20,-8],[-2,-16],[16,-17]]},
+    {name:'Asia', points:[[75,35],[67,60],[58,92],[52,122],[46,138],[34,142],[24,126],[17,108],[8,95],[15,72],[24,56],[36,45],[50,40],[62,38]]},
+    {name:'Australia', points:[[-11,113],[-20,127],[-25,140],[-35,150],[-43,145],[-38,125],[-27,114]]},
+    {name:'Greenland', points:[[83,-73],[82,-28],[74,-20],[61,-44],[59,-62]]}
   ];
 
   function drawContinents(ctx, W, H, project) {
