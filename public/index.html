@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,120 +13,120 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-–corp-bg: #1b2030;
-–corp-border: #6b9bb8;
-–corp-text: #e8f0f7;
-–corp-accent: #6b9bb8;
-–sys-bg: #070b11;
-–sys-cyan: #00d4ff;
-–sys-red: #ff2d55;
-–sys-gold: #f0b429;
-–sys-text: #c8d8e8;
-–film-top: 8vh;
-–film-bot: 8vh;
+  --corp-bg: #1b2030;
+  --corp-border: #6b9bb8;
+  --corp-text: #e8f0f7;
+  --corp-accent: #6b9bb8;
+  --sys-bg: #070b11;
+  --sys-cyan: #00d4ff;
+  --sys-red: #ff2d55;
+  --sys-gold: #f0b429;
+  --sys-text: #c8d8e8;
+  --film-top: 8vh;
+  --film-bot: 8vh;
 }
 
 html, body {
-width: 100%; height: 100%;
-overflow: hidden;
-background: #000;
-font-family: ‘Barlow Condensed’, sans-serif;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Barlow Condensed', sans-serif;
 }
 
 /* ══════════════════════════════════
-FILM GRAIN OVERLAY
+   FILM GRAIN OVERLAY
 ══════════════════════════════════ */
 body::after {
-content: ‘’;
-position: fixed; inset: 0; z-index: 9000; pointer-events: none;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.05’/%3E%3C/svg%3E”);
-background-size: 200px 200px;
-opacity: 0.4;
-mix-blend-mode: overlay;
+  content: '';
+  position: fixed; inset: 0; z-index: 9000; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
 }
 
 /* ══════════════════════════════════
-CINEMATIC LETTERBOX BARS
+   CINEMATIC LETTERBOX BARS
 ══════════════════════════════════ */
 .letterbox-top, .letterbox-bot {
-position: fixed; left: 0; right: 0; z-index: 500;
-background: #000;
-height: var(–film-top);
-pointer-events: none;
-transition: height 0.3s ease;
+  position: fixed; left: 0; right: 0; z-index: 500;
+  background: #000;
+  height: var(--film-top);
+  pointer-events: none;
+  transition: height 0.3s ease;
 }
 .letterbox-top { top: 0; }
 .letterbox-bot { bottom: 0; }
 @media (max-width: 700px) {
-:root { –film-top: 5vh; –film-bot: 5vh; }
+  :root { --film-top: 5vh; --film-bot: 5vh; }
 }
 
 /* ══════════════════════════════════
-CHROME UI
+   CHROME UI
 ══════════════════════════════════ */
 #phase-label {
-position: fixed; top: 0; left: 0; right: 0;
-height: var(–film-top);
-display: flex; align-items: center; padding: 0 clamp(16px,3vw,48px);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,10px);
-color: rgba(107,155,184,0.55);
-letter-spacing: 3px; text-transform: uppercase;
-z-index: 600;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--film-top);
+  display: flex; align-items: center; padding: 0 clamp(16px,3vw,48px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,10px);
+  color: rgba(107,155,184,0.55);
+  letter-spacing: 3px; text-transform: uppercase;
+  z-index: 600;
 }
 #slide-counter {
-position: fixed; top: 0; right: 0;
-height: var(–film-top);
-display: flex; align-items: center; padding: 0 clamp(16px,3vw,48px);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,10px);
-color: rgba(107,155,184,0.35);
-letter-spacing: 2px; z-index: 600;
+  position: fixed; top: 0; right: 0;
+  height: var(--film-top);
+  display: flex; align-items: center; padding: 0 clamp(16px,3vw,48px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,10px);
+  color: rgba(107,155,184,0.35);
+  letter-spacing: 2px; z-index: 600;
 }
 #nav {
-position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-height: var(–film-bot);
-display: flex; align-items: center; gap: 8px; z-index: 600;
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  height: var(--film-bot);
+  display: flex; align-items: center; gap: 8px; z-index: 600;
 }
 .nav-dot {
-width: 5px; height: 5px;
-border: 1px solid rgba(107,155,184,0.3);
-border-radius: 50%; cursor: pointer; transition: all 0.3s;
+  width: 5px; height: 5px;
+  border: 1px solid rgba(107,155,184,0.3);
+  border-radius: 50%; cursor: pointer; transition: all 0.3s;
 }
-.nav-dot.active { background: var(–corp-accent); border-color: var(–corp-accent); }
+.nav-dot.active { background: var(--corp-accent); border-color: var(--corp-accent); }
 #prev-btn, #next-btn {
-position: fixed; top: 50%; transform: translateY(-50%);
-background: none; border: none; cursor: pointer;
-color: rgba(107,155,184,0.2); font-size: clamp(20px,2.5vw,28px);
-z-index: 600; padding: clamp(12px,2vw,24px);
-transition: color 0.3s;
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: rgba(107,155,184,0.2); font-size: clamp(20px,2.5vw,28px);
+  z-index: 600; padding: clamp(12px,2vw,24px);
+  transition: color 0.3s;
 }
 #prev-btn:hover, #next-btn:hover { color: rgba(107,155,184,0.6); }
 #prev-btn { left: 0; }
 #next-btn { right: 0; }
 #key-hint {
-position: fixed; bottom: 0; left: clamp(16px,3vw,48px);
-height: var(–film-bot); display: flex; align-items: center;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 8px; color: rgba(107,155,184,0.15);
-letter-spacing: 2px; z-index: 600;
+  position: fixed; bottom: 0; left: clamp(16px,3vw,48px);
+  height: var(--film-bot); display: flex; align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px; color: rgba(107,155,184,0.15);
+  letter-spacing: 2px; z-index: 600;
 }
 
 /* ══════════════════════════════════
-SLIDE CONTAINER
+   SLIDE CONTAINER
 ══════════════════════════════════ */
 #slideshow {
-position: fixed;
-top: var(–film-top); bottom: var(–film-bot);
-left: 0; right: 0;
-overflow: hidden;
+  position: fixed;
+  top: var(--film-top); bottom: var(--film-bot);
+  left: 0; right: 0;
+  overflow: hidden;
 }
 .slide {
-position: absolute; inset: 0;
-display: flex; align-items: center; justify-content: center;
-opacity: 0; pointer-events: none;
-transition: opacity 0.55s ease;
-overflow: hidden;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.55s ease;
+  overflow: hidden;
 }
 .slide.active { opacity: 1; pointer-events: all; }
 .slide.entering { animation: fade-in 0.55s ease both; }
@@ -135,121 +134,121 @@ overflow: hidden;
 
 /* Wipe transition */
 .corp-to-system-wipe {
-position: fixed; inset: 0; z-index: 300; pointer-events: none; opacity: 0;
-background: linear-gradient(120deg,rgba(107,155,184,.3),rgba(0,212,255,.12) 40%,rgba(255,45,85,.15));
-mix-blend-mode: screen;
+  position: fixed; inset: 0; z-index: 300; pointer-events: none; opacity: 0;
+  background: linear-gradient(120deg,rgba(107,155,184,.3),rgba(0,212,255,.12) 40%,rgba(255,45,85,.15));
+  mix-blend-mode: screen;
 }
 .corp-to-system-wipe.active { animation: wipe .9s ease both; }
 @keyframes wipe {
-0% { opacity:0; transform:translateX(-100%); }
-30% { opacity:.9; }
-100% { opacity:0; transform:translateX(100%); }
+  0% { opacity:0; transform:translateX(-100%); }
+  30% { opacity:.9; }
+  100% { opacity:0; transform:translateX(100%); }
 }
 
 /* ══════════════════════════════════
-SHARED SLIDE ELEMENTS
+   SHARED SLIDE ELEMENTS
 ══════════════════════════════════ */
 .slide-frame::before {
-content: ‘’;
-position: absolute; inset: 0;
-border: 1.5px solid rgba(107,155,184,0.3);
-pointer-events: none; z-index: 10;
+  content: '';
+  position: absolute; inset: 0;
+  border: 1.5px solid rgba(107,155,184,0.3);
+  pointer-events: none; z-index: 10;
 }
 .scanlines {
-position: absolute; inset: 0; pointer-events: none; z-index: 1;
-background: repeating-linear-gradient(
-0deg, transparent, transparent 2px,
-rgba(0,212,255,0.015) 2px, rgba(0,212,255,0.015) 4px
-);
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,212,255,0.015) 2px, rgba(0,212,255,0.015) 4px
+  );
 }
 .grid-bg {
-position: absolute; inset: 0; pointer-events: none; z-index: 1;
-background-image:
-linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-background-size: 60px 60px;
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
 /* ══════════════════════════════════
-SLIDE 1 — BRAND
+   SLIDE 1 — BRAND
 ══════════════════════════════════ */
 .slide-1 {
-background: var(–corp-bg);
-flex-direction: column; gap: 0;
+  background: var(--corp-bg);
+  flex-direction: column; gap: 0;
 }
 .slide-1::before {
-content: ‘’; position: absolute; inset: 0;
-border: 1.5px solid var(–corp-border);
-pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  border: 1.5px solid var(--corp-border);
+  pointer-events: none;
 }
 .slide-1::after {
-content: ‘’; position: absolute; inset: 14px;
-border: 1px solid rgba(107,155,184,0.15);
-pointer-events: none;
+  content: ''; position: absolute; inset: 14px;
+  border: 1px solid rgba(107,155,184,0.15);
+  pointer-events: none;
 }
 .s1-logo {
-width: clamp(80px,16vmin,180px);
-height: clamp(80px,16vmin,180px);
-object-fit: contain;
-animation: logo-in 1.2s cubic-bezier(0.16,1,0.3,1) both;
-filter: brightness(1.1);
+  width: clamp(80px,16vmin,180px);
+  height: clamp(80px,16vmin,180px);
+  object-fit: contain;
+  animation: logo-in 1.2s cubic-bezier(0.16,1,0.3,1) both;
+  filter: brightness(1.1);
 }
 .s1-title {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(42px,8vw,96px);
-font-weight: 700;
-letter-spacing: 0.18em;
-color: var(–corp-text);
-text-align: center;
-animation: text-rise 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
-margin-top: clamp(12px,2vmin,28px);
-line-height: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px,8vw,96px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--corp-text);
+  text-align: center;
+  animation: text-rise 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  margin-top: clamp(12px,2vmin,28px);
+  line-height: 1;
 }
 .s1-subtitle {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(10px,1.5vw,15px);
-font-weight: 300;
-letter-spacing: 0.5em;
-color: var(–corp-accent);
-text-align: center; text-transform: uppercase;
-animation: text-rise 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s both;
-margin-top: clamp(10px,2vmin,20px);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(10px,1.5vw,15px);
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  color: var(--corp-accent);
+  text-align: center; text-transform: uppercase;
+  animation: text-rise 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s both;
+  margin-top: clamp(10px,2vmin,20px);
 }
 @keyframes logo-in {
-from { opacity:0; transform:scale(0.85); }
-to { opacity:1; transform:scale(1); }
+  from { opacity:0; transform:scale(0.85); }
+  to { opacity:1; transform:scale(1); }
 }
 @keyframes text-rise {
-from { opacity:0; transform:translateY(30px); }
-to { opacity:1; transform:translateY(0); }
+  from { opacity:0; transform:translateY(30px); }
+  to { opacity:1; transform:translateY(0); }
 }
 
 /* ══════════════════════════════════
-SLIDE 2 — MANIFESTO
+   SLIDE 2 — MANIFESTO
 ══════════════════════════════════ */
 .slide-2 {
-background: var(–corp-bg);
-flex-direction: column;
+  background: var(--corp-bg);
+  flex-direction: column;
 }
 .slide-2::before {
-content: ‘’; position: absolute; inset: 0;
-border: 1.5px solid var(–corp-border);
-pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  border: 1.5px solid var(--corp-border);
+  pointer-events: none;
 }
 .s2-text {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(30px,6.5vw,82px);
-font-weight: 700;
-color: var(–corp-text);
-text-align: center;
-line-height: 1.05;
-letter-spacing: 0.05em;
-max-width: 88%;
-text-transform: uppercase;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px,6.5vw,82px);
+  font-weight: 700;
+  color: var(--corp-text);
+  text-align: center;
+  line-height: 1.05;
+  letter-spacing: 0.05em;
+  max-width: 88%;
+  text-transform: uppercase;
 }
 .slide-2.active .s2-word {
-display: inline-block;
-animation: word-rise 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  display: inline-block;
+  animation: word-rise 0.8s cubic-bezier(0.16,1,0.3,1) both;
 }
 .s2-word:nth-child(1) { animation-delay: 0.1s; }
 .s2-word:nth-child(2) { animation-delay: 0.25s; }
@@ -257,272 +256,272 @@ animation: word-rise 0.8s cubic-bezier(0.16,1,0.3,1) both;
 .s2-word:nth-child(4) { animation-delay: 0.55s; }
 .s2-word:nth-child(5) { animation-delay: 0.7s; }
 @keyframes word-rise {
-from { opacity:0; transform:translateY(40px) skewY(3deg); }
-to { opacity:1; transform:translateY(0) skewY(0); }
+  from { opacity:0; transform:translateY(40px) skewY(3deg); }
+  to { opacity:1; transform:translateY(0) skewY(0); }
 }
 
 /* ══════════════════════════════════
-SLIDE 3 — VALUES
+   SLIDE 3 — VALUES
 ══════════════════════════════════ */
 .slide-3 {
-background: var(–corp-bg);
-padding: clamp(16px,4vmin,60px);
+  background: var(--corp-bg);
+  padding: clamp(16px,4vmin,60px);
 }
 .slide-3::before {
-content: ‘’; position: absolute; inset: 0;
-border: 1.5px solid var(–corp-border);
-pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  border: 1.5px solid var(--corp-border);
+  pointer-events: none;
 }
 .s3-cols {
-display: flex;
-width: 100%; max-width: clamp(280px,90vw,1300px);
-gap: 0;
-flex-wrap: wrap;
+  display: flex;
+  width: 100%; max-width: clamp(280px,90vw,1300px);
+  gap: 0;
+  flex-wrap: wrap;
 }
 .s3-col {
-flex: 1 1 200px;
-display: flex; flex-direction: column;
-align-items: center;
-padding: clamp(20px,4vmin,60px) clamp(16px,3vw,40px);
-border-right: 1px solid rgba(107,155,184,0.2);
-opacity: 0;
+  flex: 1 1 200px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: clamp(20px,4vmin,60px) clamp(16px,3vw,40px);
+  border-right: 1px solid rgba(107,155,184,0.2);
+  opacity: 0;
 }
 .s3-col:last-child { border-right: none; }
 .slide-3.active .s3-col:nth-child(1) { animation: col-fade 0.8s ease 0.2s both; }
 .slide-3.active .s3-col:nth-child(2) { animation: col-fade 0.8s ease 0.5s both; }
 .slide-3.active .s3-col:nth-child(3) { animation: col-fade 0.8s ease 0.8s both; }
 @keyframes col-fade {
-from { opacity:0; transform:translateY(20px); }
-to { opacity:1; transform:translateY(0); }
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
 }
 .s3-icon {
-width: 2px; height: clamp(28px,5vmin,60px);
-background: linear-gradient(to bottom, transparent, var(–corp-accent));
-margin-bottom: clamp(14px,2.5vmin,32px);
+  width: 2px; height: clamp(28px,5vmin,60px);
+  background: linear-gradient(to bottom, transparent, var(--corp-accent));
+  margin-bottom: clamp(14px,2.5vmin,32px);
 }
 .s3-label {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(22px,3.5vw,52px);
-font-weight: 700;
-color: var(–corp-text);
-letter-spacing: 0.12em; text-transform: uppercase;
-text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px,3.5vw,52px);
+  font-weight: 700;
+  color: var(--corp-text);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-align: center;
 }
 .s3-detail {
-margin-top: clamp(8px,1.5vmin,14px);
-text-align: center;
-color: rgba(232,240,247,0.65);
-font-size: clamp(10px,1.1vw,14px);
-line-height: 1.45; max-width: 260px;
+  margin-top: clamp(8px,1.5vmin,14px);
+  text-align: center;
+  color: rgba(232,240,247,0.65);
+  font-size: clamp(10px,1.1vw,14px);
+  line-height: 1.45; max-width: 260px;
 }
 
 /* ══════════════════════════════════
-SLIDE 4 — PIPELINE
+   SLIDE 4 — PIPELINE
 ══════════════════════════════════ */
 .slide-4 {
-background: var(–corp-bg);
-flex-direction: column;
-gap: clamp(20px,4vmin,60px);
-padding: clamp(16px,3vmin,40px);
+  background: var(--corp-bg);
+  flex-direction: column;
+  gap: clamp(20px,4vmin,60px);
+  padding: clamp(16px,3vmin,40px);
 }
 .slide-4::before {
-content: ‘’; position: absolute; inset: 0;
-border: 1.5px solid var(–corp-border);
-pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  border: 1.5px solid var(--corp-border);
+  pointer-events: none;
 }
 .s4-pipeline {
-display: flex; align-items: center;
-gap: 0; width: 100%; max-width: clamp(280px,90vw,1400px);
-justify-content: center; flex-wrap: wrap;
+  display: flex; align-items: center;
+  gap: 0; width: 100%; max-width: clamp(280px,90vw,1400px);
+  justify-content: center; flex-wrap: wrap;
 }
 .s4-step {
-flex: 1 1 clamp(100px,18vw,240px);
-display: flex; flex-direction: column;
-align-items: center; gap: clamp(8px,1.5vmin,16px);
-opacity: 0; min-width: 0;
+  flex: 1 1 clamp(100px,18vw,240px);
+  display: flex; flex-direction: column;
+  align-items: center; gap: clamp(8px,1.5vmin,16px);
+  opacity: 0; min-width: 0;
 }
 .s4-arrow {
-width: clamp(16px,3vw,40px); height: 1px;
-background: var(–corp-accent); opacity: 1;
-flex-shrink: 0;
+  width: clamp(16px,3vw,40px); height: 1px;
+  background: var(--corp-accent); opacity: 1;
+  flex-shrink: 0;
 }
-.s4-node { width: 8px; height: 8px; background: var(–corp-accent); border-radius: 50%; }
+.s4-node { width: 8px; height: 8px; background: var(--corp-accent); border-radius: 50%; }
 .s4-label {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(16px,2.2vw,32px);
-font-weight: 600; color: var(–corp-text);
-letter-spacing: 0.1em; text-transform: uppercase;
-text-align: center; max-width: 100%;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px,2.2vw,32px);
+  font-weight: 600; color: var(--corp-text);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-align: center; max-width: 100%;
 }
 .slide-4.active .s4-step:nth-child(1) { animation: col-fade 0.6s ease 0.1s both; }
 .slide-4.active .s4-step:nth-child(3) { animation: col-fade 0.6s ease 0.4s both; }
 .slide-4.active .s4-step:nth-child(5) { animation: col-fade 0.6s ease 0.7s both; }
 .slide-4.active .s4-step:nth-child(7) { animation: col-fade 0.6s ease 1.0s both; }
 .s4-copy {
-width: 100%; max-width: clamp(280px,90vw,1400px);
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(min(140px,100%), 1fr));
-gap: clamp(8px,1.5vmin,18px);
+  width: 100%; max-width: clamp(280px,90vw,1400px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(140px,100%), 1fr));
+  gap: clamp(8px,1.5vmin,18px);
 }
 .s4-copy-card {
-border: 1px solid rgba(107,155,184,0.22);
-background: rgba(30,37,48,0.5);
-padding: clamp(10px,2vmin,16px);
-min-height: 0; opacity: 0; transform: translateY(10px);
+  border: 1px solid rgba(107,155,184,0.22);
+  background: rgba(30,37,48,0.5);
+  padding: clamp(10px,2vmin,16px);
+  min-height: 0; opacity: 0; transform: translateY(10px);
 }
 .slide-4.active .s4-copy-card:nth-child(1) { animation: col-fade 0.55s ease 0.25s both; }
 .slide-4.active .s4-copy-card:nth-child(2) { animation: col-fade 0.55s ease 0.45s both; }
 .slide-4.active .s4-copy-card:nth-child(3) { animation: col-fade 0.55s ease 0.65s both; }
 .slide-4.active .s4-copy-card:nth-child(4) { animation: col-fade 0.55s ease 0.85s both; }
 .s4-copy-title {
-color: var(–corp-accent);
-font: 600 10px ‘Share Tech Mono’, monospace;
-letter-spacing: 2px; margin-bottom: 6px;
+  color: var(--corp-accent);
+  font: 600 10px 'Share Tech Mono', monospace;
+  letter-spacing: 2px; margin-bottom: 6px;
 }
 .s4-copy-card p {
-color: rgba(232,240,247,0.88);
-font-size: clamp(10px,1.1vw,14px); line-height: 1.45;
+  color: rgba(232,240,247,0.88);
+  font-size: clamp(10px,1.1vw,14px); line-height: 1.45;
 }
 
 /* ══════════════════════════════════
-SYS SLIDES (5–11)
+   SYS SLIDES (5–11)
 ══════════════════════════════════ */
 .slide-sys {
-background: var(–sys-bg);
-align-items: flex-start;
+  background: var(--sys-bg);
+  align-items: flex-start;
 }
 .sys-content {
-position: relative; z-index: 2;
-width: 100%;
-max-width: clamp(300px,92vw,1200px);
-padding: clamp(20px,4vmin,60px) clamp(20px,4vw,60px);
+  position: relative; z-index: 2;
+  width: 100%;
+  max-width: clamp(300px,92vw,1200px);
+  padding: clamp(20px,4vmin,60px) clamp(20px,4vw,60px);
 }
 .sys-header {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,0.9vw,11px);
-color: rgba(0,212,255,0.38);
-letter-spacing: 3px; text-transform: uppercase;
-border-bottom: 1px solid rgba(0,212,255,0.12);
-padding-bottom: 12px; margin-bottom: clamp(20px,4vmin,48px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,0.9vw,11px);
+  color: rgba(0,212,255,0.38);
+  letter-spacing: 3px; text-transform: uppercase;
+  border-bottom: 1px solid rgba(0,212,255,0.12);
+  padding-bottom: 12px; margin-bottom: clamp(20px,4vmin,48px);
 }
 .sys-title {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(9px,1.2vw,13px);
-color: rgba(0,212,255,0.48); letter-spacing: 4px;
-text-transform: uppercase; margin-bottom: clamp(10px,2vmin,24px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1.2vw,13px);
+  color: rgba(0,212,255,0.48); letter-spacing: 4px;
+  text-transform: uppercase; margin-bottom: clamp(10px,2vmin,24px);
 }
 .sys-main {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(28px,5.5vw,72px);
-font-weight: 700; color: var(–sys-text);
-letter-spacing: 0.05em; text-transform: uppercase;
-line-height: 1.05;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(28px,5.5vw,72px);
+  font-weight: 700; color: var(--sys-text);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  line-height: 1.05;
 }
 .sys-sub {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(11px,1.5vw,18px);
-color: var(–sys-cyan); letter-spacing: 3px;
-margin-top: clamp(10px,2vmin,20px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(11px,1.5vw,18px);
+  color: var(--sys-cyan); letter-spacing: 3px;
+  margin-top: clamp(10px,2vmin,20px);
 }
 .sys-doc-note {
-margin-top: 10px; font: 10px ‘Share Tech Mono’;
-color: rgba(0,212,255,.4); letter-spacing: 2px;
+  margin-top: 10px; font: 10px 'Share Tech Mono'; 
+  color: rgba(0,212,255,.4); letter-spacing: 2px;
 }
 
 /* Slide 6 — Comparison */
 .s6-split {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 2px; width: 100%; margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px; width: 100%; margin-top: 12px;
 }
 @media (max-width: 680px) { .s6-split { grid-template-columns: 1fr; } }
 .s6-col { padding: clamp(16px,3vmin,40px); position: relative; }
 .s6-col-left { background: rgba(200,216,232,0.03); }
 .s6-col-right { background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.18); }
 .s6-col-header {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,0.9vw,11px); letter-spacing: 3px;
-text-transform: uppercase; margin-bottom: clamp(14px,2.5vmin,28px);
-padding-bottom: 12px; border-bottom: 1px solid rgba(200,216,232,0.1);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,0.9vw,11px); letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: clamp(14px,2.5vmin,28px);
+  padding-bottom: 12px; border-bottom: 1px solid rgba(200,216,232,0.1);
 }
 .s6-col-left .s6-col-header { color: rgba(200,216,232,0.35); }
-.s6-col-right .s6-col-header { color: var(–sys-cyan); }
+.s6-col-right .s6-col-header { color: var(--sys-cyan); }
 .s6-item {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(13px,1.8vw,22px); font-weight: 400;
-text-transform: uppercase; letter-spacing: 0.05em;
-margin-bottom: clamp(8px,1.5vmin,16px); line-height: 1.3;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(13px,1.8vw,22px); font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: clamp(8px,1.5vmin,16px); line-height: 1.3;
 }
 .s6-col-left .s6-item { color: rgba(200,216,232,0.45); }
-.s6-col-right .s6-item { color: var(–sys-text); }
+.s6-col-right .s6-item { color: var(--sys-text); }
 .s6-sub { font-size: clamp(10px,1.2vw,15px); opacity: 0.65; margin-bottom: clamp(10px,1.5vmin,16px); }
 
 /* Slide 7 — List */
 .sys-list { list-style: none; margin-top: 16px; }
 .sys-list li {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(12px,1.8vw,22px);
-color: var(–sys-text);
-padding: clamp(8px,1.5vmin,14px) 0;
-border-bottom: 1px solid rgba(0,212,255,0.07);
-letter-spacing: 3px; text-transform: uppercase;
-opacity: 0; transform: translateX(-10px);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(12px,1.8vw,22px);
+  color: var(--sys-text);
+  padding: clamp(8px,1.5vmin,14px) 0;
+  border-bottom: 1px solid rgba(0,212,255,0.07);
+  letter-spacing: 3px; text-transform: uppercase;
+  opacity: 0; transform: translateX(-10px);
 }
-.sys-list li::before { content: ’▸ ’; color: var(–sys-cyan); margin-right: 12px; }
+.sys-list li::before { content: '▸ '; color: var(--sys-cyan); margin-right: 12px; }
 .slide-sys.active .sys-list li:nth-child(1) { animation: list-in 0.5s ease 0.2s both; }
 .slide-sys.active .sys-list li:nth-child(2) { animation: list-in 0.5s ease 0.35s both; }
 .slide-sys.active .sys-list li:nth-child(3) { animation: list-in 0.5s ease 0.5s both; }
 .slide-sys.active .sys-list li:nth-child(4) { animation: list-in 0.5s ease 0.65s both; }
 .slide-sys.active .sys-list li:nth-child(5) { animation: list-in 0.5s ease 0.8s both; }
 @keyframes list-in {
-from { opacity:0; transform:translateX(-10px); }
-to { opacity:1; transform:translateX(0); }
+  from { opacity:0; transform:translateX(-10px); }
+  to { opacity:1; transform:translateX(0); }
 }
 
 /* Slide 8 — Low Status */
 .s8-small {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(9px,1.1vw,14px);
-color: rgba(200,216,232,0.22);
-letter-spacing: 3px; text-transform: uppercase;
-line-height: 1.8; margin-top: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1.1vw,14px);
+  color: rgba(200,216,232,0.22);
+  letter-spacing: 3px; text-transform: uppercase;
+  line-height: 1.8; margin-top: 20px;
 }
 
 /* Slide 8B — Classification Ladder */
 .s8b-ladder {
-display: flex; flex-direction: column;
-gap: clamp(8px,1.5vmin,14px);
-margin-top: clamp(12px,2vmin,24px);
-width: 100%; max-width: 1000px;
+  display: flex; flex-direction: column;
+  gap: clamp(8px,1.5vmin,14px);
+  margin-top: clamp(12px,2vmin,24px);
+  width: 100%; max-width: 1000px;
 }
 .s8b-rung {
-display: grid;
-grid-template-columns: clamp(60px,8vw,88px) 1fr;
-align-items: center; gap: 14px; opacity: 0;
+  display: grid;
+  grid-template-columns: clamp(60px,8vw,88px) 1fr;
+  align-items: center; gap: 14px; opacity: 0;
 }
 .s8b-rung-label {
-font: clamp(8px,0.9vw,11px) ‘Share Tech Mono’, monospace;
-color: rgba(200,216,232,0.7); letter-spacing: 2px; text-transform: uppercase;
+  font: clamp(8px,0.9vw,11px) 'Share Tech Mono', monospace;
+  color: rgba(200,216,232,0.7); letter-spacing: 2px; text-transform: uppercase;
 }
 .s8b-track {
-position: relative; height: clamp(18px,2.5vmin,26px);
-border: 1px solid rgba(255,255,255,0.08);
-background: rgba(255,255,255,0.03); overflow: hidden;
+  position: relative; height: clamp(18px,2.5vmin,26px);
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03); overflow: hidden;
 }
 .s8b-fill {
-height: 100%; display: flex; align-items: center;
-justify-content: flex-end; padding-right: 10px;
-font: 700 clamp(8px,0.9vw,11px) ‘Share Tech Mono’, monospace;
-letter-spacing: 1px; color: rgba(5,8,16,0.9); text-transform: uppercase;
+  height: 100%; display: flex; align-items: center;
+  justify-content: flex-end; padding-right: 10px;
+  font: 700 clamp(8px,0.9vw,11px) 'Share Tech Mono', monospace;
+  letter-spacing: 1px; color: rgba(5,8,16,0.9); text-transform: uppercase;
 }
 .s8b-fill.level-1 { width: 99%; background: linear-gradient(90deg,#8d949d,#646c77); color:#f2f5f8; }
 .s8b-fill.level-2 { width: 75%; background: linear-gradient(90deg,#b8bdc4,#8f97a3); color:#0b1017; }
 .s8b-fill.level-3 { width: 50%; background: linear-gradient(90deg,#00d4ff,#00f0ff); color:#041018; }
 .s8b-fill.level-4 { width: 25%; background: linear-gradient(90deg,#ff2d55,#ff546f); color:#13060a; }
 .s8b-status {
-margin-top: 16px; font: 11px ‘Share Tech Mono’, monospace;
-letter-spacing: 4px; text-transform: uppercase;
-color: var(–sys-cyan); text-align: center;
+  margin-top: 16px; font: 11px 'Share Tech Mono', monospace;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--sys-cyan); text-align: center;
 }
 .slide-sys.active .s8b-rung:nth-child(1) { animation: list-in 0.5s ease 0.1s both; }
 .slide-sys.active .s8b-rung:nth-child(2) { animation: list-in 0.5s ease 0.3s both; }
@@ -531,49 +530,49 @@ color: var(–sys-cyan); text-align: center;
 
 /* Slide 9 — Alert */
 .s9-alert {
-border: 1px solid rgba(255,45,85,0.45);
-padding: clamp(20px,4vmin,40px) clamp(20px,5vw,60px);
-position: relative; background: rgba(255,45,85,0.04);
-max-width: 800px;
+  border: 1px solid rgba(255,45,85,0.45);
+  padding: clamp(20px,4vmin,40px) clamp(20px,5vw,60px);
+  position: relative; background: rgba(255,45,85,0.04);
+  max-width: 800px;
 }
 .s9-trigger-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(9px,1vw,11px); color: var(–sys-red);
-letter-spacing: 4px; margin-bottom: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1vw,11px); color: var(--sys-red);
+  letter-spacing: 4px; margin-bottom: 20px;
 }
 .s9-alert-text {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(24px,5vw,64px); font-weight: 800;
-color: var(–corp-text); text-transform: uppercase;
-letter-spacing: 0.06em; animation: glitch 4s infinite;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(24px,5vw,64px); font-weight: 800;
+  color: var(--corp-text); text-transform: uppercase;
+  letter-spacing: 0.06em; animation: glitch 4s infinite;
 }
 .s9-blink {
-width: 8px; height: 8px; background: var(–sys-red); border-radius: 50%;
-position: absolute; top: 20px; right: 20px;
-animation: blink 1s infinite;
+  width: 8px; height: 8px; background: var(--sys-red); border-radius: 50%;
+  position: absolute; top: 20px; right: 20px;
+  animation: blink 1s infinite;
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 @keyframes glitch {
-0%,95%,100%{transform:translate(0);clip-path:none}
-96%{transform:translate(-2px,1px);clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
-97%{transform:translate(2px,-1px);clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%)}
-98%{transform:translate(0);clip-path:none}
+  0%,95%,100%{transform:translate(0);clip-path:none}
+  96%{transform:translate(-2px,1px);clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
+  97%{transform:translate(2px,-1px);clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%)}
+  98%{transform:translate(0);clip-path:none}
 }
 
 /* Slide 10 — Dehumanisation */
 .s10-pipeline {
-display: flex; align-items: center;
-gap: clamp(8px,1.5vw,16px); flex-wrap: wrap;
+  display: flex; align-items: center;
+  gap: clamp(8px,1.5vw,16px); flex-wrap: wrap;
 }
 .s10-word {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(22px,4.5vw,64px); font-weight: 700;
-color: var(–sys-text); letter-spacing: 0.06em; text-transform: uppercase;
-opacity: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px,4.5vw,64px); font-weight: 700;
+  color: var(--sys-text); letter-spacing: 0.06em; text-transform: uppercase;
+  opacity: 0;
 }
 .s10-arrow {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(16px,2vw,24px); color: var(–sys-cyan); opacity: 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(16px,2vw,24px); color: var(--sys-cyan); opacity: 0;
 }
 .slide-sys.active .s10-word:nth-child(1) { animation: word-fade 0.6s ease 0.1s both; }
 .slide-sys.active .s10-arrow:nth-child(2) { animation: word-fade 0.4s ease 0.4s both; }
@@ -581,246 +580,246 @@ font-size: clamp(16px,2vw,24px); color: var(–sys-cyan); opacity: 0;
 .slide-sys.active .s10-arrow:nth-child(4) { animation: word-fade 0.4s ease 0.9s both; }
 .slide-sys.active .s10-word:nth-child(5) { animation: word-fade 0.6s ease 1.1s both; }
 .slide-sys.active .s10-arrow:nth-child(6) { animation: word-fade 0.4s ease 1.4s both; }
-.slide-sys.active .s10-word:nth-child(7) { animation: word-fade 0.6s ease 1.6s both; color: var(–sys-red); }
+.slide-sys.active .s10-word:nth-child(7) { animation: word-fade 0.6s ease 1.6s both; color: var(--sys-red); }
 @keyframes word-fade { from{opacity:0} to{opacity:1} }
 
 /* Slide 11 — Truth */
 .s11-headline {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(42px,9vw,120px); font-weight: 800;
-color: var(–corp-text); text-transform: uppercase;
-letter-spacing: -0.01em; line-height: 0.92;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(42px,9vw,120px); font-weight: 800;
+  color: var(--corp-text); text-transform: uppercase;
+  letter-spacing: -0.01em; line-height: 0.92;
 }
-.s11-eq { color: var(–sys-red); }
+.s11-eq { color: var(--sys-red); }
 .s11-sub {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.35);
-letter-spacing: 4px; margin-top: 28px; text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.35);
+  letter-spacing: 4px; margin-top: 28px; text-transform: uppercase;
 }
 
 /* Redacted strip */
 .redacted-strip { margin-top:18px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 .redacted-file { border:1px solid rgba(255,45,85,.28); background:rgba(255,45,85,.07); padding:10px; min-height:68px; }
 .redacted-line { height:8px; background:linear-gradient(90deg,#000 20%,#300); margin:6px 0; }
-.redacted-file::after { content:“CLASSIFIED”; display:block; font:9px ‘Share Tech Mono’; letter-spacing:2px; color:rgba(255,45,85,.6); margin-top:8px; }
+.redacted-file::after { content:"CLASSIFIED"; display:block; font:9px 'Share Tech Mono'; letter-spacing:2px; color:rgba(255,45,85,.6); margin-top:8px; }
 
 /* ══════════════════════════════════
-SLIDE 12 — MAP (REDESIGNED)
+   SLIDE 12 — MAP (REDESIGNED)
 ══════════════════════════════════ */
 .slide-12 {
-background: #050810;
-overflow: hidden; flex-direction: column;
+  background: #050810;
+  overflow: hidden; flex-direction: column;
 }
 .map-cinema-wrap {
-position: absolute; inset: 0;
-display: flex; flex-direction: column;
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
 }
 .map-header-bar {
-position: absolute; top: 0; left: 0; right: 0;
-height: clamp(40px,7vmin,64px); z-index: 10;
-background: linear-gradient(to bottom, rgba(5,8,16,0.95), transparent);
-display: flex; align-items: center;
-padding: 0 clamp(12px,2.5vw,32px);
-gap: 16px;
+  position: absolute; top: 0; left: 0; right: 0;
+  height: clamp(40px,7vmin,64px); z-index: 10;
+  background: linear-gradient(to bottom, rgba(5,8,16,0.95), transparent);
+  display: flex; align-items: center;
+  padding: 0 clamp(12px,2.5vw,32px);
+  gap: 16px;
 }
 .map-header-title {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.7);
-letter-spacing: 3px; text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.7);
+  letter-spacing: 3px; text-transform: uppercase;
 }
 .map-header-tag {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(7px,0.8vw,9px); color: rgba(255,45,85,0.6);
-letter-spacing: 2px; text-transform: uppercase;
-border: 1px solid rgba(255,45,85,0.3); padding: 2px 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(7px,0.8vw,9px); color: rgba(255,45,85,0.6);
+  letter-spacing: 2px; text-transform: uppercase;
+  border: 1px solid rgba(255,45,85,0.3); padding: 2px 8px;
 }
 /* SVG World Map */
 #world-svg-map {
-position: absolute; inset: 0;
-width: 100%; height: 100%;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
 }
 .map-land {
-fill: rgba(107,155,184,0.10);
-stroke: rgba(0,212,255,0.35);
-stroke-width: 0.5;
+  fill: rgba(107,155,184,0.10);
+  stroke: rgba(0,212,255,0.35);
+  stroke-width: 0.5;
 }
 .map-node-dot {
-fill: var(–sys-cyan); r: 4;
-filter: drop-shadow(0 0 6px var(–sys-cyan));
-animation: node-pulse 2.5s ease-in-out infinite;
+  fill: var(--sys-cyan); r: 4;
+  filter: drop-shadow(0 0 6px var(--sys-cyan));
+  animation: node-pulse 2.5s ease-in-out infinite;
 }
-.map-node-dot.red { fill: var(–sys-red); filter: drop-shadow(0 0 6px var(–sys-red)); }
-.map-node-dot.gold { fill: var(–sys-gold); filter: drop-shadow(0 0 6px var(–sys-gold)); }
+.map-node-dot.red { fill: var(--sys-red); filter: drop-shadow(0 0 6px var(--sys-red)); }
+.map-node-dot.gold { fill: var(--sys-gold); filter: drop-shadow(0 0 6px var(--sys-gold)); }
 @keyframes node-pulse {
-0%,100% { opacity: 1; r: 4; }
-50% { opacity: 0.6; r: 5.5; }
+  0%,100% { opacity: 1; r: 4; }
+  50% { opacity: 0.6; r: 5.5; }
 }
 .map-node-ring {
-fill: none; stroke-width: 1;
-animation: ring-expand 2.5s ease-out infinite;
+  fill: none; stroke-width: 1;
+  animation: ring-expand 2.5s ease-out infinite;
 }
-.map-node-ring.cyan { stroke: var(–sys-cyan); }
-.map-node-ring.red { stroke: var(–sys-red); }
-.map-node-ring.gold { stroke: var(–sys-gold); }
+.map-node-ring.cyan { stroke: var(--sys-cyan); }
+.map-node-ring.red { stroke: var(--sys-red); }
+.map-node-ring.gold { stroke: var(--sys-gold); }
 @keyframes ring-expand {
-0% { r: 5; opacity: 0.7; }
-100% { r: 18; opacity: 0; }
+  0% { r: 5; opacity: 0.7; }
+  100% { r: 18; opacity: 0; }
 }
 .map-conn-line {
-fill: none; stroke-width: 1;
-stroke-dasharray: 6 4;
-animation: dash-flow 3s linear infinite;
+  fill: none; stroke-width: 1;
+  stroke-dasharray: 6 4;
+  animation: dash-flow 3s linear infinite;
 }
 .map-conn-line.cyan { stroke: rgba(0,212,255,0.35); }
 .map-conn-line.red { stroke: rgba(255,45,85,0.5); }
 .map-conn-line.gold { stroke: rgba(240,180,41,0.45); }
 @keyframes dash-flow { to { stroke-dashoffset: -30; } }
 .map-node-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 9px; fill: rgba(200,220,240,0.85);
-letter-spacing: 1.5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px; fill: rgba(200,220,240,0.85);
+  letter-spacing: 1.5px;
 }
 .map-node-sublabel {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 7.5px; fill: rgba(150,180,200,0.5);
-letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7.5px; fill: rgba(150,180,200,0.5);
+  letter-spacing: 1px;
 }
 /* Bottom legend strip */
 .map-legend {
-position: absolute; bottom: 0; left: 0; right: 0;
-height: clamp(36px,7vmin,56px); z-index: 10;
-background: linear-gradient(to top, rgba(5,8,16,0.95), transparent);
-display: flex; align-items: center;
-padding: 0 clamp(12px,2.5vw,32px);
-gap: clamp(12px,2vw,28px);
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: clamp(36px,7vmin,56px); z-index: 10;
+  background: linear-gradient(to top, rgba(5,8,16,0.95), transparent);
+  display: flex; align-items: center;
+  padding: 0 clamp(12px,2.5vw,32px);
+  gap: clamp(12px,2vw,28px);
 }
 .map-leg-item {
-display: flex; align-items: center; gap: 7px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(7px,0.8vw,9px); color: rgba(200,220,240,0.7);
-letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(7px,0.8vw,9px); color: rgba(200,220,240,0.7);
+  letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
 }
 .map-leg-line { width: 18px; height: 2px; }
 .map-leg-dot { width: 8px; height: 8px; border-radius: 50%; }
 /* Side info panel */
 .map-info-panel {
-position: absolute; top: clamp(44px,8vmin,72px); left: clamp(10px,2vw,24px);
-z-index: 10;
-width: min(clamp(180px,26vw,300px), 90vw);
-border: 1px solid rgba(107,155,184,0.28);
-background: rgba(5,8,16,0.82); backdrop-filter: blur(10px);
-padding: clamp(8px,1.5vmin,12px);
-color: rgba(232,240,247,0.88);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(7px,0.8vw,10px); line-height: 1.6; letter-spacing: 1px;
-max-height: 55vh; overflow: auto;
+  position: absolute; top: clamp(44px,8vmin,72px); left: clamp(10px,2vw,24px);
+  z-index: 10;
+  width: min(clamp(180px,26vw,300px), 90vw);
+  border: 1px solid rgba(107,155,184,0.28);
+  background: rgba(5,8,16,0.82); backdrop-filter: blur(10px);
+  padding: clamp(8px,1.5vmin,12px);
+  color: rgba(232,240,247,0.88);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(7px,0.8vw,10px); line-height: 1.6; letter-spacing: 1px;
+  max-height: 55vh; overflow: auto;
 }
 .map-labour-types {
-position: absolute; bottom: clamp(40px,8vmin,64px); left: clamp(10px,2vw,24px);
-z-index: 10;
-display: flex; flex-wrap: wrap; gap: 6px;
-max-width: min(400px,90vw);
+  position: absolute; bottom: clamp(40px,8vmin,64px); left: clamp(10px,2vw,24px);
+  z-index: 10;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  max-width: min(400px,90vw);
 }
 .labour-tag {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(7px,0.8vw,10px);
-color: rgba(255,45,85,0.7); letter-spacing: 2px; text-transform: uppercase;
-border: 1px solid rgba(255,45,85,0.28); padding: 4px 10px;
-white-space: nowrap;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(7px,0.8vw,10px);
+  color: rgba(255,45,85,0.7); letter-spacing: 2px; text-transform: uppercase;
+  border: 1px solid rgba(255,45,85,0.28); padding: 4px 10px;
+  white-space: nowrap;
 }
 
 /* ══════════════════════════════════
-SLIDE 13 — CONNECTION REVEAL
+   SLIDE 13 — CONNECTION REVEAL
 ══════════════════════════════════ */
 .slide-13 {
-background: var(–sys-bg);
-flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  background: var(--sys-bg);
+  flex-direction: column; align-items: center; justify-content: center; gap: 0;
 }
 .slide-13::before {
-content: ‘’; position: absolute; inset: 0;
-background-image:
-linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
-background-size: 60px 60px; pointer-events: none;
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px; pointer-events: none;
 }
 .s13-logos {
-display: flex; align-items: center;
-gap: clamp(20px,4vw,40px); margin: clamp(10px,2vmin,20px) 0;
-flex-wrap: wrap; justify-content: center;
+  display: flex; align-items: center;
+  gap: clamp(20px,4vw,40px); margin: clamp(10px,2vmin,20px) 0;
+  flex-wrap: wrap; justify-content: center;
 }
 .s13-logo {
-width: clamp(48px,8vmin,80px); height: clamp(48px,8vmin,80px);
-object-fit: contain; opacity: 0;
+  width: clamp(48px,8vmin,80px); height: clamp(48px,8vmin,80px);
+  object-fit: contain; opacity: 0;
 }
 .slide-13.active .s13-logo:nth-child(1) { animation: col-fade 0.6s ease 0.3s both; }
 .slide-13.active .s13-logo:nth-child(3) { animation: col-fade 0.6s ease 0.6s both; }
 .s13-plus {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(32px,5vw,60px);
-color: var(–corp-accent); font-weight: 300;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px,5vw,60px);
+  color: var(--corp-accent); font-weight: 300;
 }
 .s13-entity {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(20px,4.5vw,72px); font-weight: 700;
-color: var(–corp-text); letter-spacing: 0.1em;
-text-transform: uppercase; text-align: center;
-max-width: 92%;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px,4.5vw,72px); font-weight: 700;
+  color: var(--corp-text); letter-spacing: 0.1em;
+  text-transform: uppercase; text-align: center;
+  max-width: 92%;
 }
 .s13-connector { margin-top: clamp(20px,4vmin,48px); text-align: center; }
 .s13-connector-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.38);
-letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,11px); color: rgba(0,212,255,0.38);
+  letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;
 }
 .s13-line {
-width: 1px; height: clamp(30px,6vmin,60px);
-background: linear-gradient(to bottom, transparent, var(–sys-gold), transparent);
-margin: 0 auto 12px; opacity: 0;
+  width: 1px; height: clamp(30px,6vmin,60px);
+  background: linear-gradient(to bottom, transparent, var(--sys-gold), transparent);
+  margin: 0 auto 12px; opacity: 0;
 }
 .slide-13.active .s13-line { animation: col-fade 0.5s ease 1.0s both; }
 .s13-investor {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(14px,2vw,28px); font-weight: 700;
-color: var(–sys-gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(14px,2vw,28px); font-weight: 700;
+  color: var(--sys-gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0;
 }
 .slide-13.active .s13-investor { animation: col-fade 0.8s ease 1.2s both; }
 
 /* ══════════════════════════════════
-SLIDE 14 — MEDIA WALL
+   SLIDE 14 — MEDIA WALL
 ══════════════════════════════════ */
 .slide-14 { background: #0d0d0d; overflow: hidden; flex-direction: column; }
 .media-conversation {
-position: absolute; left: clamp(10px,2vw,18px); top: clamp(10px,2vmin,18px);
-z-index: 20; display: grid; gap: 8px;
-align-content: start;
-max-height: min(54vh,460px);
-width: min(clamp(160px,32vw,500px), 90vw);
-padding: 12px; border: 1px solid rgba(255,255,255,.18);
-border-radius: 16px;
-background: linear-gradient(160deg,rgba(40,48,67,.56),rgba(10,16,28,.78));
-backdrop-filter: blur(16px) saturate(140%);
-box-shadow: 0 20px 52px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.2);
-overflow: hidden;
+  position: absolute; left: clamp(10px,2vw,18px); top: clamp(10px,2vmin,18px);
+  z-index: 20; display: grid; gap: 8px;
+  align-content: start;
+  max-height: min(54vh,460px);
+  width: min(clamp(160px,32vw,500px), 90vw);
+  padding: 12px; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  background: linear-gradient(160deg,rgba(40,48,67,.56),rgba(10,16,28,.78));
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 20px 52px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.2);
+  overflow: hidden;
 }
 .media-conversation::before {
-content: ‘# ops-board  •  live’;
-font: 700 9px ‘Share Tech Mono’; letter-spacing: 2px;
-color: rgba(186,215,255,.7); padding-bottom: 8px;
-border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 4px;
+  content: '# ops-board  •  live';
+  font: 700 9px 'Share Tech Mono'; letter-spacing: 2px;
+  color: rgba(186,215,255,.7); padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 4px;
 }
 .msg {
-display: grid; gap: 4px; max-width: 100%;
-padding: 9px 11px; border: 1px solid rgba(255,255,255,.16);
-border-radius: 12px;
-background: linear-gradient(140deg,rgba(43,54,76,.6),rgba(24,31,45,.6));
-backdrop-filter: blur(8px); opacity: 0;
-animation: msg-loop 12s linear infinite;
+  display: grid; gap: 4px; max-width: 100%;
+  padding: 9px 11px; border: 1px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  background: linear-gradient(140deg,rgba(43,54,76,.6),rgba(24,31,45,.6));
+  backdrop-filter: blur(8px); opacity: 0;
+  animation: msg-loop 12s linear infinite;
 }
-.msg-name { font: 9px ‘Share Tech Mono’; letter-spacing: 1.8px; color: #9ddcff; text-transform: uppercase; }
+.msg-name { font: 9px 'Share Tech Mono'; letter-spacing: 1.8px; color: #9ddcff; text-transform: uppercase; }
 .msg-text {
-font: clamp(9px,1vw,12px) ‘Share Tech Mono’; line-height: 1.45; color: #ecf4ff;
-white-space: nowrap; overflow: hidden; width: 0;
-animation: typing 12s steps(72,end) infinite;
+  font: clamp(9px,1vw,12px) 'Share Tech Mono'; line-height: 1.45; color: #ecf4ff;
+  white-space: nowrap; overflow: hidden; width: 0;
+  animation: typing 12s steps(72,end) infinite;
 }
 .msg-in { border-color: rgba(0,212,255,.42); }
 .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:3s}.msg:nth-child(3){animation-delay:6s}.msg:nth-child(4){animation-delay:9s}
@@ -829,165 +828,162 @@ animation: typing 12s steps(72,end) infinite;
 @keyframes typing{0%,9%{width:0}20%,32%{width:100%}100%{width:100%}}
 
 .media-wall {
-position: absolute; inset: 0;
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-grid-template-rows: repeat(3, 1fr);
-gap: 2px; padding: 2px;
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px; padding: 2px;
 }
 @media (max-width: 700px) {
-.media-wall { grid-template-columns: 1fr 1fr; }
+  .media-wall { grid-template-columns: 1fr 1fr; }
 }
 .headline-cell {
-background: radial-gradient(circle at 80% 12%, rgba(255,45,85,.07), rgba(16,16,16,.97));
-display: flex; align-items: center; justify-content: center;
-padding: clamp(12px,2vmin,20px);
-border: 1px solid rgba(255,45,85,0.08);
-position: relative; overflow: hidden;
+  background: radial-gradient(circle at 80% 12%, rgba(255,45,85,.07), rgba(16,16,16,.97));
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(12px,2vmin,20px);
+  border: 1px solid rgba(255,45,85,0.08);
+  position: relative; overflow: hidden;
 }
 .headline-cell::before {
-content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-background: var(–sys-red); transform: scaleX(0); transform-origin: left;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--sys-red); transform: scaleX(0); transform-origin: left;
 }
 .headline-cell.active-cell::before { animation: bar-grow 0.6s ease both; }
 @keyframes bar-grow { from{transform:scaleX(0)} to{transform:scaleX(1)} }
 .headline-text {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(11px,1.4vw,18px); font-weight: 600;
-color: #ddd; text-transform: uppercase;
-letter-spacing: 0.02em; line-height: 1.2; text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(11px,1.4vw,18px); font-weight: 600;
+  color: #ddd; text-transform: uppercase;
+  letter-spacing: 0.02em; line-height: 1.2; text-align: center;
 }
 .headline-source {
-position: absolute; bottom: 6px; left: 10px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(6px,0.7vw,9px); color: rgba(255,45,85,0.45);
-letter-spacing: 2px; text-transform: uppercase;
+  position: absolute; bottom: 6px; left: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(6px,0.7vw,9px); color: rgba(255,45,85,0.45);
+  letter-spacing: 2px; text-transform: uppercase;
 }
 .headline-sponsor {
-position: absolute; top: 8px; right: 8px;
-width: clamp(16px,2.5vmin,22px); height: clamp(16px,2.5vmin,22px);
-opacity: .75; filter: drop-shadow(0 0 4px rgba(255,45,85,.3));
+  position: absolute; top: 8px; right: 8px;
+  width: clamp(16px,2.5vmin,22px); height: clamp(16px,2.5vmin,22px);
+  opacity: .75; filter: drop-shadow(0 0 4px rgba(255,45,85,.3));
 }
 .social-chip {
-position: absolute; top: 14px; right: 16px;
-font: 9px ‘Share Tech Mono’; color: #ff6c86; letter-spacing: 2px;
+  position: absolute; top: 14px; right: 16px;
+  font: 9px 'Share Tech Mono'; color: #ff6c86; letter-spacing: 2px;
 }
 .media-overlay-text {
-position: absolute; bottom: clamp(8px,2vmin,16px); left: 50%;
-transform: translateX(-50%);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(9px,1vw,11px); color: rgba(255,45,85,0.45);
-letter-spacing: 6px; text-transform: uppercase;
-z-index: 10; white-space: nowrap;
+  position: absolute; bottom: clamp(8px,2vmin,16px); left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1vw,11px); color: rgba(255,45,85,0.45);
+  letter-spacing: 6px; text-transform: uppercase;
+  z-index: 10; white-space: nowrap;
 }
 
 /* ══════════════════════════════════
-SLIDE 15 — PERSONAL STORIES
+   SLIDE 15 — PERSONAL STORIES
 ══════════════════════════════════ */
 .slide-15 {
-background: #0f0e0c; padding: clamp(20px,4vmin,60px);
-align-items: flex-start; flex-direction: column;
-gap: clamp(16px,3vmin,40px);
+  background: #0f0e0c; padding: clamp(20px,4vmin,60px);
+  align-items: flex-start; flex-direction: column;
+  gap: clamp(16px,3vmin,40px);
 }
 .s15-header {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,11px); color: rgba(200,180,150,0.35);
-letter-spacing: 4px; text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,11px); color: rgba(200,180,150,0.35);
+  letter-spacing: 4px; text-transform: uppercase;
 }
 .s15-profiles {
-display: flex; gap: clamp(20px,4vw,60px);
-width: 100%; align-items: flex-start; flex-wrap: wrap;
+  display: flex; gap: clamp(20px,4vw,60px);
+  width: 100%; align-items: flex-start; flex-wrap: wrap;
 }
 .s15-profile {
-flex: 1 1 clamp(140px,26%,280px);
-display: flex; flex-direction: column; gap: clamp(8px,1.5vmin,16px);
+  flex: 1 1 clamp(140px,26%,280px);
+  display: flex; flex-direction: column; gap: clamp(8px,1.5vmin,16px);
 }
 .s15-photo-placeholder {
-width: 100%; height: clamp(120px,22vmin,280px);
-background: linear-gradient(135deg, #1a1a18, #2a2a26);
-border-left: 2px solid rgba(200,180,150,0.28);
-display: flex; align-items: center; justify-content: center;
+  width: 100%; height: clamp(120px,22vmin,280px);
+  background: linear-gradient(135deg, #1a1a18, #2a2a26);
+  border-left: 2px solid rgba(200,180,150,0.28);
+  display: flex; align-items: center; justify-content: center;
 }
 .s15-photo-placeholder span {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(8px,1vw,10px); color: rgba(200,180,150,0.18); letter-spacing: 3px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(8px,1vw,10px); color: rgba(200,180,150,0.18); letter-spacing: 3px;
 }
 .s15-name {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(16px,2.2vw,30px); font-weight: 600;
-color: #d4c8b4; letter-spacing: 0.05em; text-transform: uppercase;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px,2.2vw,30px); font-weight: 600;
+  color: #d4c8b4; letter-spacing: 0.05em; text-transform: uppercase;
 }
 .s15-caption {
-font-family: ‘Barlow Condensed’, sans-serif;
-font-size: clamp(11px,1.3vw,16px); font-weight: 400;
-color: rgba(200,180,150,0.55); line-height: 1.4;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(11px,1.3vw,16px); font-weight: 400;
+  color: rgba(200,180,150,0.55); line-height: 1.4;
 }
 .upload-panel { margin-top: clamp(10px,2vmin,20px); border: 1px dashed rgba(200,180,150,.35); padding: 12px; }
-.upload-panel label { display:block; font:11px ‘Share Tech Mono’; letter-spacing:2px; color:rgba(212,200,180,.65); margin-bottom:8px; }
+.upload-panel label { display:block; font:11px 'Share Tech Mono'; letter-spacing:2px; color:rgba(212,200,180,.65); margin-bottom:8px; }
 .upload-panel input { width:100%; color:#d4c8b4; background:#181614; border:1px solid rgba(200,180,150,.2); padding:8px; }
 
 /* ══════════════════════════════════
-SLIDE 16 — DEFIANT
+   SLIDE 16 — DEFIANT
 ══════════════════════════════════ */
 .slide-16 {
-background: #000;
-flex-direction: column; align-items: center; justify-content: center;
+  background: #000;
+  flex-direction: column; align-items: center; justify-content: center;
 }
 .s16-text {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(48px,10vw,130px); font-weight: 700;
-color: #fff; text-align: center; line-height: 1.0;
-letter-spacing: -0.01em; text-transform: uppercase;
-animation: flicker 6s infinite;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px,10vw,130px); font-weight: 700;
+  color: #fff; text-align: center; line-height: 1.0;
+  letter-spacing: -0.01em; text-transform: uppercase;
+  animation: flicker 6s infinite;
 }
 .s16-slash {
-color: rgba(255,255,255,0.12);
-text-decoration: line-through;
-text-decoration-color: var(–sys-red);
-text-decoration-thickness: 3px;
+  color: rgba(255,255,255,0.12);
+  text-decoration: line-through;
+  text-decoration-color: var(--sys-red);
+  text-decoration-thickness: 3px;
 }
 @keyframes flicker {
-0%,98%,100%{opacity:1} 99%{opacity:0.84}
+  0%,98%,100%{opacity:1} 99%{opacity:0.84}
 }
 .s16-subtext {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: clamp(9px,1.1vw,11px); color: rgba(255,255,255,0.2);
-letter-spacing: 6px; text-transform: uppercase;
-margin-top: clamp(20px,4vmin,36px); text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1.1vw,11px); color: rgba(255,255,255,0.2);
+  letter-spacing: 6px; text-transform: uppercase;
+  margin-top: clamp(20px,4vmin,36px); text-align: center;
 }
 
 /* ══════════════════════════════════
-RESPONSIVE OVERRIDES
+   RESPONSIVE OVERRIDES
 ══════════════════════════════════ */
 @media (max-width: 900px) {
-.s3-cols { flex-direction: column; max-width: min(95vw,520px); }
-.s3-col { border-right: none; border-bottom: 1px solid rgba(107,155,184,0.18); }
-.s3-col:last-child { border-bottom: none; }
-.s4-pipeline { display: grid; grid-template-columns: repeat(2,1fr); }
-.s4-arrow { display: none; }
-.s4-step { opacity: 1 !important; animation: none !important; }
-.map-info-panel { display: none; }
-.media-conversation { width: min(90vw,360px); }
-.s15-profiles { flex-direction: column; }
+  .s3-cols { flex-direction: column; max-width: min(95vw,520px); }
+  .s3-col { border-right: none; border-bottom: 1px solid rgba(107,155,184,0.18); }
+  .s3-col:last-child { border-bottom: none; }
+  .s4-pipeline { display: grid; grid-template-columns: repeat(2,1fr); }
+  .s4-arrow { display: none; }
+  .s4-step { opacity: 1 !important; animation: none !important; }
+  .map-info-panel { display: none; }
+  .media-conversation { width: min(90vw,360px); }
+  .s15-profiles { flex-direction: column; }
 }
 @media (max-width: 600px) {
-.s4-copy { grid-template-columns: 1fr; }
-.media-conversation { display: none; }
-.map-labour-types { flex-direction: column; }
-.s16-text { font-size: clamp(36px,14vw,80px); }
+  .s4-copy { grid-template-columns: 1fr; }
+  .media-conversation { display: none; }
+  .map-labour-types { flex-direction: column; }
+  .s16-text { font-size: clamp(36px,14vw,80px); }
 }
 </style>
-
 </head>
 <body>
 
 <!-- LETTERBOX -->
-
 <div class="letterbox-top"></div>
 <div class="letterbox-bot"></div>
 
 <!-- CHROME -->
-
 <div id="phase-label">PHASE 01 — CORPORATE</div>
 <div id="slide-counter">01 / 16</div>
 <div id="key-hint">← → · SWIPE · CLICK</div>
@@ -1000,14 +996,12 @@ RESPONSIVE OVERRIDES
 <div id="slideshow">
 
 <!-- ─── SLIDE 1 — BRAND ─────────────────── -->
-
 <div class="slide slide-1 active" data-slide="1" data-phase="PHASE 01 — CORPORATE">
   <div class="s1-title">PROVIDENTIA</div>
   <div class="s1-subtitle">Predictive Security for National Stability</div>
 </div>
 
 <!-- ─── SLIDE 2 — MANIFESTO ─────────────── -->
-
 <div class="slide slide-2" data-slide="2" data-phase="PHASE 01 — CORPORATE">
   <div class="s2-text">
     <span class="s2-word">IDENTIFYING&nbsp;</span>
@@ -1019,7 +1013,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 3 — VALUES ─────────────────── -->
-
 <div class="slide slide-3" data-slide="3" data-phase="PHASE 01 — CORPORATE">
   <div class="s3-cols">
     <div class="s3-col">
@@ -1041,7 +1034,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 4 — PIPELINE ──────────────── -->
-
 <div class="slide slide-4" data-slide="4" data-phase="PHASE 01 — CORPORATE">
   <div class="s4-pipeline">
     <div class="s4-step">
@@ -1085,7 +1077,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 5 — MECHANISM ─────────────── -->
-
 <div class="slide slide-sys" data-slide="5" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1104,7 +1095,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 6 — COMPARISON ────────────── -->
-
 <div class="slide slide-sys" data-slide="6" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1129,7 +1119,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 7 — TARGET GROUP ──────────── -->
-
 <div class="slide slide-sys" data-slide="7" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1147,7 +1136,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 8 — LOW STATUS ────────────── -->
-
 <div class="slide slide-sys" data-slide="8" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1159,7 +1147,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 9 — ESCALATION LADDER ────── -->
-
 <div class="slide slide-sys" data-slide="9" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1176,7 +1163,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 10 — ALERT ─────────────────── -->
-
 <div class="slide slide-sys" data-slide="10" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1192,7 +1178,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 11 — DEHUMANISATION ──────── -->
-
 <div class="slide slide-sys" data-slide="11" data-phase="PHASE 02 — SYSTEM INTERIOR">
   <div class="scanlines"></div>
   <div class="grid-bg"></div>
@@ -1213,7 +1198,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 11B — TRUTH ─────────────── -->
-
 <div class="slide slide-sys" data-slide="12" data-phase="PHASE 03 — EXPOSURE">
   <div class="scanlines"></div>
   <div class="sys-content" style="display:flex;flex-direction:column;justify-content:center;height:100%;padding-top:0;">
@@ -1227,7 +1211,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 12 — MAP ───────────────────── -->
-
 <div class="slide slide-12" data-slide="13" data-phase="PHASE 03 — EXPOSURE">
   <div class="map-cinema-wrap">
     <!-- Header bar -->
@@ -1236,185 +1219,181 @@ RESPONSIVE OVERRIDES
       <div class="map-header-tag">CLASSIFIED</div>
     </div>
 
-```
-<!-- SVG World Map -->
-<svg id="world-svg-map" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="glow-bg" cx="55%" cy="40%" r="50%">
-      <stop offset="0%" stop-color="rgba(0,212,255,0.08)"/>
-      <stop offset="100%" stop-color="rgba(5,8,16,0)"/>
-    </radialGradient>
-    <filter id="blur-sm">
-      <feGaussianBlur stdDeviation="1"/>
-    </filter>
-  </defs>
+    <!-- SVG World Map -->
+    <svg id="world-svg-map" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glow-bg" cx="55%" cy="40%" r="50%">
+          <stop offset="0%" stop-color="rgba(0,212,255,0.08)"/>
+          <stop offset="100%" stop-color="rgba(5,8,16,0)"/>
+        </radialGradient>
+        <filter id="blur-sm">
+          <feGaussianBlur stdDeviation="1"/>
+        </filter>
+      </defs>
 
-  <!-- Background glow -->
-  <rect width="800" height="440" fill="url(#glow-bg)"/>
+      <!-- Background glow -->
+      <rect width="800" height="440" fill="url(#glow-bg)"/>
 
-  <!-- Simplified continental outlines -->
-  <!-- North America -->
-  <path class="map-land" d="M40,80 L140,65 L165,72 L160,100 L155,120 L170,140 L165,160 L148,175 L130,195 L115,220 L100,240 L90,265 L75,270 L60,255 L45,230 L40,210 L35,185 L30,160 L32,130 L38,100 Z"/>
-  <!-- Greenland -->
-  <path class="map-land" d="M148,35 L175,30 L190,45 L185,65 L165,72 L148,65 Z"/>
-  <!-- South America -->
-  <path class="map-land" d="M110,275 L140,268 L160,280 L175,310 L178,340 L170,370 L155,395 L135,410 L115,408 L100,390 L95,360 L100,330 L105,305 Z"/>
-  <!-- Europe -->
-  <path class="map-land" d="M295,55 L330,48 L350,55 L355,70 L345,85 L330,92 L310,95 L295,88 L288,75 Z"/>
-  <!-- UK (separate small blob) -->
-  <path class="map-land" d="M278,58 L286,55 L290,62 L285,70 L278,68 Z"/>
-  <!-- Africa -->
-  <path class="map-land" d="M295,110 L335,100 L365,105 L380,125 L388,160 L385,200 L375,240 L355,275 L330,300 L305,305 L285,290 L272,260 L270,220 L275,180 L280,145 L290,120 Z"/>
-  <!-- Middle East / Arabian Peninsula -->
-  <path class="map-land" d="M355,110 L390,108 L405,120 L408,145 L398,160 L380,165 L362,155 L358,135 Z"/>
-  <!-- Russia / Central Asia -->
-  <path class="map-land" d="M350,45 L440,38 L510,42 L545,55 L540,80 L510,90 L470,95 L430,92 L390,85 L360,78 L348,65 Z"/>
-  <!-- Asia (main body) -->
-  <path class="map-land" d="M440,80 L520,70 L570,78 L600,90 L610,115 L595,140 L570,155 L540,158 L510,150 L490,135 L465,125 L445,110 Z"/>
-  <!-- India -->
-  <path class="map-land" d="M490,135 L520,130 L535,145 L530,175 L515,195 L498,190 L488,165 Z"/>
-  <!-- Southeast Asia -->
-  <path class="map-land" d="M570,145 L600,138 L620,150 L625,170 L610,180 L590,175 L574,162 Z"/>
-  <!-- Australia -->
-  <path class="map-land" d="M600,270 L650,258 L680,268 L690,295 L685,320 L665,338 L638,340 L615,328 L600,305 L598,285 Z"/>
-  <!-- Japan (simplified) -->
-  <path class="map-land" d="M634,92 L640,88 L647,95 L643,105 L635,104 Z"/>
+      <!-- Simplified continental outlines -->
+      <!-- North America -->
+      <path class="map-land" d="M40,80 L140,65 L165,72 L160,100 L155,120 L170,140 L165,160 L148,175 L130,195 L115,220 L100,240 L90,265 L75,270 L60,255 L45,230 L40,210 L35,185 L30,160 L32,130 L38,100 Z"/>
+      <!-- Greenland -->
+      <path class="map-land" d="M148,35 L175,30 L190,45 L185,65 L165,72 L148,65 Z"/>
+      <!-- South America -->
+      <path class="map-land" d="M110,275 L140,268 L160,280 L175,310 L178,340 L170,370 L155,395 L135,410 L115,408 L100,390 L95,360 L100,330 L105,305 Z"/>
+      <!-- Europe -->
+      <path class="map-land" d="M295,55 L330,48 L350,55 L355,70 L345,85 L330,92 L310,95 L295,88 L288,75 Z"/>
+      <!-- UK (separate small blob) -->
+      <path class="map-land" d="M278,58 L286,55 L290,62 L285,70 L278,68 Z"/>
+      <!-- Africa -->
+      <path class="map-land" d="M295,110 L335,100 L365,105 L380,125 L388,160 L385,200 L375,240 L355,275 L330,300 L305,305 L285,290 L272,260 L270,220 L275,180 L280,145 L290,120 Z"/>
+      <!-- Middle East / Arabian Peninsula -->
+      <path class="map-land" d="M355,110 L390,108 L405,120 L408,145 L398,160 L380,165 L362,155 L358,135 Z"/>
+      <!-- Russia / Central Asia -->
+      <path class="map-land" d="M350,45 L440,38 L510,42 L545,55 L540,80 L510,90 L470,95 L430,92 L390,85 L360,78 L348,65 Z"/>
+      <!-- Asia (main body) -->
+      <path class="map-land" d="M440,80 L520,70 L570,78 L600,90 L610,115 L595,140 L570,155 L540,158 L510,150 L490,135 L465,125 L445,110 Z"/>
+      <!-- India -->
+      <path class="map-land" d="M490,135 L520,130 L535,145 L530,175 L515,195 L498,190 L488,165 Z"/>
+      <!-- Southeast Asia -->
+      <path class="map-land" d="M570,145 L600,138 L620,150 L625,170 L610,180 L590,175 L574,162 Z"/>
+      <!-- Australia -->
+      <path class="map-land" d="M600,270 L650,258 L680,268 L690,295 L685,320 L665,338 L638,340 L615,328 L600,305 L598,285 Z"/>
+      <!-- Japan (simplified) -->
+      <path class="map-land" d="M634,92 L640,88 L647,95 L643,105 L635,104 Z"/>
 
-  <!-- CONNECTION LINES (arcs between nodes) -->
-  <!-- UK ↔ Silicon Valley (red labour) -->
-  <path class="map-conn-line red" d="M282,62 Q200,40 98,118"/>
-  <!-- UK ↔ Nouadhibou (red) -->
-  <path class="map-conn-line red" d="M282,62 Q270,110 285,195"/>
-  <!-- UK ↔ Tangier (red) -->
-  <path class="map-conn-line red" d="M282,62 Q282,100 290,135"/>
-  <!-- UK ↔ Namibia (red) -->
-  <path class="map-conn-line red" d="M282,62 Q280,180 303,285"/>
-  <!-- UK ↔ Gaza (red) -->
-  <path class="map-conn-line red" d="M282,62 Q330,95 367,148"/>
-  <!-- UK ↔ Mindanao (red) -->
-  <path class="map-conn-line red" d="M282,62 Q440,60 606,175"/>
-  <!-- UK ↔ Chile (red) -->
-  <path class="map-conn-line red" d="M282,62 Q170,180 135,350"/>
-  <!-- UK ↔ Greenland (red) -->
-  <path class="map-conn-line red" d="M282,62 Q222,30 170,48"/>
-  <!-- Singapore ↔ Silicon Valley (gold capital) -->
-  <path class="map-conn-line gold" d="M596,178 Q400,120 98,118"/>
-  <!-- Singapore ↔ Dubai (gold) -->
-  <path class="map-conn-line gold" d="M596,178 Q520,150 390,140"/>
-  <!-- Silicon Valley ↔ Dubai (cyan data) -->
-  <path class="map-conn-line cyan" d="M98,118 Q250,90 390,140"/>
+      <!-- CONNECTION LINES (arcs between nodes) -->
+      <!-- UK ↔ Silicon Valley (red labour) -->
+      <path class="map-conn-line red" d="M282,62 Q200,40 98,118"/>
+      <!-- UK ↔ Nouadhibou (red) -->
+      <path class="map-conn-line red" d="M282,62 Q270,110 285,195"/>
+      <!-- UK ↔ Tangier (red) -->
+      <path class="map-conn-line red" d="M282,62 Q282,100 290,135"/>
+      <!-- UK ↔ Namibia (red) -->
+      <path class="map-conn-line red" d="M282,62 Q280,180 303,285"/>
+      <!-- UK ↔ Gaza (red) -->
+      <path class="map-conn-line red" d="M282,62 Q330,95 367,148"/>
+      <!-- UK ↔ Mindanao (red) -->
+      <path class="map-conn-line red" d="M282,62 Q440,60 606,175"/>
+      <!-- UK ↔ Chile (red) -->
+      <path class="map-conn-line red" d="M282,62 Q170,180 135,350"/>
+      <!-- UK ↔ Greenland (red) -->
+      <path class="map-conn-line red" d="M282,62 Q222,30 170,48"/>
+      <!-- Singapore ↔ Silicon Valley (gold capital) -->
+      <path class="map-conn-line gold" d="M596,178 Q400,120 98,118"/>
+      <!-- Singapore ↔ Dubai (gold) -->
+      <path class="map-conn-line gold" d="M596,178 Q520,150 390,140"/>
+      <!-- Silicon Valley ↔ Dubai (cyan data) -->
+      <path class="map-conn-line cyan" d="M98,118 Q250,90 390,140"/>
 
-  <!-- POWER NODES -->
-  <!-- Silicon Valley -->
-  <circle class="map-node-ring cyan" cx="98" cy="118" r="5" style="animation-delay:0s"/>
-  <circle class="map-node-dot" cx="98" cy="118" r="4" style="animation-delay:0s"/>
-  <text class="map-node-label" x="108" y="115">PROVIDENTIA</text>
-  <text class="map-node-sublabel" x="108" y="125">Silicon Valley</text>
+      <!-- POWER NODES -->
+      <!-- Silicon Valley -->
+      <circle class="map-node-ring cyan" cx="98" cy="118" r="5" style="animation-delay:0s"/>
+      <circle class="map-node-dot" cx="98" cy="118" r="4" style="animation-delay:0s"/>
+      <text class="map-node-label" x="108" y="115">PROVIDENTIA</text>
+      <text class="map-node-sublabel" x="108" y="125">Silicon Valley</text>
 
-  <!-- Singapore -->
-  <circle class="map-node-ring gold" cx="596" cy="178" r="5" style="animation-delay:0.8s"/>
-  <circle class="map-node-dot gold" cx="596" cy="178" r="4" style="animation-delay:0.8s"/>
-  <text class="map-node-label" x="604" y="175">FRONTIER CATALYST</text>
-  <text class="map-node-sublabel" x="604" y="185">Singapore</text>
+      <!-- Singapore -->
+      <circle class="map-node-ring gold" cx="596" cy="178" r="5" style="animation-delay:0.8s"/>
+      <circle class="map-node-dot gold" cx="596" cy="178" r="4" style="animation-delay:0.8s"/>
+      <text class="map-node-label" x="604" y="175">FRONTIER CATALYST</text>
+      <text class="map-node-sublabel" x="604" y="185">Singapore</text>
 
-  <!-- Dubai -->
-  <circle class="map-node-ring cyan" cx="390" cy="140" r="5" style="animation-delay:1.6s"/>
-  <circle class="map-node-dot" cx="390" cy="140" r="4" style="animation-delay:1.6s"/>
-  <text class="map-node-label" x="400" y="137">MERIDIAN GROUP</text>
-  <text class="map-node-sublabel" x="400" y="147">Dubai</text>
+      <!-- Dubai -->
+      <circle class="map-node-ring cyan" cx="390" cy="140" r="5" style="animation-delay:1.6s"/>
+      <circle class="map-node-dot" cx="390" cy="140" r="4" style="animation-delay:1.6s"/>
+      <text class="map-node-label" x="400" y="137">MERIDIAN GROUP</text>
+      <text class="map-node-sublabel" x="400" y="147">Dubai</text>
 
-  <!-- UK Origin -->
-  <circle cx="282" cy="62" r="4" fill="rgba(255,255,255,0.7)"/>
-  <text class="map-node-sublabel" x="290" y="59" fill="rgba(255,255,255,0.6)">UK / EUROPE</text>
+      <!-- UK Origin -->
+      <circle cx="282" cy="62" r="4" fill="rgba(255,255,255,0.7)"/>
+      <text class="map-node-sublabel" x="290" y="59" fill="rgba(255,255,255,0.6)">UK / EUROPE</text>
 
-  <!-- Charter Cities (red nodes) -->
-  <!-- Nouadhibou -->
-  <circle class="map-node-ring red" cx="260" cy="185" r="3" style="animation-delay:0.3s"/>
-  <circle class="map-node-dot red" cx="260" cy="185" r="3" style="animation-delay:0.3s"/>
-  <text class="map-node-label" x="268" y="183" font-size="8">PORT MERIDIAN</text>
-  <text class="map-node-sublabel" x="268" y="191" font-size="7">Nouadhibou</text>
+      <!-- Charter Cities (red nodes) -->
+      <!-- Nouadhibou -->
+      <circle class="map-node-ring red" cx="260" cy="185" r="3" style="animation-delay:0.3s"/>
+      <circle class="map-node-dot red" cx="260" cy="185" r="3" style="animation-delay:0.3s"/>
+      <text class="map-node-label" x="268" y="183" font-size="8">PORT MERIDIAN</text>
+      <text class="map-node-sublabel" x="268" y="191" font-size="7">Nouadhibou</text>
 
-  <!-- Greenland -->
-  <circle class="map-node-ring red" cx="170" cy="48" r="3" style="animation-delay:0.5s"/>
-  <circle class="map-node-dot red" cx="170" cy="48" r="3" style="animation-delay:0.5s"/>
-  <text class="map-node-label" x="178" y="46" font-size="8">AURORA DELTA</text>
-  <text class="map-node-sublabel" x="178" y="54" font-size="7">Greenland</text>
+      <!-- Greenland -->
+      <circle class="map-node-ring red" cx="170" cy="48" r="3" style="animation-delay:0.5s"/>
+      <circle class="map-node-dot red" cx="170" cy="48" r="3" style="animation-delay:0.5s"/>
+      <text class="map-node-label" x="178" y="46" font-size="8">AURORA DELTA</text>
+      <text class="map-node-sublabel" x="178" y="54" font-size="7">Greenland</text>
 
-  <!-- Tangier -->
-  <circle class="map-node-ring red" cx="290" cy="130" r="3" style="animation-delay:0.7s"/>
-  <circle class="map-node-dot red" cx="290" cy="130" r="3" style="animation-delay:0.7s"/>
-  <text class="map-node-label" x="298" y="128" font-size="8">ATLAS NEXUS</text>
-  <text class="map-node-sublabel" x="298" y="136" font-size="7">Tangier</text>
+      <!-- Tangier -->
+      <circle class="map-node-ring red" cx="290" cy="130" r="3" style="animation-delay:0.7s"/>
+      <circle class="map-node-dot red" cx="290" cy="130" r="3" style="animation-delay:0.7s"/>
+      <text class="map-node-label" x="298" y="128" font-size="8">ATLAS NEXUS</text>
+      <text class="map-node-sublabel" x="298" y="136" font-size="7">Tangier</text>
 
-  <!-- Namibia -->
-  <circle class="map-node-ring red" cx="305" cy="285" r="3" style="animation-delay:0.9s"/>
-  <circle class="map-node-dot red" cx="305" cy="285" r="3" style="animation-delay:0.9s"/>
-  <text class="map-node-label" x="313" y="283" font-size="8">NEW TYRE</text>
-  <text class="map-node-sublabel" x="313" y="291" font-size="7">Namibia</text>
+      <!-- Namibia -->
+      <circle class="map-node-ring red" cx="305" cy="285" r="3" style="animation-delay:0.9s"/>
+      <circle class="map-node-dot red" cx="305" cy="285" r="3" style="animation-delay:0.9s"/>
+      <text class="map-node-label" x="313" y="283" font-size="8">NEW TYRE</text>
+      <text class="map-node-sublabel" x="313" y="291" font-size="7">Namibia</text>
 
-  <!-- Mindanao -->
-  <circle class="map-node-ring red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
-  <circle class="map-node-dot red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
-  <text class="map-node-label" x="614" y="173" font-size="8">PACIFICA BIOPORT</text>
-  <text class="map-node-sublabel" x="614" y="181" font-size="7">Mindanao</text>
+      <!-- Mindanao -->
+      <circle class="map-node-ring red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
+      <circle class="map-node-dot red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
+      <text class="map-node-label" x="614" y="173" font-size="8">PACIFICA BIOPORT</text>
+      <text class="map-node-sublabel" x="614" y="181" font-size="7">Mindanao</text>
 
-  <!-- Chile -->
-  <circle class="map-node-ring red" cx="140" cy="348" r="3" style="animation-delay:1.3s"/>
-  <circle class="map-node-dot red" cx="140" cy="348" r="3" style="animation-delay:1.3s"/>
-  <text class="map-node-label" x="148" y="346" font-size="8">CASCADIA GRID</text>
-  <text class="map-node-sublabel" x="148" y="354" font-size="7">Chile</text>
+      <!-- Chile -->
+      <circle class="map-node-ring red" cx="140" cy="348" r="3" style="animation-delay:1.3s"/>
+      <circle class="map-node-dot red" cx="140" cy="348" r="3" style="animation-delay:1.3s"/>
+      <text class="map-node-label" x="148" y="346" font-size="8">CASCADIA GRID</text>
+      <text class="map-node-sublabel" x="148" y="354" font-size="7">Chile</text>
 
-  <!-- Gaza -->
-  <circle class="map-node-ring red" cx="367" cy="148" r="3" style="animation-delay:1.5s"/>
-  <circle class="map-node-dot red" cx="367" cy="148" r="3" style="animation-delay:1.5s"/>
-  <text class="map-node-label" x="375" y="146" font-size="8">LEVANT GATEWAY</text>
-  <text class="map-node-sublabel" x="375" y="154" font-size="7">Gaza</text>
-</svg>
+      <!-- Gaza -->
+      <circle class="map-node-ring red" cx="367" cy="148" r="3" style="animation-delay:1.5s"/>
+      <circle class="map-node-dot red" cx="367" cy="148" r="3" style="animation-delay:1.5s"/>
+      <text class="map-node-label" x="375" y="146" font-size="8">LEVANT GATEWAY</text>
+      <text class="map-node-sublabel" x="375" y="154" font-size="7">Gaza</text>
+    </svg>
 
-<!-- Info Panel -->
-<div class="map-info-panel" id="map-info">
-  <strong style="color:var(--sys-cyan);letter-spacing:2px;">LOCATION FUNCTIONS</strong><br><br>
-  Hover / tap a node to inspect route intelligence and labour function.
-</div>
+    <!-- Info Panel -->
+    <div class="map-info-panel" id="map-info">
+      <strong style="color:var(--sys-cyan);letter-spacing:2px;">LOCATION FUNCTIONS</strong><br><br>
+      Hover / tap a node to inspect route intelligence and labour function.
+    </div>
 
-<!-- Labour type tags -->
-<div class="map-labour-types">
-  <div class="labour-tag">AGRICULTURE</div>
-  <div class="labour-tag">LOGISTICS</div>
-  <div class="labour-tag">MANUFACTURING</div>
-  <div class="labour-tag">DATA PROCESSING</div>
-</div>
+    <!-- Labour type tags -->
+    <div class="map-labour-types">
+      <div class="labour-tag">AGRICULTURE</div>
+      <div class="labour-tag">LOGISTICS</div>
+      <div class="labour-tag">MANUFACTURING</div>
+      <div class="labour-tag">DATA PROCESSING</div>
+    </div>
 
-<!-- Legend -->
-<div class="map-legend">
-  <div class="map-leg-item">
-    <div class="map-leg-line" style="background:rgba(240,180,41,0.7)"></div>
-    Capital routing
-  </div>
-  <div class="map-leg-item">
-    <div class="map-leg-line" style="background:rgba(0,212,255,0.7)"></div>
-    Data / control
-  </div>
-  <div class="map-leg-item">
-    <div class="map-leg-line" style="background:rgba(255,45,85,0.7)"></div>
-    Labour corridor
-  </div>
-  <div class="map-leg-item">
-    <div class="map-leg-dot" style="background:rgba(255,255,255,0.6)"></div>
-    Origin region
-  </div>
-  <div class="map-leg-item">
-    <div class="map-leg-dot" style="background:var(--sys-red)"></div>
-    Charter city
-  </div>
-</div>
-```
-
+    <!-- Legend -->
+    <div class="map-legend">
+      <div class="map-leg-item">
+        <div class="map-leg-line" style="background:rgba(240,180,41,0.7)"></div>
+        Capital routing
+      </div>
+      <div class="map-leg-item">
+        <div class="map-leg-line" style="background:rgba(0,212,255,0.7)"></div>
+        Data / control
+      </div>
+      <div class="map-leg-item">
+        <div class="map-leg-line" style="background:rgba(255,45,85,0.7)"></div>
+        Labour corridor
+      </div>
+      <div class="map-leg-item">
+        <div class="map-leg-dot" style="background:rgba(255,255,255,0.6)"></div>
+        Origin region
+      </div>
+      <div class="map-leg-item">
+        <div class="map-leg-dot" style="background:var(--sys-red)"></div>
+        Charter city
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- ─── SLIDE 13 — CONNECTION ────────────── -->
-
 <div class="slide slide-13" data-slide="14" data-phase="PHASE 03 — EXPOSURE">
   <div class="s13-entity">MERIDIAN GROUP + PROVIDENTIA</div>
   <div class="s13-logos">
@@ -1434,7 +1413,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 14 — MEDIA WALL ────────────── -->
-
 <div class="slide slide-14" data-slide="15" data-phase="PHASE 04 — MEDIA">
   <div class="media-conversation" aria-label="Live social conversation">
     <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">CLIP_01 mirrors Atlas Nexus route data from Phase 03.</span></div>
@@ -1459,7 +1437,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 15 — PERSONAL STORIES ────── -->
-
 <div class="slide slide-15" data-slide="16" data-phase="PHASE 04 — HUMAN">
   <div class="s15-header">FIELD INVESTIGATION — AURORA BENTLEY // COMPILED 2031</div>
   <div class="s15-profiles">
@@ -1486,7 +1463,6 @@ RESPONSIVE OVERRIDES
 </div>
 
 <!-- ─── SLIDE 16 — DEFIANT ────────────────── -->
-
 <div class="slide slide-16" data-slide="17" data-phase="FINAL — DEFIANT">
   <div>
     <div class="s16-text">
@@ -1608,6 +1584,5 @@ function animateMediaWall() {
 // Init counter
 counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
 </script>
-
 </body>
 </html>
