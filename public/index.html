@@ -852,7 +852,7 @@
     letter-spacing: 2px;
     text-transform: uppercase;
   }
-  .headline-sponsor{position:absolute;top:10px;right:10px;width:22px;height:22px;opacity:.8;filter:drop-shadow(0 0 6px rgba(255,45,85,.35))}
+  .headline-sponsor{position:absolute;top:8px;right:8px;width:14px;height:14px;opacity:.72;filter:drop-shadow(0 0 4px rgba(255,45,85,.3))}
   .media-overlay-text {
     position: absolute; bottom: 40px; left: 50%;
     transform: translateX(-50%);
@@ -1011,11 +1011,11 @@
   .mock-card{background:rgba(10,10,10,.82);border:1px solid rgba(255,45,85,.28);padding:8px;color:#ddd;font:10px 'Share Tech Mono';letter-spacing:1px}
   .mock-card strong{color:#ff9bb0}
   
-  .media-conversation{position:absolute;left:18px;top:18px;z-index:20;display:grid;gap:8px;pointer-events:none;align-content:start;max-height:min(56vh,460px);width:min(36vw,520px);padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:20px;background:linear-gradient(160deg,rgba(41,48,67,.56),rgba(11,16,28,.76));backdrop-filter:blur(18px) saturate(150%);box-shadow:0 20px 52px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.24);overflow:hidden}
+  .media-conversation{position:absolute;left:14px;top:14px;z-index:20;display:grid;gap:6px;pointer-events:none;align-content:start;max-height:min(40vh,280px);width:min(30vw,360px);padding:10px;border:1px solid rgba(255,255,255,.24);border-radius:18px;background:linear-gradient(160deg,rgba(52,60,81,.55),rgba(15,22,36,.78));backdrop-filter:blur(22px) saturate(155%);box-shadow:0 12px 30px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.28);overflow:hidden}
   .media-conversation::before{content:'# ops-board  •  live';font:700 10px 'Share Tech Mono';letter-spacing:2px;color:rgba(186,215,255,.75);padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:4px}
   .msg{display:grid;gap:4px;max-width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:linear-gradient(140deg,rgba(43,54,76,.62),rgba(24,31,45,.62));backdrop-filter:blur(10px);opacity:0;animation:msg-loop 12s linear infinite}
   .msg-name{font:10px 'Share Tech Mono';letter-spacing:1.8px;color:#9ddcff;text-transform:uppercase}
-  .msg-text{font:clamp(11px,1.1vw,13px) 'Share Tech Mono';line-height:1.45;color:#ecf4ff;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
+  .msg-text{font:clamp(10px,1vw,12px) 'Share Tech Mono';line-height:1.4;color:#ecf4ff;white-space:nowrap;overflow:hidden;width:0;animation:typing 12s steps(72,end) infinite}
   .msg-in{justify-self:start;border-color:rgba(0,212,255,.45);box-shadow:0 0 0 1px rgba(0,212,255,.12)}
   .msg-out{justify-self:start;border-color:rgba(255,255,255,.26)}
   .msg:nth-child(1){animation-delay:0s}.msg:nth-child(2){animation-delay:3s}.msg:nth-child(3){animation-delay:6s}.msg:nth-child(4){animation-delay:9s}
@@ -1039,7 +1039,7 @@
     .map-details{top:72px;left:10px;width:94vw;font-size:9px;max-height:42vh}
     .map-key{right:10px;bottom:10px;min-width:170px;padding:8px}
     .media-wall{grid-template-columns:1fr 1fr}
-    .media-conversation{left:8px;top:8px;width:min(92vw,420px)}
+    .media-conversation{left:8px;top:8px;width:min(86vw,320px);max-height:34vh}
     .s16-profiles{flex-direction:column;gap:20px}
     .slide-16{padding:20px}
   }
@@ -1069,7 +1069,7 @@
     .map-title{font-size:10px;line-height:1.4}
     .map-key{max-width:calc(100vw - 20px)}
     .media-wall{margin-top:20px;grid-template-columns:1fr}
-    .media-conversation{left:8px;top:8px;width:min(94vw,400px);max-height:42vh}
+    .media-conversation{left:6px;top:6px;width:min(84vw,280px);max-height:30vh}
     .msg{max-width:100%;padding:9px 10px}
   }
 @media (max-aspect-ratio: 4/5){
@@ -1148,40 +1148,40 @@
     <div class="s4-pipeline">
       <div class="s4-step">
         <div class="s4-node"></div>
-        <div class="s4-label">DATA</div>
+        <div class="s4-label">SIGNAL INGEST</div>
       </div>
       <div class="s4-arrow" style="opacity:1;animation:none;"></div>
       <div class="s4-step">
         <div class="s4-node"></div>
-        <div class="s4-label">RISK SCORE</div>
+        <div class="s4-label">THREAT SCORING</div>
       </div>
       <div class="s4-arrow" style="opacity:1;animation:none;"></div>
       <div class="s4-step">
         <div class="s4-node"></div>
-        <div class="s4-label">CLASSIFICATION</div>
+        <div class="s4-label">NARRATIVE TARGETING</div>
       </div>
       <div class="s4-arrow" style="opacity:1;animation:none;"></div>
       <div class="s4-step">
         <div class="s4-node"></div>
-        <div class="s4-label">ACTION*</div>
+        <div class="s4-label">POLICY TRIGGER</div>
       </div>
     </div>
     <div class="s4-copy">
       <div class="s4-copy-card">
-        <div class="s4-copy-title">DATA</div>
-        <p>Ingest border, compliance, and behavioral signals into one governed stream.</p>
+        <div class="s4-copy-title">SIGNAL INGEST</div>
+        <p>Ingest social chatter, border clips, and tabloid talking points into one reactive stream.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">RISK SCORE</div>
-        <p>Model weighted indicators and publish a transparent confidence score.</p>
+        <div class="s4-copy-title">THREAT SCORING</div>
+        <p>Rank stories by outrage potential and route fear cues into audience-specific feeds.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">CLASSIFICATION</div>
-        <p>Route outcomes into clear monitor, restrict, detain, or remove classes.</p>
+        <div class="s4-copy-title">NARRATIVE TARGETING</div>
+        <p>Layer anti-migrant frames across channels until public sentiment starts to align.</p>
       </div>
       <div class="s4-copy-card">
-        <div class="s4-copy-title">ACTION*</div>
-        <p>Trigger cross-agency alerts and continuously re-evaluate interventions.</p>
+        <div class="s4-copy-title">POLICY TRIGGER</div>
+        <p>Convert headline pressure into policy asks, then loop back for kinetic reinforcement.</p>
       </div>
     </div>
   </div>
@@ -1354,10 +1354,10 @@
   <!-- SLIDE 15 — MEDIA WALL -->
   <div class="slide slide-15" data-slide="15" data-phase="PHASE 04 — MEDIA">
     <div class="media-conversation" aria-label="Live social conversation">
-      <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">Watching CLIP_01 now. This rollout mirrors the Atlas Nexus route data from Phase 03.</span></div>
-      <div class="msg msg-in"><span class="msg-name">Simon Day</span><span class="msg-text">My district feed is amplifying fear headlines every 20 minutes. Sentiment just spiked.</span></div>
-      <div class="msg msg-out"><span class="msg-name">Selam Tesfae</span><span class="msg-text">Port Meridian mentions are rising too. They are framing labour transfer as protection.</span></div>
-      <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Archive everything. We need the timeline before tonight's policy briefing.</span></div>
+      <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">Headline stack is synchronized again. Same anti-migrant script across every channel.</span></div>
+      <div class="msg msg-in"><span class="msg-name">Simon Day</span><span class="msg-text">Pings keep dropping in upper-left alerts, tiny cards, nonstop push pressure like Discord.</span></div>
+      <div class="msg msg-out"><span class="msg-name">Selam Tesfae</span><span class="msg-text">They rebrand displacement as safety, then bury corrections beneath red-badge notifications.</span></div>
+      <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Capture it all. This is manufacturing consent in real time before policy lock-in.</span></div>
     </div>
     <div class="media-wall" id="media-wall">
       <div class="headline-cell"><div class="social-chip">CLIP_01</div><img class="headline-sponsor" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23232762'/%3E%3Cpath d='M6 10h28l-5 6H11z' fill='%23ffffff' fill-opacity='.92'/%3E%3Cpath d='M6 16h28l-5 6H11z' fill='%23d3202e'/%3E%3Ctext x='20' y='32' text-anchor='middle' font-size='8' font-family='Arial' font-weight='700' fill='%23fff'%3ENF%3C/text%3E%3C/svg%3E" alt="Nation First sponsor"><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
