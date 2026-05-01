@@ -698,9 +698,13 @@ body::after {
   font-family: 'Share Tech Mono', monospace;
   font-size: clamp(7px,0.8vw,9px); color: rgba(200,220,240,0.7);
   letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+  cursor: pointer; user-select: none; padding: 4px 6px; border: 1px solid transparent; border-radius: 2px; transition: all .2s ease;
 }
+.map-leg-item:hover { border-color: rgba(0,212,255,0.35); color: rgba(230,240,250,0.95); }
+.map-leg-item.inactive { opacity: 0.45; }
 .map-leg-line { width: 18px; height: 2px; }
 .map-leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+.map-muted { opacity: 0.12 !important; }
 /* Side info panel */
 .map-info-panel {
   position: absolute; top: clamp(44px,8vmin,72px); left: clamp(10px,2vw,24px);
@@ -1124,6 +1128,7 @@ body::after {
   pointer-events: none;
 }
 .cctv-iframe.loaded { opacity: 1; }
+.cctv-open-link { position:absolute;right:6px;bottom:6px;z-index:12;font:10px/1 "Share Tech Mono",monospace;padding:4px 6px;text-decoration:none;color:rgba(255,255,255,.95);background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);border-radius:2px; }
 /* Overlay text on top of video */
 .cctv-overlay {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
@@ -1513,8 +1518,8 @@ body::after {
       <!-- Mindanao -->
       <circle class="map-node-ring red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
       <circle class="map-node-dot red" cx="606" cy="175" r="3" style="animation-delay:1.1s"/>
-      <text class="map-node-label" x="614" y="173" font-size="8">PACIFICA BIOPORT</text>
-      <text class="map-node-sublabel" x="614" y="181" font-size="7">Mindanao</text>
+      <text class="map-node-label" x="626" y="168" font-size="8">PACIFICA BIOPORT</text>
+      <text class="map-node-sublabel" x="626" y="176" font-size="7">Mindanao</text>
 
       <!-- Chile -->
       <circle class="map-node-ring red" cx="140" cy="348" r="3" style="animation-delay:1.3s"/>
@@ -1545,23 +1550,23 @@ body::after {
 
     <!-- Legend -->
     <div class="map-legend">
-      <div class="map-leg-item">
+      <div class="map-leg-item" data-map-filter="capital">
         <div class="map-leg-line" style="background:rgba(240,180,41,0.7)"></div>
         Capital routing
       </div>
-      <div class="map-leg-item">
+      <div class="map-leg-item" data-map-filter="data">
         <div class="map-leg-line" style="background:rgba(0,212,255,0.7)"></div>
         Data / control
       </div>
-      <div class="map-leg-item">
+      <div class="map-leg-item" data-map-filter="labour">
         <div class="map-leg-line" style="background:rgba(255,45,85,0.7)"></div>
         Labour corridor
       </div>
-      <div class="map-leg-item">
+      <div class="map-leg-item" data-map-filter="origin">
         <div class="map-leg-dot" style="background:rgba(255,255,255,0.6)"></div>
         Origin region
       </div>
-      <div class="map-leg-item">
+      <div class="map-leg-item" data-map-filter="charter">
         <div class="map-leg-dot" style="background:var(--sys-red)"></div>
         Charter city
       </div>
@@ -1611,7 +1616,7 @@ body::after {
   <div class="media-wall" id="media-wall">
     <div class="cctv-cell" data-ytid="vT4k5YL-5Ug" data-delay="0">
       <div class="cctv-header"><span class="cctv-cam">CAM 01</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=vT4k5YL-5Ug" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div>
         <div class="cctv-source">NATIONAL HERALD</div>
@@ -1619,7 +1624,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="rCb7dZpQbGo" data-delay="1200">
       <div class="cctv-header"><span class="cctv-cam">CAM 02</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=rCb7dZpQbGo" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div>
         <div class="cctv-source">EVENING STANDARD</div>
@@ -1627,7 +1632,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="NMre6IAAAiU" data-delay="2400">
       <div class="cctv-header"><span class="cctv-cam">CAM 03</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=NMre6IAAAiU" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div>
         <div class="cctv-source">DAILY POST</div>
@@ -1635,7 +1640,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="k9HDVpY4X6E" data-delay="3600">
       <div class="cctv-header"><span class="cctv-cam">CAM 04</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=k9HDVpY4X6E" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div>
         <div class="cctv-source">THE OBSERVER</div>
@@ -1652,7 +1657,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="Q0fYFkDgoL0" data-delay="4800">
       <div class="cctv-header"><span class="cctv-cam">CAM 06</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=Q0fYFkDgoL0" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">SOFT TOUCH POLICY ENABLING TERROR NETWORKS</div>
         <div class="cctv-source">SECURITY TODAY</div>
@@ -1660,7 +1665,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="7f9e0EM7biE" data-delay="6000">
       <div class="cctv-header"><span class="cctv-cam">CAM 07</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=7f9e0EM7biE" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">WELFARE TOURISM: THE SYSTEM THEY'RE EXPLOITING</div>
         <div class="cctv-source">METRO VOICE</div>
@@ -1668,7 +1673,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="1KmGm5Bh66A" data-delay="7200">
       <div class="cctv-header"><span class="cctv-cam">CAM 08</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=1KmGm5Bh66A" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">POLL: 74% WANT STRICTER DEPORTATION MEASURES</div>
         <div class="cctv-source">NATIONWIDE SURVEY</div>
@@ -1676,7 +1681,7 @@ body::after {
     </div>
     <div class="cctv-cell" data-ytid="C7U0sIv-3yY" data-delay="8400">
       <div class="cctv-header"><span class="cctv-cam">CAM 09</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=C7U0sIv-3yY" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">SCHOOLS OVERWHELMED AS INTAKE SURGES AGAIN</div>
         <div class="cctv-source">EDUCATION WEEKLY</div>
@@ -1821,6 +1826,30 @@ document.querySelectorAll('.map-node-label').forEach(label => {
   el.addEventListener('click', highlight);
 });
 
+
+
+// Legend filters
+const legendState = { capital:true, data:true, labour:true, origin:true, charter:true };
+function syncMapLegend() {
+  document.querySelectorAll('.map-leg-item[data-map-filter]').forEach(item => {
+    const k=item.dataset.mapFilter;
+    item.classList.toggle('inactive', !legendState[k]);
+  });
+  document.querySelectorAll('.map-conn-line.gold').forEach(el => el.classList.toggle('map-muted', !legendState.capital));
+  document.querySelectorAll('.map-conn-line.cyan').forEach(el => el.classList.toggle('map-muted', !legendState.data));
+  document.querySelectorAll('.map-conn-line.red').forEach(el => el.classList.toggle('map-muted', !legendState.labour));
+  document.querySelectorAll('circle[fill="rgba(255,255,255,0.7)"], text[fill="rgba(255,255,255,0.6)"]').forEach(el => el.classList.toggle('map-muted', !legendState.origin));
+  document.querySelectorAll('.map-node-dot.red, .map-node-ring.red').forEach(el => el.classList.toggle('map-muted', !legendState.charter));
+}
+document.querySelectorAll('.map-leg-item[data-map-filter]').forEach(item => {
+  item.addEventListener('click', () => {
+    const k=item.dataset.mapFilter;
+    legendState[k]=!legendState[k];
+    syncMapLegend();
+  });
+});
+syncMapLegend();
+
 // ══════════════════════════════════
 // CCTV MEDIA WALL — staggered turn-on + YouTube embed
 // ══════════════════════════════════
@@ -1849,10 +1878,10 @@ function animateMediaWall() {
         setTimeout(() => {
           iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&modestbranding=1&rel=0&showinfo=0`;
           iframe.addEventListener('load', () => {
-            setTimeout(() => iframe.classList.add('loaded'), 800);
+            setTimeout(() => { iframe.classList.add('loaded'); iframe.style.pointerEvents = 'auto'; }, 800);
           }, { once: true });
           // Fallback if load event doesn't fire
-          setTimeout(() => iframe.classList.add('loaded'), 3000);
+          setTimeout(() => { iframe.classList.add('loaded'); iframe.style.pointerEvents = 'auto'; }, 3000);
         }, 5000);
       }
     }, onDelay);
