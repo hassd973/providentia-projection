@@ -639,6 +639,7 @@ body::after {
   width: 100%; height: 100%;
 }
 .map-land {
+  transition: fill 0.25s ease, stroke 0.25s ease;
   fill: rgba(107,155,184,0.10);
   stroke: rgba(0,212,255,0.35);
   stroke-width: 0.5;
@@ -685,6 +686,36 @@ body::after {
   letter-spacing: 1px;
 }
 /* Bottom legend strip */
+
+.map-cinema-wrap:focus-within .map-land,
+.map-cinema-wrap:hover .map-land {
+  fill: rgba(130,190,225,0.22);
+  stroke: rgba(130,200,235,0.55);
+}
+.map-graticule {
+  stroke: rgba(0, 212, 255, 0.08);
+  stroke-width: 0.7;
+  fill: none;
+}
+.map-controls {
+  position: absolute;
+  right: clamp(8px,1.5vw,16px);
+  top: clamp(40px,6vh,70px);
+  display: flex;
+  gap: 6px;
+  z-index: 30;
+}
+.map-btn {
+  border: 1px solid rgba(0,212,255,0.35);
+  background: rgba(8,18,30,0.68);
+  color: rgba(210,235,255,0.9);
+  font: 700 11px "Share Tech Mono", monospace;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.map-btn:hover { background: rgba(10,30,45,0.88); }
+
 .map-legend {
   position: absolute; bottom: 0; left: 0; right: 0;
   height: clamp(36px,7vmin,56px); z-index: 10;
@@ -1402,6 +1433,10 @@ body::after {
 
     <!-- SVG World Map -->
     <svg id="world-svg-map" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <g class="map-graticule">
+        <path d="M0,80 H800 M0,140 H800 M0,200 H800 M0,260 H800 M0,320 H800"/>
+        <path d="M100,0 V440 M200,0 V440 M300,0 V440 M400,0 V440 M500,0 V440 M600,0 V440 M700,0 V440"/>
+      </g>
       <defs>
         <radialGradient id="glow-bg" cx="55%" cy="40%" r="50%">
           <stop offset="0%" stop-color="rgba(0,212,255,0.08)"/>
@@ -1533,6 +1568,11 @@ body::after {
       <text class="map-node-label" x="375" y="146" font-size="8">LEVANT GATEWAY</text>
       <text class="map-node-sublabel" x="375" y="154" font-size="7">Gaza</text>
     </svg>
+    <div class="map-controls">
+      <button class="map-btn" id="map-zoom-in" aria-label="Zoom in">+</button>
+      <button class="map-btn" id="map-zoom-out" aria-label="Zoom out">−</button>
+      <button class="map-btn" id="map-reset" aria-label="Reset map">Reset</button>
+    </div>
 
     <!-- Info Panel -->
     <div class="map-info-panel" id="map-info">
@@ -1615,33 +1655,33 @@ body::after {
 
   <!-- CCTV MEDIA WALL -->
   <div class="media-wall" id="media-wall">
-    <div class="cctv-cell" data-ytid="vT4k5YL-5Ug" data-delay="0">
+    <div class="cctv-cell" data-ytid="dQw4w9WgXcQ" data-delay="0">
       <div class="cctv-header"><span class="cctv-cam">CAM 01</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=vT4k5YL-5Ug" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div>
         <div class="cctv-source">NATIONAL HERALD</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="rCb7dZpQbGo" data-delay="1200">
+    <div class="cctv-cell" data-ytid="3JZ_D3ELwOQ" data-delay="1200">
       <div class="cctv-header"><span class="cctv-cam">CAM 02</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=rCb7dZpQbGo" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div>
         <div class="cctv-source">EVENING STANDARD</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="NMre6IAAAiU" data-delay="2400">
+    <div class="cctv-cell" data-ytid="L_jWHffIx5E" data-delay="2400">
       <div class="cctv-header"><span class="cctv-cam">CAM 03</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=NMre6IAAAiU" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=L_jWHffIx5E" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div>
         <div class="cctv-source">DAILY POST</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="k9HDVpY4X6E" data-delay="3600">
+    <div class="cctv-cell" data-ytid="kXYiU_JCYtU" data-delay="3600">
       <div class="cctv-header"><span class="cctv-cam">CAM 04</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=k9HDVpY4X6E" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=kXYiU_JCYtU" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div>
         <div class="cctv-source">THE OBSERVER</div>
@@ -1656,33 +1696,33 @@ body::after {
         </div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="Q0fYFkDgoL0" data-delay="4800">
+    <div class="cctv-cell" data-ytid="fJ9rUzIMcZQ" data-delay="4800">
       <div class="cctv-header"><span class="cctv-cam">CAM 06</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=Q0fYFkDgoL0" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=fJ9rUzIMcZQ" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">SOFT TOUCH POLICY ENABLING TERROR NETWORKS</div>
         <div class="cctv-source">SECURITY TODAY</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="7f9e0EM7biE" data-delay="6000">
+    <div class="cctv-cell" data-ytid="60ItHLz5WEA" data-delay="6000">
       <div class="cctv-header"><span class="cctv-cam">CAM 07</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=7f9e0EM7biE" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=60ItHLz5WEA" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">WELFARE TOURISM: THE SYSTEM THEY'RE EXPLOITING</div>
         <div class="cctv-source">METRO VOICE</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="1KmGm5Bh66A" data-delay="7200">
+    <div class="cctv-cell" data-ytid="RgKAFK5djSk" data-delay="7200">
       <div class="cctv-header"><span class="cctv-cam">CAM 08</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=1KmGm5Bh66A" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=RgKAFK5djSk" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">POLL: 74% WANT STRICTER DEPORTATION MEASURES</div>
         <div class="cctv-source">NATIONWIDE SURVEY</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="C7U0sIv-3yY" data-delay="8400">
+    <div class="cctv-cell" data-ytid="hTWKbfoikeg" data-delay="8400">
       <div class="cctv-header"><span class="cctv-cam">CAM 09</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=C7U0sIv-3yY" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=hTWKbfoikeg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">SCHOOLS OVERWHELMED AS INTAKE SURGES AGAIN</div>
         <div class="cctv-source">EDUCATION WEEKLY</div>
@@ -1919,7 +1959,7 @@ function animateMediaWall() {
   const resizeHandle = document.getElementById('glassChatResize');
   if (!panel || !handle) return;
 
-  let dragging = false, resizing=false, startX=0, startY=0, origLeft=0, origTop=0, startW=0, startH=0;
+  let dragging = false, resizing=false, startX=0, startY=0, origLeft=0, origTop=0, startW=0, startH=0, pinchStartDist=0, pinchStartW=0, pinchStartH=0;
 
   function startDrag(cx,cy) {
     dragging = true;
@@ -1941,14 +1981,35 @@ function animateMediaWall() {
     panel.style.top = newT + 'px';
   }
   function moveResize(cx,cy){ if(!resizing) return; const w=Math.max(220,Math.min(window.innerWidth-12,startW+(cx-startX))); const h=Math.max(150,Math.min(window.innerHeight-12,startH+(cy-startY))); panel.style.width=w+'px'; panel.querySelector('.glass-chat-msgs').style.maxHeight=Math.max(110,h-68)+'px'; }
-  function endDrag() { dragging = false; resizing = false; }
+  function applySize(w,h){ const nw=Math.max(220,Math.min(window.innerWidth-12,w)); const nh=Math.max(150,Math.min(window.innerHeight-12,h)); panel.style.width=nw+'px'; panel.querySelector('.glass-chat-msgs').style.maxHeight=Math.max(110,nh-68)+'px'; }
+  function endDrag() { dragging = false; resizing = false; pinchStartDist = 0; }
 
   handle.addEventListener('mousedown', e => { e.preventDefault(); startDrag(e.clientX, e.clientY); });
   document.addEventListener('mousemove', e => { moveDrag(e.clientX, e.clientY); moveResize(e.clientX, e.clientY); });
   document.addEventListener('mouseup', endDrag);
 
   handle.addEventListener('touchstart', e => { e.preventDefault(); startDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive:false });
-  document.addEventListener('touchmove', e => { if(dragging||resizing){ e.preventDefault(); const t=e.touches[0]; if(dragging) moveDrag(t.clientX,t.clientY); if(resizing) moveResize(t.clientX,t.clientY);} }, { passive:false });
+  panel.addEventListener('touchstart', e => {
+    if(e.touches.length===2){
+      e.preventDefault();
+      const [a,b]=e.touches;
+      pinchStartDist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+      pinchStartW=panel.offsetWidth;
+      pinchStartH=panel.offsetHeight;
+    }
+  }, { passive:false });
+  document.addEventListener('touchmove', e => {
+    if(e.touches.length===2 && panel.contains(e.target)){
+      e.preventDefault();
+      const [a,b]=e.touches;
+      const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+      if(!pinchStartDist){ pinchStartDist=d; pinchStartW=panel.offsetWidth; pinchStartH=panel.offsetHeight; }
+      const ratio=d/pinchStartDist;
+      applySize(pinchStartW*ratio, pinchStartH*ratio);
+      return;
+    }
+    if(dragging||resizing){ e.preventDefault(); const t=e.touches[0]; if(dragging) moveDrag(t.clientX,t.clientY); if(resizing) moveResize(t.clientX,t.clientY);}
+  }, { passive:false });
   document.addEventListener('touchend', endDrag);
   if (resizeHandle){
     resizeHandle.addEventListener('mousedown', e=>{e.preventDefault(); resizing=true; startX=e.clientX; startY=e.clientY; startW=panel.offsetWidth; startH=panel.offsetHeight;});
