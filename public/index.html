@@ -204,6 +204,13 @@ body::after {
   margin-top: clamp(12px,2vmin,28px);
   line-height: 1;
 }
+.brand-logo {
+  width: clamp(110px,20vmin,220px);
+  height: clamp(110px,20vmin,220px);
+  object-fit: contain;
+  margin-bottom: clamp(10px,2vmin,24px);
+  filter: drop-shadow(0 8px 22px rgba(0,0,0,.45));
+}
 .s1-subtitle {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: clamp(10px,1.5vw,15px);
@@ -800,7 +807,10 @@ body::after {
   backdrop-filter: blur(16px) saturate(140%);
   box-shadow: 0 20px 52px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.2);
   overflow: hidden;
+  cursor: grab;
+  touch-action: none;
 }
+.media-conversation.dragging { cursor: grabbing; }
 .media-conversation::before {
   content: '# ops-board  •  live';
   font: 700 9px 'Share Tech Mono'; letter-spacing: 2px;
@@ -844,6 +854,25 @@ body::after {
   border: 1px solid rgba(255,45,85,0.08);
   position: relative; overflow: hidden;
 }
+.headline-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+.headline-cell.video-on .headline-video { opacity: .65; }
+.headline-cell .headline-text {
+  position: relative;
+  z-index: 2;
+  padding: 10px 12px;
+  background: rgba(6,8,14,.62);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.16);
+}
 .headline-cell::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: var(--sys-red); transform: scaleX(0); transform-origin: left;
@@ -878,6 +907,14 @@ body::after {
   font-size: clamp(9px,1vw,11px); color: rgba(255,45,85,0.45);
   letter-spacing: 6px; text-transform: uppercase;
   z-index: 10; white-space: nowrap;
+}
+.media-brand {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: clamp(58px,10vmin,94px);
+  z-index: 25;
+  opacity: .85;
 }
 
 /* ══════════════════════════════════
@@ -997,6 +1034,7 @@ body::after {
 
 <!-- ─── SLIDE 1 — BRAND ─────────────────── -->
 <div class="slide slide-1 active" data-slide="1" data-phase="PHASE 01 — CORPORATE">
+  <img class="brand-logo" alt="Providentia logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect x='22' y='22' width='176' height='176' fill='none' stroke='%23c8dce8' stroke-width='10'/%3E%3Crect x='50' y='50' width='120' height='120' fill='none' stroke='%236b9bb8' stroke-width='10'/%3E%3Ccircle cx='110' cy='110' r='22' fill='none' stroke='%23c8dce8' stroke-width='9'/%3E%3Ccircle cx='118' cy='102' r='6' fill='%23c8dce8'/%3E%3C/svg%3E">
   <div class="s1-title">PROVIDENTIA</div>
   <div class="s1-subtitle">Predictive Security for National Stability</div>
 </div>
@@ -1397,13 +1435,9 @@ body::after {
 <div class="slide slide-13" data-slide="14" data-phase="PHASE 03 — EXPOSURE">
   <div class="s13-entity">MERIDIAN GROUP + PROVIDENTIA</div>
   <div class="s13-logos">
-    <div style="width:clamp(40px,8vmin,80px);height:clamp(40px,8vmin,80px);background:rgba(107,155,184,0.15);border:1px solid rgba(107,155,184,0.3);display:flex;align-items:center;justify-content:center;opacity:0;" class="s13-logo">
-      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--corp-accent);letter-spacing:2px;">PRV</span>
-    </div>
+    <img class="s13-logo" alt="Providentia logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Crect x='22' y='22' width='176' height='176' fill='none' stroke='%23c8dce8' stroke-width='10'/%3E%3Crect x='50' y='50' width='120' height='120' fill='none' stroke='%236b9bb8' stroke-width='10'/%3E%3Ccircle cx='110' cy='110' r='22' fill='none' stroke='%23c8dce8' stroke-width='9'/%3E%3Ccircle cx='118' cy='102' r='6' fill='%23c8dce8'/%3E%3C/svg%3E">
     <div class="s13-plus">+</div>
-    <div style="width:clamp(40px,8vmin,80px);height:clamp(40px,8vmin,80px);background:rgba(107,155,184,0.15);border:1px solid rgba(107,155,184,0.3);display:flex;align-items:center;justify-content:center;opacity:0;" class="s13-logo">
-      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--corp-accent);letter-spacing:2px;">MDN</span>
-    </div>
+    <img class="s13-logo" alt="Meridian Group logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cpath d='M35 50h150l-20 24H55z' fill='%23c8dce8'/%3E%3Cpath d='M40 72h140l-42 68-30-50-8 92-30 16z' fill='%23373739'/%3E%3Cpath d='M40 168a70 42 0 0 1 140 0' fill='none' stroke='%2388b1cb' stroke-width='10'/%3E%3C/svg%3E">
   </div>
   <div class="s13-connector">
     <div class="s13-connector-label">COMMON INVESTOR</div>
@@ -1414,6 +1448,7 @@ body::after {
 
 <!-- ─── SLIDE 14 — MEDIA WALL ────────────── -->
 <div class="slide slide-14" data-slide="15" data-phase="PHASE 04 — MEDIA">
+  <img class="media-brand" alt="Nation First News logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 140'%3E%3Crect width='220' height='140' rx='10' fill='%231f2364'/%3E%3Cpath d='M15 15h190l-20 20H35z' fill='%23d9d9df'/%3E%3Cpath d='M25 24h170l-20 14H45z' fill='%23d11f2f'/%3E%3Ctext x='110' y='82' fill='%23ffffff' font-size='42' text-anchor='middle' font-family='Arial Black'%3ENATION%3C/text%3E%3Ctext x='110' y='118' fill='%23ff2d3f' font-size='30' text-anchor='middle' font-family='Arial Black'%3EFIRST%3C/text%3E%3C/svg%3E">
   <div class="media-conversation" aria-label="Live social conversation">
     <div class="msg msg-out"><span class="msg-name">Aurora Bentley</span><span class="msg-text">CLIP_01 mirrors Atlas Nexus route data from Phase 03.</span></div>
     <div class="msg msg-in"><span class="msg-name">Simon Day</span><span class="msg-text">My district feed amplifies fear headlines every 20 minutes.</span></div>
@@ -1421,17 +1456,17 @@ body::after {
     <div class="msg msg-in"><span class="msg-name">Ibrahim Musa</span><span class="msg-text">Archive everything before tonight's policy briefing.</span></div>
   </div>
   <div class="media-wall" id="media-wall">
-    <div class="headline-cell"><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
-    <div class="headline-cell"><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
-    <div class="headline-cell"><div class="headline-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div><div class="headline-source">DAILY POST</div></div>
-    <div class="headline-cell"><div class="headline-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div><div class="headline-source">THE OBSERVER</div></div>
+    <div class="headline-cell" data-video-id="kgA4JvNFTnY"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="social-chip">CLIP_01</div><div class="headline-text">MIGRANT CRIME WAVE HITS COASTAL CITIES</div><div class="headline-source">NATIONAL HERALD</div></div>
+    <div class="headline-cell" data-video-id="2rn-vMbFglI"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">BORDERS IN CRISIS: WHO IS REALLY COMING IN?</div><div class="headline-source">EVENING STANDARD</div></div>
+    <div class="headline-cell" data-video-id="hDni8M5rRzI"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">ILLEGAL ARRIVALS UP 340% UNDER CURRENT GOVERNMENT</div><div class="headline-source">DAILY POST</div></div>
+    <div class="headline-cell" data-video-id="f6-Mw7V6J2g"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">OUR COMMUNITIES ARE BEING CHANGED WITHOUT CONSENT</div><div class="headline-source">THE OBSERVER</div></div>
     <div class="headline-cell" style="border:1px solid rgba(255,45,85,0.28);background:#140808;">
       <div class="headline-text" style="font-size:clamp(14px,2.2vw,26px);color:#ff2d55;">SENTIMENT<br>ALIGNMENT</div>
     </div>
-    <div class="headline-cell"><div class="headline-text">SOFT TOUCH POLICY ENABLING TERROR NETWORKS</div><div class="headline-source">SECURITY TODAY</div></div>
-    <div class="headline-cell"><div class="headline-text">WELFARE TOURISM: THE SYSTEM THEY'RE EXPLOITING</div><div class="headline-source">METRO VOICE</div></div>
-    <div class="headline-cell"><div class="headline-text">POLL: 74% WANT STRICTER DEPORTATION MEASURES</div><div class="headline-source">NATIONWIDE SURVEY</div></div>
-    <div class="headline-cell"><div class="headline-text">SCHOOLS OVERWHELMED AS INTAKE SURGES AGAIN</div><div class="headline-source">EDUCATION WEEKLY</div></div>
+    <div class="headline-cell" data-video-id="D6R4Q9YIZQ4"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">SOFT TOUCH POLICY ENABLING TERROR NETWORKS</div><div class="headline-source">SECURITY TODAY</div></div>
+    <div class="headline-cell" data-video-id="9auOCbH5Ns4"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">WELFARE TOURISM: THE SYSTEM THEY'RE EXPLOITING</div><div class="headline-source">METRO VOICE</div></div>
+    <div class="headline-cell" data-video-id="F5pgG1M_h_U"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">POLL: 74% WANT STRICTER DEPORTATION MEASURES</div><div class="headline-source">NATIONWIDE SURVEY</div></div>
+    <div class="headline-cell" data-video-id="xEJhN6a5Y8w"><iframe class="headline-video" loading="lazy" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="headline-text">SCHOOLS OVERWHELMED AS INTAKE SURGES AGAIN</div><div class="headline-source">EDUCATION WEEKLY</div></div>
   </div>
   <div class="media-overlay-text">MANUFACTURED CONSENT</div>
 </div>
@@ -1576,10 +1611,47 @@ document.querySelectorAll('.map-node-label').forEach(label => {
 // MEDIA WALL ANIMATION
 // ══════════════════════════════════
 function animateMediaWall() {
-  document.querySelectorAll('.headline-cell').forEach((cell, i) => {
-    setTimeout(() => cell.classList.add('active-cell'), i * 120);
+  const cells = Array.from(document.querySelectorAll('.headline-cell'));
+  const shuffled = cells.sort(() => Math.random() - 0.5);
+  shuffled.forEach((cell, i) => {
+    setTimeout(() => {
+      cell.classList.add('active-cell');
+      const vid = cell.dataset.videoId;
+      const frame = cell.querySelector('.headline-video');
+      if (vid && frame) {
+        if (!frame.src) frame.src = `https://www.youtube.com/embed/${vid}?autoplay=1&mute=1&controls=0&loop=1&playlist=${vid}&playsinline=1&rel=0`;
+        setTimeout(() => cell.classList.add('video-on'), 5000);
+      }
+    }, i * 500);
   });
 }
+
+// draggable ops board
+(() => {
+  const panel = document.querySelector('.media-conversation');
+  if (!panel) return;
+  let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+  panel.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    panel.classList.add('dragging');
+    sx = e.clientX; sy = e.clientY;
+    panel.setPointerCapture(e.pointerId);
+  });
+  panel.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    ox += e.clientX - sx;
+    oy += e.clientY - sy;
+    sx = e.clientX; sy = e.clientY;
+    panel.style.transform = `translate(${ox}px, ${oy}px)`;
+  });
+  function stop(e) {
+    dragging = false;
+    panel.classList.remove('dragging');
+    if (e.pointerId) panel.releasePointerCapture(e.pointerId);
+  }
+  panel.addEventListener('pointerup', stop);
+  panel.addEventListener('pointercancel', stop);
+})();
 
 // Init counter
 counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
