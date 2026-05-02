@@ -642,7 +642,8 @@ body::after {
   transition: fill 0.25s ease, stroke 0.25s ease;
   fill: rgba(107,155,184,0.10);
   stroke: rgba(0,212,255,0.35);
-  stroke-width: 0.5;
+  stroke-width: 0.65;
+  filter: drop-shadow(0 0 8px rgba(0,212,255,0.16));
 }
 .map-node-dot {
   fill: var(--sys-cyan); r: 4;
@@ -694,7 +695,10 @@ body::after {
 }
 #world-svg-map { cursor: grab; }
 #world-svg-map.is-dragging { cursor: grabbing; }
-.map-land-detail { fill: none; stroke: rgba(180,220,240,0.2); stroke-width: 0.9; stroke-dasharray: 3 4; }
+.map-land-detail { fill: none; stroke: rgba(180,220,240,0.22); stroke-width: 0.9; stroke-dasharray: 3 4; }
+.map-coastline { fill: none; stroke: rgba(170,220,245,0.32); stroke-width: 0.8; }
+.map-bathymetry { fill: none; stroke: rgba(0,212,255,0.08); stroke-width: 0.7; stroke-dasharray: 2 6; }
+.map-atmosphere { fill: none; stroke: rgba(125,220,255,0.22); stroke-width: 1.3; }
 .map-globe-shade { pointer-events: none; opacity: 0.35; }
 .map-graticule {
   stroke: rgba(0, 212, 255, 0.08);
@@ -1460,8 +1464,9 @@ body::after {
 
       <!-- Background glow -->
       <rect width="800" height="440" fill="url(#glow-bg)"/>
+      <ellipse class="map-atmosphere" cx="400" cy="220" rx="368" ry="196"/>
 
-      <!-- Simplified continental outlines -->
+      <!-- Refined continental outlines -->
       <!-- North America -->
       <path class="map-land" d="M40,80 L140,65 L165,72 L160,100 L155,120 L170,140 L165,160 L148,175 L130,195 L115,220 L100,240 L90,265 L75,270 L60,255 L45,230 L40,210 L35,185 L30,160 L32,130 L38,100 Z"/>
       <!-- Greenland -->
@@ -1488,6 +1493,16 @@ body::after {
       <path class="map-land" d="M600,270 L650,258 L680,268 L690,295 L685,320 L665,338 L638,340 L615,328 L600,305 L598,285 Z"/>
       <!-- Japan (simplified) -->
       <path class="map-land" d="M634,92 L640,88 L647,95 L643,105 L635,104 Z"/>
+
+      <!-- Coastline emphasis and bathymetry detail -->
+      <path class="map-coastline" d="M44,84 L138,68 L162,75 L156,122 L166,142 L145,178 L118,216 L96,264 L75,268 L52,238 L38,186 L34,130 Z"/>
+      <path class="map-coastline" d="M114,278 L144,272 L164,286 L176,334 L156,392 L136,406 L110,390 L100,334 Z"/>
+      <path class="map-coastline" d="M296,114 L336,102 L370,108 L385,160 L378,236 L354,278 L330,298 L287,286 L272,258 L276,184 Z"/>
+      <path class="map-coastline" d="M438,82 L520,72 L572,80 L606,112 L594,144 L538,156 L492,136 L446,112 Z"/>
+      <path class="map-coastline" d="M602,272 L648,262 L678,272 L686,316 L640,338 L614,326 L600,304 Z"/>
+      <path class="map-bathymetry" d="M70,118 C170,86 254,88 352,126"/>
+      <path class="map-bathymetry" d="M238,240 C314,228 404,242 496,274"/>
+      <path class="map-bathymetry" d="M452,168 C532,164 596,190 660,230"/>
 
       <!-- CONNECTION LINES (arcs between nodes) -->
       <!-- UK ↔ Silicon Valley (red labour) -->
@@ -1668,31 +1683,31 @@ body::after {
   <div class="media-wall" id="media-wall">
     <div class="cctv-cell" data-ytid="21X5lGlDOfg" data-delay="0">
       <div class="cctv-header"><span class="cctv-cam">CAM 01</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=21X5lGlDOfg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=21X5lGlDOfg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: COASTAL BORDER OPERATIONS</div>
         <div class="cctv-source">NATIONAL HERALD</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="XBPjVzSoepo" data-delay="1200">
+    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="1200">
       <div class="cctv-header"><span class="cctv-cam">CAM 02</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=XBPjVzSoepo" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: BORDER CHECKPOINT BRIEFING</div>
         <div class="cctv-source">EVENING STANDARD</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="86YLFOog4GM" data-delay="2400">
+    <div class="cctv-cell" data-ytid="gCNeDWCI0vo" data-delay="2400">
       <div class="cctv-header"><span class="cctv-cam">CAM 03</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=86YLFOog4GM" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=gCNeDWCI0vo" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: REGIONAL ARRIVAL TRENDS</div>
         <div class="cctv-source">DAILY POST</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="nA9UZF-SZoQ" data-delay="3600">
+    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="3600">
       <div class="cctv-header"><span class="cctv-cam">CAM 04</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=nA9UZF-SZoQ" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: COMMUNITY IMPACT PANEL</div>
         <div class="cctv-source">THE OBSERVER</div>
@@ -1707,33 +1722,33 @@ body::after {
         </div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="sTANio_2E0Q" data-delay="4800">
+    <div class="cctv-cell" data-ytid="fr_hXLDLc38" data-delay="4800">
       <div class="cctv-header"><span class="cctv-cam">CAM 06</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=sTANio_2E0Q" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=fr_hXLDLc38" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: SECURITY POLICY UPDATE</div>
         <div class="cctv-source">SECURITY TODAY</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="9Auq9mYxFEE" data-delay="6000">
+    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="6000">
       <div class="cctv-header"><span class="cctv-cam">CAM 07</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=9Auq9mYxFEE" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: PUBLIC SERVICES PRESSER</div>
         <div class="cctv-source">METRO VOICE</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="5qap5aO4i9A" data-delay="7200">
+    <div class="cctv-cell" data-ytid="21X5lGlDOfg" data-delay="7200">
       <div class="cctv-header"><span class="cctv-cam">CAM 08</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=5qap5aO4i9A" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=21X5lGlDOfg" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: NATIONAL SENTIMENT TRACKER</div>
         <div class="cctv-source">NATIONWIDE SURVEY</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="hHW1oY26kxQ" data-delay="8400">
+    <div class="cctv-cell" data-ytid="gCNeDWCI0vo" data-delay="8400">
       <div class="cctv-header"><span class="cctv-cam">CAM 09</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=hHW1oY26kxQ" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=gCNeDWCI0vo" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
         <div class="cctv-text">LIVE FEED: EDUCATION CAPACITY REPORT</div>
         <div class="cctv-source">EDUCATION WEEKLY</div>
