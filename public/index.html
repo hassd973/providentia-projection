@@ -2048,12 +2048,9 @@ function renderCharacterCarousel() {
     <div class="prism-meta">${carouselPrismView ? `SUBJECT ID: PRM-${10000 + carouselIndex} • RISK CLASS: ${p.level.toUpperCase()}` : `HUMAN PROFILE • CITIZEN ID: X-${10000 + carouselIndex}`}</div>
     ${carouselPrismView ? `<div class="prism-score ${p.level}">${p.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${p.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>` : `<div style="font-size:13px;line-height:1.4;color:#c8d8e8;">${p.humanDesc}</div>`}
     <details class="prism-stage-controls">
-      <summary>🎭 SP TOOLS — UPDATE PHOTOS</summary>
+      <summary>🎭 🖼️</summary>
       <div class="prism-stage-controls-body">
         <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Stage production photos:</strong><input type="file" accept="image/*" data-stage-upload></div>
-        <div class="prism-stage-toggle">
-          ${stageKeys.map(k => `<button type="button" data-stage="${k}" class="${p.activeStage===k?'active':''}">${stageLabels[k]}</button>`).join('')}
-        </div>
       </div>
     </details>
   `;
