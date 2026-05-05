@@ -969,67 +969,34 @@ body::after {
 .upload-panel input { width:100%; color:#d4c8b4; background:#181614; border:1px solid rgba(200,180,150,.2); padding:8px; }
 
 /* ══════════════════════════════════
-   SLIDE 16 — PERSONA → PRISM
+   SLIDE 16 — DEFIANT
 ══════════════════════════════════ */
 .slide-16 {
-  background: #06080d;
-  justify-content: center;
-  align-items: stretch;
+  background: #000;
+  flex-direction: column; align-items: center; justify-content: center;
 }
-.persona-prism-wrap {
-  width: 100%;
-  position: relative;
+.s16-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px,10vw,130px); font-weight: 700;
+  color: #fff; text-align: center; line-height: 1.0;
+  letter-spacing: -0.01em; text-transform: uppercase;
+  animation: flicker 6s infinite;
 }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 40px;
+.s16-slash {
+  color: rgba(255,255,255,0.12);
+  text-decoration: line-through;
+  text-decoration-color: var(--sys-red);
+  text-decoration-thickness: 3px;
 }
-.human-phase .profile {
-  text-align: center;
-  opacity: 0;
-  animation: fadeIn 0.8s forwards;
+@keyframes flicker {
+  0%,98%,100%{opacity:1} 99%{opacity:0.84}
 }
-.profile img {
-  width: 100%;
-  filter: contrast(0.9) brightness(1.1);
+.s16-subtext {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px,1.1vw,11px); color: rgba(255,255,255,0.2);
+  letter-spacing: 6px; text-transform: uppercase;
+  margin-top: clamp(20px,4vmin,36px); text-align: center;
 }
-.prism-phase {
-  opacity: 0;
-}
-.prism-card {
-  background: rgba(0,0,0,0.85);
-  padding: 20px;
-  border: 1px solid #1f2a38;
-  animation: snapIn 0.4s ease-out;
-}
-.prism-card .score strong {
-  font-size: 32px;
-}
-.risk.critical { color: #ff3b3b; }
-.risk.high { color: #ff7a3b; }
-.risk.moderate { color: #ffaa3b; }
-.risk.low { color: #3bffb6; }
-#scan-overlay {
-  position: absolute;
-  top: -100%;
-  left: 0;
-  width: 100%;
-  height: 200%;
-  background: linear-gradient(to bottom, transparent, rgba(0,255,255,0.15), transparent);
-  pointer-events: none;
-}
-@keyframes fadeIn { to { opacity: 1; } }
-@keyframes snapIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-@keyframes scanSweep {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-.hidden { display: none; }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -1816,137 +1783,14 @@ body::after {
   </div>
 </div>
 
-<!-- ─── SLIDE 16 — PERSONA → PRISM ────────────────── -->
-<div class="slide slide-16" data-slide="17" data-phase="FINAL — PERSONA → PRISM">
-  <section id="slide-16" class="persona-prism-wrap">
-
-    <!-- PHASE 1: HUMAN -->
-    <div id="human-phase" class="grid human-phase">
-
-      <div class="profile">
-        <img src="assets/simon.jpg" alt="Simon Day" />
-        <h3>Simon Day</h3>
-        <p>Documentary filmmaker exploring migration and identity</p>
-      </div>
-
-      <div class="profile">
-        <img src="assets/ibrahim.jpg" alt="Ibrahim Musa" />
-        <h3>Ibrahim Musa</h3>
-        <p>Community organiser focused on housing justice</p>
-      </div>
-
-      <div class="profile">
-        <img src="assets/jo.jpg" alt="Jo Rivers" />
-        <h3>Jo Rivers</h3>
-        <p>Primary school teacher and marathon runner</p>
-      </div>
-
-      <div class="profile">
-        <img src="assets/khalid.jpg" alt="Khalid Rahman" />
-        <h3>Khalid Rahman</h3>
-        <p>Driver studying mechanical engineering</p>
-      </div>
-
-      <div class="profile">
-        <img src="assets/marek.jpg" alt="Marek Kowalski" />
-        <h3>Marek Kowalski</h3>
-        <p>Warehouse supervisor and father of two</p>
-      </div>
-
-      <div class="profile">
-        <img src="assets/extra.jpg" alt="Elena Varga" />
-        <h3>Elena Varga</h3>
-        <p>Corporate analyst specialising in logistics</p>
-      </div>
-
+<!-- ─── SLIDE 16 — DEFIANT ────────────────── -->
+<div class="slide slide-16" data-slide="17" data-phase="FINAL — DEFIANT">
+  <div>
+    <div class="s16-text">
+      NO HUMAN<br>IS <span class="s16-slash">ILLEGAL</span>
     </div>
-
-    <!-- SCAN TRANSITION -->
-    <div id="scan-overlay"></div>
-
-    <!-- PHASE 2: PRISM -->
-    <div id="prism-phase" class="grid prism-phase hidden">
-
-      <div class="prism-card critical">
-        <h2>SIMON DAY</h2>
-        <p class="meta">ID: 7934418-SD</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>84</strong>
-        </div>
-
-        <div class="risk critical">RISK TIER: CRITICAL</div>
-        <div class="action">RECOMMENDED: REMOVAL (PRIORITY)</div>
-      </div>
-
-      <div class="prism-card moderate">
-        <h2>IBRAHIM MUSA</h2>
-        <p class="meta">ID: 6187723-IM</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>46.2</strong>
-        </div>
-
-        <div class="risk moderate">RISK TIER: MODERATE</div>
-        <div class="action">RECOMMENDED: DISRUPTION</div>
-      </div>
-
-      <div class="prism-card low">
-        <h2>JO RIVERS</h2>
-        <p class="meta">ID: 9912231-JR</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>28</strong>
-        </div>
-
-        <div class="risk low">RISK TIER: LOW</div>
-        <div class="action">RECOMMENDED: MONITOR</div>
-      </div>
-
-      <div class="prism-card moderate">
-        <h2>KHALID RAHMAN</h2>
-        <p class="meta">ID: 8821932-KR</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>51</strong>
-        </div>
-
-        <div class="risk moderate">RISK TIER: MODERATE</div>
-        <div class="action">RECOMMENDED: CONTAINMENT</div>
-      </div>
-
-      <div class="prism-card high">
-        <h2>MAREK KOWALSKI</h2>
-        <p class="meta">ID: 5521993-MK</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>67</strong>
-        </div>
-
-        <div class="risk high">RISK TIER: HIGH</div>
-        <div class="action">RECOMMENDED: SURVEILLANCE</div>
-      </div>
-
-      <div class="prism-card moderate">
-        <h2>ELENA VARGA</h2>
-        <p class="meta">ID: 1192333-EV</p>
-
-        <div class="score">
-          <span>FINAL RISK SCORE</span>
-          <strong>49</strong>
-        </div>
-
-        <div class="risk moderate">RISK TIER: MODERATE</div>
-        <div class="action">RECOMMENDED: REVIEW</div>
-      </div>
-
-    </div>
-  </section>
+    <div class="s16-subtext">— end of transmission —</div>
+  </div>
 </div>
 
 </div><!-- /slideshow -->
@@ -2016,28 +1860,6 @@ document.addEventListener('touchend', e => {
   const diff = touchStart - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
 });
-
-// Slide 16 timeline control
-setTimeout(() => {
-  document.querySelectorAll('.profile').forEach((el, i) => {
-    el.style.animationDelay = `${i * 0.2}s`;
-  });
-}, 0);
-
-setTimeout(() => {
-  const scan = document.getElementById('scan-overlay');
-  if (scan) scan.style.animation = 'scanSweep 1.2s linear';
-}, 3000);
-
-setTimeout(() => {
-  const human = document.getElementById('human-phase');
-  const prism = document.getElementById('prism-phase');
-  if (human && prism) {
-    human.style.display = 'none';
-    prism.classList.remove('hidden');
-    prism.style.opacity = 1;
-  }
-}, 4500);
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
