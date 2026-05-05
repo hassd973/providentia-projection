@@ -1026,17 +1026,6 @@ body::after {
 .prism-criteria ul { list-style: none; padding-left: 0; }
 .prism-criteria li { padding: 3px 0; position: relative; }
 .prism-criteria li::before { content: "•"; color: var(--sys-red); margin-right: 8px; }
-.prism-carousel { width:min(92vw,760px); }
-.prism-carousel-nav{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:14px; }
-.prism-nav-btn{ background:#101827; border:1px solid rgba(0,212,255,0.3); color:#9ddcff; padding:8px 14px; font:700 11px "Share Tech Mono", monospace; letter-spacing:1px; cursor:pointer; }
-.prism-position{ font:10px "Share Tech Mono", monospace; color:rgba(200,216,232,0.75); letter-spacing:2px; min-width:60px; text-align:center; }
-.prism-card{ width:100%; }
-.prism-stage-row{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-.prism-stage-row label{ font:9px "Share Tech Mono", monospace; color:rgba(200,216,232,0.55); letter-spacing:1.2px; text-transform:uppercase; }
-.prism-stage-toggle{ display:flex; border:1px solid rgba(157,220,255,0.25); border-radius:999px; overflow:hidden; }
-.prism-stage-toggle button{ background:transparent; color:rgba(200,216,232,0.65); border:none; padding:5px 10px; font:700 9px "Share Tech Mono", monospace; cursor:pointer; }
-.prism-stage-toggle button.active{ background:rgba(0,212,255,0.22); color:#d5f5ff; }
-.prism-upload{ font:9px "Share Tech Mono", monospace; color:rgba(200,216,232,0.75); }
 .prism-footer {
   margin-top: 30px;
   text-align: center;
@@ -1091,10 +1080,6 @@ body::after {
     .prism-view-toggle { position: static; align-self: flex-end; margin-bottom: 12px; }
 }
 @media (max-width: 600px) {
-  .s3-cols { max-width: 100%; padding: 4px 0; }
-  .s3-col { padding: 14px 12px; }
-  .s3-label { font-size: clamp(18px,8vw,30px); }
-  .s3-detail { max-width: 100%; font-size: 12px; }
   .s4-copy { grid-template-columns: 1fr; }
   .media-conversation { display: none; }
   .map-labour-types { flex-direction: column; }
@@ -1849,12 +1834,7 @@ body::after {
     </div>
     <div class="prism-status">THREAT LEVEL: ELEVATED • 6 ACTIVE PROFILES</div>
   </div>
-  <div class="prism-carousel" id="prismCarousel"></div>
-  <div class="prism-carousel-nav">
-    <button id="prismPrev" class="prism-nav-btn">← PREV</button>
-    <div class="prism-position" id="prismPosition">1 / 6</div>
-    <button id="prismNext" class="prism-nav-btn">NEXT →</button>
-  </div>
+  <div class="prism-grid" id="prismGrid"></div>
   <div class="prism-footer">PROVIDENTIA CLASSIFIED // AUTOMATED RISK SCORING • DEHUMANISATION PROTOCOL ACTIVE</div>
 </div>
 
@@ -1941,33 +1921,47 @@ document.addEventListener('touchend', e => {
 // ══════════════════════════════════
 
 const prismProfiles = [
-  { id: 1, name: "Simon Day", photo: "https://picsum.photos/id/64/600/400", humanDesc: "Loving father of two. Community gardener and amateur musician.", score: "87", level: "high", criteria: ["Attended unregistered assembly", "Social media activity flagged as dissent", "Known association with reform groups"], photos: { before: "", during: "", after: "" } },
-  { id: 2, name: "Selam Tesfae", photo: "https://picsum.photos/id/1011/600/400", humanDesc: "Dedicated nurse. Volunteers at local youth centre.", score: "94", level: "high", criteria: ["Origin from high-risk corridor", "Family ties to prior flagged individuals", "Employment in public health sector"], photos: { before: "", during: "", after: "" } },
-  { id: 3, name: "Ibrahim Musa", photo: "https://picsum.photos/id/201/600/400", humanDesc: "Skilled mechanic. Soccer coach for neighbourhood kids.", score: "79", level: "high", criteria: ["Failed loyalty questionnaire", "Travel history outside approved zones", "Religious observance pattern"], photos: { before: "", during: "", after: "" } },
-  { id: 4, name: "Jo Rivers", photo: "https://picsum.photos/id/669/600/400", humanDesc: "School teacher. Environmental activist and mother.", score: "82", level: "high", criteria: ["Signed open letter against charter cities", "Digital footprint shows anti-corporate sentiment", "Frequent contact with migrant advocacy networks"], photos: { before: "", during: "", after: "" } },
-  { id: 5, name: "Khalid Rahman", photo: "https://picsum.photos/id/823/600/400", humanDesc: "Taxi driver. Devoted husband and father of three.", score: "71", level: "med", criteria: ["Repeated route anomalies near border zones", "Financial transactions flagged", "Community mosque attendance"], photos: { before: "", during: "", after: "" } },
-  { id: 6, name: "Marek Kowalski", photo: "https://picsum.photos/id/1005/600/400", humanDesc: "Construction worker. Amateur boxer and volunteer firefighter.", score: "88", level: "high", criteria: ["Eastern European migration background", "Participation in labour rights rally", "Encrypted messaging detected"], photos: { before: "", during: "", after: "" } }
+  { id: 1, name: "Simon Day", photo: "https://picsum.photos/id/64/600/400", humanDesc: "Loving father of two. Community gardener and amateur musician.", score: "87", level: "high", criteria: ["Attended unregistered assembly", "Social media activity flagged as dissent", "Known association with reform groups"] },
+  { id: 2, name: "Selam Tesfae", photo: "https://picsum.photos/id/1011/600/400", humanDesc: "Dedicated nurse. Volunteers at local youth centre.", score: "94", level: "high", criteria: ["Origin from high-risk corridor", "Family ties to prior flagged individuals", "Employment in public health sector"] },
+  { id: 3, name: "Ibrahim Musa", photo: "https://picsum.photos/id/201/600/400", humanDesc: "Skilled mechanic. Soccer coach for neighbourhood kids.", score: "79", level: "high", criteria: ["Failed loyalty questionnaire", "Travel history outside approved zones", "Religious observance pattern"] },
+  { id: 4, name: "Jo Rivers", photo: "https://picsum.photos/id/669/600/400", humanDesc: "School teacher. Environmental activist and mother.", score: "82", level: "high", criteria: ["Signed open letter against charter cities", "Digital footprint shows anti-corporate sentiment", "Frequent contact with migrant advocacy networks"] },
+  { id: 5, name: "Khalid Rahman", photo: "https://picsum.photos/id/823/600/400", humanDesc: "Taxi driver. Devoted husband and father of three.", score: "71", level: "med", criteria: ["Repeated route anomalies near border zones", "Financial transactions flagged", "Community mosque attendance"] },
+  { id: 6, name: "Marek Kowalski", photo: "https://picsum.photos/id/1005/600/400", humanDesc: "Construction worker. Amateur boxer and volunteer firefighter.", score: "88", level: "high", criteria: ["Eastern European migration background", "Participation in labour rights rally", "Encrypted messaging detected"] }
 ];
-let isHumanView = true;
-let currentPrismIndex = 0;
-let currentStage = 'before';
-const prismWrap = document.getElementById('prismCarousel');
-function savePrismPhotoState(){ localStorage.setItem('prismCharacterPhotos', JSON.stringify(prismProfiles.map(p => ({id:p.id,photos:p.photos})))); }
-(function loadPrismPhotoState(){ try { const saved = JSON.parse(localStorage.getItem('prismCharacterPhotos') || '[]'); saved.forEach(entry => { const t=prismProfiles.find(p=>p.id===entry.id); if(t && entry.photos){ t.photos={...t.photos,...entry.photos}; } }); } catch(e){} })();
-function renderPrismCard(){
-  if(!prismWrap) return;
-  const profile = prismProfiles[currentPrismIndex];
-  const stagePhoto = profile.photos[currentStage] || profile.photo;
-  prismWrap.innerHTML = `<div class="prism-card ${isHumanView ? 'human' : ''}"><img src="${stagePhoto}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">${isHumanView ? `HUMAN PROFILE • CITIZEN ID: X-${10000 + currentPrismIndex}` : `SUBJECT ID: PRM-${10000 + currentPrismIndex} • RISK CLASS: ${profile.level.toUpperCase()}`}</div>${isHumanView ? `<div style="font-size:13px; line-height:1.4; color:#c8d8e8;">${profile.humanDesc}</div>` : `<div class="prism-score ${profile.level}">${profile.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${profile.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>`}<div class="prism-stage-row"><label>Stage photo</label><div class="prism-stage-toggle">${['before','during','after'].map(stage => `<button class="${currentStage===stage?'active':''}" data-stage="${stage}">${stage.toUpperCase()}</button>`).join('')}</div><input class="prism-upload" type="file" id="stagePhotoUpload" accept="image/*"></div></div>`;
-  document.getElementById('prismPosition').textContent = `${currentPrismIndex + 1} / ${prismProfiles.length}`;
-  prismWrap.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => { currentStage = btn.dataset.stage; renderPrismCard(); }));
-  prismWrap.querySelector('#stagePhotoUpload')?.addEventListener('change', e => { const [file]=e.target.files||[]; if(!file)return; const r=new FileReader(); r.onload=()=>{ prismProfiles[currentPrismIndex].photos[currentStage]=String(r.result); savePrismPhotoState(); renderPrismCard(); }; r.readAsDataURL(file); });
+
+function renderPrismCards(isHumanView = false) {
+  const grid = document.getElementById('prismGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  prismProfiles.forEach((profile, index) => {
+    const card = document.createElement('div');
+    card.className = `prism-card ${isHumanView ? 'human' : ''}`;
+    card.style.transitionDelay = `${index * 80}ms`;
+    card.innerHTML = isHumanView
+      ? `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">HUMAN PROFILE • CITIZEN ID: X-${10000 + index}</div><div style="font-size:13px; line-height:1.4; color:#c8d8e8;">${profile.humanDesc}</div>`
+      : `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">SUBJECT ID: PRM-${10000 + index} • RISK CLASS: ${profile.level.toUpperCase()}</div><div class="prism-score ${profile.level}">${profile.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${profile.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>`;
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 100);
+  });
 }
+
+let isHumanView = true;
 const toggleBtn = document.getElementById('viewToggle');
-toggleBtn?.addEventListener('click', ()=>{ isHumanView=!isHumanView; toggleBtn.textContent = isHumanView ? "SWITCH TO PRISM ASSESSMENT →" : "RETURN TO HUMAN PROFILES ←"; renderPrismCard(); });
-document.getElementById('prismPrev')?.addEventListener('click', ()=>{ currentPrismIndex=(currentPrismIndex-1+prismProfiles.length)%prismProfiles.length; renderPrismCard(); });
-document.getElementById('prismNext')?.addEventListener('click', ()=>{ currentPrismIndex=(currentPrismIndex+1)%prismProfiles.length; renderPrismCard(); });
-renderPrismCard();
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    isHumanView = !isHumanView;
+    toggleBtn.textContent = isHumanView ? "SWITCH TO PRISM ASSESSMENT →" : "RETURN TO HUMAN PROFILES ←";
+    renderPrismCards(isHumanView);
+  });
+  renderPrismCards(true);
+  setTimeout(() => {
+    if (isHumanView && document.querySelector('.slide-15')?.classList.contains('active')) {
+      isHumanView = false;
+      toggleBtn.textContent = "RETURN TO HUMAN PROFILES ←";
+      renderPrismCards(false);
+    }
+  }, 8000);
+}
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
