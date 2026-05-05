@@ -1035,6 +1035,52 @@ body::after {
   letter-spacing: 2px;
 }
 
+.prism-carousel-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+.prism-carousel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: stretch;
+}
+.carousel-nav-btn {
+  border: 1px solid rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.08);
+  color: var(--sys-cyan);
+  min-width: 44px;
+  cursor: pointer;
+}
+.prism-character-card {
+  background: rgba(10,14,24,0.95);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 16px;
+}
+.prism-stage-toggle { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+.prism-stage-toggle button { border:1px solid rgba(255,255,255,.2); background:#111726; color:#d7e3ef; padding:6px 10px; cursor:pointer; }
+.prism-stage-toggle button.active { border-color: var(--sys-cyan); color: var(--sys-cyan); }
+.prism-upload-row { display:flex; gap:10px; align-items:center; margin:10px 0 14px; flex-wrap:wrap; }
+.prism-upload-row input { color:#d7e3ef; font: 11px 'Share Tech Mono', monospace; }
+.prism-view-switch {
+  border: 1px solid var(--sys-cyan);
+  background: rgba(0,212,255,.08);
+  color: var(--sys-cyan);
+  padding: 8px 12px;
+  font:700 10px 'Share Tech Mono', monospace;
+  letter-spacing:1px;
+  justify-self: end;
+  cursor:pointer;
+}
+@media (max-width: 600px) {
+  .s3-detail { font-size: 12px; line-height: 1.35; max-width: 100%; }
+  .s3-col { padding: 16px 12px; }
+  .prism-carousel { grid-template-columns: 38px 1fr 38px; }
+}
+
 /* ══════════════════════════════════
    SLIDE 16 — DEFIANT
 ══════════════════════════════════ */
@@ -1838,13 +1884,15 @@ body::after {
   <div class="prism-footer">PROVIDENTIA CLASSIFIED // AUTOMATED RISK SCORING • DEHUMANISATION PROTOCOL ACTIVE</div>
 </div>
 
-<!-- ─── SLIDE 16 — DEFIANT ────────────────── -->
-<div class="slide slide-16" data-slide="17" data-phase="FINAL — DEFIANT">
-  <div>
-    <div class="s16-text">
-      NO HUMAN<br>IS <span class="s16-slash">ILLEGAL</span>
+<!-- ─── SLIDE 16 — CHARACTER CAROUSEL ────────────────── -->
+<div class="slide slide-16" data-slide="17" data-phase="FINAL — CHARACTER REVIEW">
+  <div class="prism-carousel-wrap">
+    <button class="prism-view-switch" id="carouselViewSwitch">SWITCH TO PRISM ASSESSMENT →</button>
+    <div class="prism-carousel">
+      <button class="carousel-nav-btn" id="charPrev" aria-label="Previous character">‹</button>
+      <div class="prism-character-card" id="characterCard"></div>
+      <button class="carousel-nav-btn" id="charNext" aria-label="Next character">›</button>
     </div>
-    <div class="s16-subtext">— end of transmission —</div>
   </div>
 </div>
 
@@ -1962,6 +2010,65 @@ if (toggleBtn) {
     }
   }, 8000);
 }
+
+
+
+const stageKeys = ['before','during','after'];
+const stageLabels = { before: 'Before show', during: 'During show', after: 'After show' };
+let carouselIndex = 0;
+let carouselPrismView = false;
+
+prismProfiles.forEach(p => {
+  p.stagePhotos = p.stagePhotos || { before: p.photo, during: p.photo, after: p.photo };
+});
+
+function renderCharacterCarousel() {
+  const card = document.getElementById('characterCard');
+  const switchBtn = document.getElementById('carouselViewSwitch');
+  if (!card || !switchBtn) return;
+  const p = prismProfiles[carouselIndex];
+  p.activeStage = p.activeStage || 'before';
+  const activePhoto = p.stagePhotos[p.activeStage] || p.photo;
+  switchBtn.textContent = carouselPrismView ? 'RETURN TO HUMAN PROFILE ←' : 'SWITCH TO PRISM ASSESSMENT →';
+  card.innerHTML = `
+    <img src="${activePhoto}" class="prism-photo" alt="${p.name}">
+    <div class="prism-name">${p.name}</div>
+    <div class="prism-meta">${carouselPrismView ? `SUBJECT ID: PRM-${10000 + carouselIndex} • RISK CLASS: ${p.level.toUpperCase()}` : `HUMAN PROFILE • CITIZEN ID: X-${10000 + carouselIndex}`}</div>
+    ${carouselPrismView ? `<div class="prism-score ${p.level}">${p.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${p.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>` : `<div style="font-size:13px;line-height:1.4;color:#c8d8e8;">${p.humanDesc}</div>`}
+    <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Stage production photos:</strong><input type="file" accept="image/*" data-stage-upload></div>
+    <div class="prism-stage-toggle">
+      ${stageKeys.map(k => `<button type="button" data-stage="${k}" class="${p.activeStage===k?'active':''}">${stageLabels[k]}</button>`).join('')}
+    </div>
+  `;
+  card.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => {
+    p.activeStage = btn.dataset.stage;
+    renderCharacterCarousel();
+  }));
+  card.querySelector('[data-stage-upload]')?.addEventListener('change', e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      p.stagePhotos[p.activeStage] = ev.target.result;
+      renderCharacterCarousel();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('charPrev')?.addEventListener('click', () => {
+  carouselIndex = (carouselIndex - 1 + prismProfiles.length) % prismProfiles.length;
+  renderCharacterCarousel();
+});
+document.getElementById('charNext')?.addEventListener('click', () => {
+  carouselIndex = (carouselIndex + 1) % prismProfiles.length;
+  renderCharacterCarousel();
+});
+document.getElementById('carouselViewSwitch')?.addEventListener('click', () => {
+  carouselPrismView = !carouselPrismView;
+  renderCharacterCarousel();
+});
+renderCharacterCarousel();
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
