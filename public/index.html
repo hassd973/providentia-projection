@@ -924,49 +924,116 @@ body::after {
 }
 
 /* ══════════════════════════════════
-   SLIDE 15 — PERSONAL STORIES
+   SLIDE 15 — PRISM RISK DASHBOARD
 ══════════════════════════════════ */
 .slide-15 {
-  background: #0f0e0c; padding: clamp(20px,4vmin,60px);
-  align-items: flex-start; flex-direction: column;
-  gap: clamp(16px,3vmin,40px);
+  background: #05080f;
+  padding: clamp(20px, 3vmin, 40px);
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
 }
-.s15-header {
+.prism-header {
+  width: 100%; max-width: 1280px; margin: 0 auto 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(0,212,255,0.25);
+  padding-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.prism-title {
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(8px,1vw,11px); color: rgba(200,180,150,0.35);
-  letter-spacing: 4px; text-transform: uppercase;
+  font-size: clamp(13px, 1.6vw, 22px);
+  color: var(--sys-cyan);
+  letter-spacing: 4px;
+  text-transform: uppercase;
 }
-.s15-profiles {
-  display: flex; gap: clamp(20px,4vw,60px);
-  width: 100%; align-items: flex-start; flex-wrap: wrap;
-}
-.s15-profile {
-  flex: 1 1 clamp(140px,26%,280px);
-  display: flex; flex-direction: column; gap: clamp(8px,1.5vmin,16px);
-}
-.s15-photo-placeholder {
-  width: 100%; height: clamp(120px,22vmin,280px);
-  background: linear-gradient(135deg, #1a1a18, #2a2a26);
-  border-left: 2px solid rgba(200,180,150,0.28);
-  display: flex; align-items: center; justify-content: center;
-}
-.s15-photo-placeholder span {
+.prism-status {
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(8px,1vw,10px); color: rgba(200,180,150,0.18); letter-spacing: 3px;
+  font-size: clamp(9px, 1vw, 13px);
+  color: var(--sys-red);
+  letter-spacing: 2px;
+  background: rgba(255,45,85,0.1);
+  padding: 4px 12px;
+  border: 1px solid rgba(255,45,85,0.4);
 }
-.s15-name {
+.prism-view-toggle {
+  position: absolute; top: 30px; right: 30px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid var(--sys-cyan);
+  color: var(--sys-cyan);
+  font: 700 10px 'Share Tech Mono', monospace;
+  padding: 6px 14px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  z-index: 100;
+}
+.prism-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.prism-card {
+  background: rgba(10,14,24,0.95);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 16px;
+  position: relative;
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.prism-card.visible { opacity: 1; transform: translateY(0); }
+.prism-card.human { border-color: rgba(200,180,150,0.4); }
+.prism-photo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+}
+.prism-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(16px,2.2vw,30px); font-weight: 600;
-  color: #d4c8b4; letter-spacing: 0.05em; text-transform: uppercase;
+  font-size: clamp(18px, 2.2vw, 26px);
+  color: #e8f0f7;
+  letter-spacing: 0.05em;
 }
-.s15-caption {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(11px,1.3vw,16px); font-weight: 400;
-  color: rgba(200,180,150,0.55); line-height: 1.4;
+.prism-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: rgba(200,216,232,0.6);
+  margin: 4px 0 12px;
 }
-.upload-panel { margin-top: clamp(10px,2vmin,20px); border: 1px dashed rgba(200,180,150,.35); padding: 12px; }
-.upload-panel label { display:block; font:11px 'Share Tech Mono'; letter-spacing:2px; color:rgba(212,200,180,.65); margin-bottom:8px; }
-.upload-panel input { width:100%; color:#d4c8b4; background:#181614; border:1px solid rgba(200,180,150,.2); padding:8px; }
+.prism-score {
+  position: absolute; top: 16px; right: 16px;
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font: 700 22px 'Share Tech Mono', monospace;
+  border: 3px solid;
+  background: #0a0e1a;
+}
+.prism-score.high { border-color: #ff2d55; color: #ff2d55; }
+.prism-score.med { border-color: #f0b429; color: #f0b429; }
+.prism-criteria {
+  font-size: clamp(10px, 1.1vw, 13px);
+  line-height: 1.4;
+  color: rgba(232,240,247,0.75);
+  margin-top: 12px;
+}
+.prism-criteria ul { list-style: none; padding-left: 0; }
+.prism-criteria li { padding: 3px 0; position: relative; }
+.prism-criteria li::before { content: "•"; color: var(--sys-red); margin-right: 8px; }
+.prism-footer {
+  margin-top: 30px;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,45,85,0.6);
+  letter-spacing: 2px;
+}
 
 /* ══════════════════════════════════
    SLIDE 16 — DEFIANT
@@ -1010,7 +1077,7 @@ body::after {
   .s4-step { opacity: 1 !important; animation: none !important; }
   .map-info-panel { display: none; }
   .media-conversation { width: min(90vw,360px); }
-  .s15-profiles { flex-direction: column; }
+    .prism-view-toggle { position: static; align-self: flex-end; margin-bottom: 12px; }
 }
 @media (max-width: 600px) {
   .s4-copy { grid-template-columns: 1fr; }
@@ -1757,30 +1824,18 @@ body::after {
   </div>
 </div>
 
-<!-- ─── SLIDE 15 — PERSONAL STORIES ────── -->
+<!-- ─── SLIDE 15 — PRISM RISK ASSESSMENT ────── -->
 <div class="slide slide-15" data-slide="16" data-phase="PHASE 04 — HUMAN">
-  <div class="s15-header">FIELD INVESTIGATION — AURORA BENTLEY // COMPILED 2031</div>
-  <div class="s15-profiles">
-    <div class="s15-profile">
-      <div class="s15-photo-placeholder"><span>SIMON</span></div>
-      <div class="s15-name">Simon Day</div>
-      <div class="s15-caption">Citizenship revoked for attending a peaceful protest.</div>
+  <button class="prism-view-toggle" id="viewToggle">SWITCH TO PRISM ASSESSMENT →</button>
+  <div class="prism-header">
+    <div>
+      <div class="prism-title">PROVIDENTIA — PRISM v4.2 • RISK PROFILING ENGINE</div>
+      <div style="font:10px 'Share Tech Mono'; color:rgba(0,212,255,0.5); letter-spacing:2px;">SUBJECTS UNDER REVIEW • LIVE • 2031-04-12</div>
     </div>
-    <div class="s15-profile">
-      <div class="s15-photo-placeholder"><span>SELAM</span></div>
-      <div class="s15-name">Selam Tesfae</div>
-      <div class="s15-caption">Deported to Port Meridian and forced into labour.</div>
-    </div>
-    <div class="s15-profile">
-      <div class="s15-photo-placeholder"><span>IBRAHIM</span></div>
-      <div class="s15-name">Ibrahim Musa</div>
-      <div class="s15-caption">Held in removal centre 9 months. Denied visits & legal representation.</div>
-    </div>
+    <div class="prism-status">THREAT LEVEL: ELEVATED • 6 ACTIVE PROFILES</div>
   </div>
-  <div class="upload-panel">
-    <label>UPLOAD REAL PHOTOS / REPLACE MOCKUPS</label>
-    <input type="file" accept="image/*" multiple>
-  </div>
+  <div class="prism-grid" id="prismGrid"></div>
+  <div class="prism-footer">PROVIDENTIA CLASSIFIED // AUTOMATED RISK SCORING • DEHUMANISATION PROTOCOL ACTIVE</div>
 </div>
 
 <!-- ─── SLIDE 16 — DEFIANT ────────────────── -->
@@ -1860,6 +1915,53 @@ document.addEventListener('touchend', e => {
   const diff = touchStart - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
 });
+
+// ══════════════════════════════════
+// PRISM DASHBOARD
+// ══════════════════════════════════
+
+const prismProfiles = [
+  { id: 1, name: "Simon Day", photo: "https://picsum.photos/id/64/600/400", humanDesc: "Loving father of two. Community gardener and amateur musician.", score: "87", level: "high", criteria: ["Attended unregistered assembly", "Social media activity flagged as dissent", "Known association with reform groups"] },
+  { id: 2, name: "Selam Tesfae", photo: "https://picsum.photos/id/1011/600/400", humanDesc: "Dedicated nurse. Volunteers at local youth centre.", score: "94", level: "high", criteria: ["Origin from high-risk corridor", "Family ties to prior flagged individuals", "Employment in public health sector"] },
+  { id: 3, name: "Ibrahim Musa", photo: "https://picsum.photos/id/201/600/400", humanDesc: "Skilled mechanic. Soccer coach for neighbourhood kids.", score: "79", level: "high", criteria: ["Failed loyalty questionnaire", "Travel history outside approved zones", "Religious observance pattern"] },
+  { id: 4, name: "Jo Rivers", photo: "https://picsum.photos/id/669/600/400", humanDesc: "School teacher. Environmental activist and mother.", score: "82", level: "high", criteria: ["Signed open letter against charter cities", "Digital footprint shows anti-corporate sentiment", "Frequent contact with migrant advocacy networks"] },
+  { id: 5, name: "Khalid Rahman", photo: "https://picsum.photos/id/823/600/400", humanDesc: "Taxi driver. Devoted husband and father of three.", score: "71", level: "med", criteria: ["Repeated route anomalies near border zones", "Financial transactions flagged", "Community mosque attendance"] },
+  { id: 6, name: "Marek Kowalski", photo: "https://picsum.photos/id/1005/600/400", humanDesc: "Construction worker. Amateur boxer and volunteer firefighter.", score: "88", level: "high", criteria: ["Eastern European migration background", "Participation in labour rights rally", "Encrypted messaging detected"] }
+];
+
+function renderPrismCards(isHumanView = false) {
+  const grid = document.getElementById('prismGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  prismProfiles.forEach((profile, index) => {
+    const card = document.createElement('div');
+    card.className = `prism-card ${isHumanView ? 'human' : ''}`;
+    card.style.transitionDelay = `${index * 80}ms`;
+    card.innerHTML = isHumanView
+      ? `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">HUMAN PROFILE • CITIZEN ID: X-${10000 + index}</div><div style="font-size:13px; line-height:1.4; color:#c8d8e8;">${profile.humanDesc}</div>`
+      : `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">SUBJECT ID: PRM-${10000 + index} • RISK CLASS: ${profile.level.toUpperCase()}</div><div class="prism-score ${profile.level}">${profile.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${profile.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>`;
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 100);
+  });
+}
+
+let isHumanView = true;
+const toggleBtn = document.getElementById('viewToggle');
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    isHumanView = !isHumanView;
+    toggleBtn.textContent = isHumanView ? "SWITCH TO PRISM ASSESSMENT →" : "RETURN TO HUMAN PROFILES ←";
+    renderPrismCards(isHumanView);
+  });
+  renderPrismCards(true);
+  setTimeout(() => {
+    if (isHumanView && document.querySelector('.slide-15')?.classList.contains('active')) {
+      isHumanView = false;
+      toggleBtn.textContent = "RETURN TO HUMAN PROFILES ←";
+      renderPrismCards(false);
+    }
+  }, 8000);
+}
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
