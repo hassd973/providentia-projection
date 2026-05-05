@@ -1065,6 +1065,18 @@ body::after {
 .prism-stage-toggle button.active { border-color: var(--sys-cyan); color: var(--sys-cyan); }
 .prism-upload-row { display:flex; gap:10px; align-items:center; margin:10px 0 14px; flex-wrap:wrap; }
 .prism-upload-row input { color:#d7e3ef; font: 11px 'Share Tech Mono', monospace; }
+.prism-stage-controls { margin-top: 12px; border: 1px solid rgba(0,212,255,0.25); background: rgba(5,8,16,0.75); }
+.prism-stage-controls summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  color: #9ec7df;
+  font: 700 10px 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+}
+.prism-stage-controls summary::-webkit-details-marker { display: none; }
+.prism-stage-controls[open] summary { border-bottom: 1px solid rgba(0,212,255,0.2); }
+.prism-stage-controls-body { padding: 10px; }
 .prism-view-switch {
   border: 1px solid var(--sys-cyan);
   background: rgba(0,212,255,.08);
@@ -2035,10 +2047,15 @@ function renderCharacterCarousel() {
     <div class="prism-name">${p.name}</div>
     <div class="prism-meta">${carouselPrismView ? `SUBJECT ID: PRM-${10000 + carouselIndex} • RISK CLASS: ${p.level.toUpperCase()}` : `HUMAN PROFILE • CITIZEN ID: X-${10000 + carouselIndex}`}</div>
     ${carouselPrismView ? `<div class="prism-score ${p.level}">${p.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${p.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>` : `<div style="font-size:13px;line-height:1.4;color:#c8d8e8;">${p.humanDesc}</div>`}
-    <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Stage production photos:</strong><input type="file" accept="image/*" data-stage-upload></div>
-    <div class="prism-stage-toggle">
-      ${stageKeys.map(k => `<button type="button" data-stage="${k}" class="${p.activeStage===k?'active':''}">${stageLabels[k]}</button>`).join('')}
-    </div>
+    <details class="prism-stage-controls">
+      <summary>🎭 SP TOOLS — UPDATE PHOTOS</summary>
+      <div class="prism-stage-controls-body">
+        <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Stage production photos:</strong><input type="file" accept="image/*" data-stage-upload></div>
+        <div class="prism-stage-toggle">
+          ${stageKeys.map(k => `<button type="button" data-stage="${k}" class="${p.activeStage===k?'active':''}">${stageLabels[k]}</button>`).join('')}
+        </div>
+      </div>
+    </details>
   `;
   card.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => {
     p.activeStage = btn.dataset.stage;
