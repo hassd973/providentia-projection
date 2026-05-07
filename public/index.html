@@ -1179,6 +1179,8 @@ body::after {
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.tele-msg .reactions { display:flex; gap:6px; margin-top:8px; }
+.tele-msg .pill { background:#f1f1f1; border-radius:12px; padding:3px 7px; font:700 10px 'Barlow Condensed',sans-serif; }
 .tele-msg:nth-child(1){ animation-delay:.35s; } .tele-msg:nth-child(2){ animation-delay:.65s; } .tele-msg:nth-child(3){ animation-delay:.95s; } .tele-msg:nth-child(4){ animation-delay:1.25s; } .tele-msg:nth-child(5){ animation-delay:1.55s; }
 .tele-photo { width:100%; height:130px; margin-bottom:8px; border-radius:8px; position:relative; background-size:cover; background-position:center; filter:saturate(.92) contrast(1.04); }
 .face-blur { position:absolute; width:42px; height:42px; border-radius:50%; background:rgba(224,232,241,.65); filter: blur(8px); }
@@ -2296,11 +2298,18 @@ const teleImages = {
   2: 'https://picsum.photos/id/237/600/380',
   4: 'https://picsum.photos/id/433/600/380'
 };
+const teleMeta = [
+  { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
+  { user: '@Lionheart_Sentinel', react1: '👊 245', react2: '🚫 92' },
+  { user: '@Lionheart_Marshal', react1: '🤮 531', react2: '🤬 204' },
+  { user: '@Lionheart_Command', react1: '🇬🇧 1.2K', react2: '⚔️ 340' },
+  { user: '@Lionheart_Locate', react1: '📍 890', react2: '' }
+];
 const feed = document.getElementById('telegramFeed');
 const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f7a56"/><stop offset="1" stop-color="#c8a65e"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#g)"/><text x="40" y="48" text-anchor="middle" font-size="26" font-family="Arial" fill="white">LC</text></svg>');
 function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   if (!feed) return;
-  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleImages[i] ? `<div class="tele-photo" style="background-image:url('${teleImages[i]}')"><div class="face-blur" style="top:38%;left:30%;"></div><div class="face-blur" style="top:44%;left:58%;"></div>${i===4 ? '<div class="tele-map-circle"></div>' : ''}</div>` : ''}<h4>CREW UPDATE ${i+1}</h4><p>${t}</p></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">THREAD LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
+  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleImages[i] ? `<div class="tele-photo" style="background-image:url('${teleImages[i]}')"><div class="face-blur" style="top:38%;left:30%;"></div><div class="face-blur" style="top:44%;left:58%;"></div>${i===4 ? '<div class="tele-map-circle"></div>' : ''}</div>` : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
