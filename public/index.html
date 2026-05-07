@@ -1176,7 +1176,7 @@ body::after {
 .telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px; background:rgba(8,14,24,.75); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
 .telegram-viewer-thread { overflow:auto; padding:12px; }
-.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; }
+.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; padding-bottom:18px; }
 .telegram-typing { font:600 10px 'Share Tech Mono', monospace; color:#d7ecff; opacity:.9; }
 .crew-tab.active { box-shadow: 0 0 0 1px rgba(0,212,255,.55) inset, 0 0 18px rgba(0,212,255,.25); }
 @media (max-width: 640px) { .crew-tabs { position: sticky; top: 0; z-index: 2; } .crew-tab.active { transform: translateY(-1px); } }
@@ -1187,7 +1187,7 @@ body::after {
 .telegram-header { position: relative; z-index: 2; display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 46vh; overflow: hidden; animation:auto-scroll 18s linear infinite alternate; animation-delay:1s; }
+.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 62vh; overflow: auto; animation:auto-scroll 22s linear infinite alternate; animation-delay:1s; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
@@ -2025,26 +2025,12 @@ body::after {
     <div class="crew-topbar">
       <div class="crew-title">THEATRE CREW MENU</div>
       <div class="crew-tabs">
-        <button class="crew-tab active" data-crew-tab="cast">MEET THE CAST</button>
-        <button class="crew-tab" data-crew-tab="files">FILES</button>
+        <button class="crew-tab active" data-crew-tab="files">FILES</button>
         <button class="crew-tab" data-crew-tab="map">MAP</button>
       </div>
+      <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE</button>
     </div>
-    <div class="crew-panel active" id="panel-cast">
-      <div class="cast-grid cast-stage" id="castStage">
-        <div class="glass-block">
-          <div class="cast-stage-controls">
-            <button class="action-btn" id="uploadCastBgBtn" type="button">UPLOAD CAST BACKGROUND</button>
-            <button class="action-btn" id="resetCastBgBtn" type="button">RESET BACKGROUND</button>
-            <input type="file" id="castBgUpload" accept="image/*" hidden>
-          </div>
-          <div class="cast-list" id="castList"></div>
-          <button class="action-btn" id="addCharacterBtn">+ ADD NEW CHARACTER</button>
-        </div>
-        <div class="glass-block cast-preview" id="castEditor"></div>
-      </div>
-    </div>
-    <div class="crew-panel" id="panel-files">
+    <div class="crew-panel active" id="panel-files">
       <div class="glass-block files-toolbar">
         <button class="action-btn" id="downloadTelegramHtmlBtn">DOWNLOAD TELEGRAM THREAD (.HTML)</button>
         <button class="action-btn" id="openTelegramViewerBtn" type="button">OPEN TELEGRAM THREAD VIEWER</button>
@@ -2079,6 +2065,30 @@ body::after {
   </div>
 </div>
 
+
+<!-- ─── SLIDE 19 — MEET THE CAST MODULE ────────────────── -->
+<div class="slide slide-cast-module" data-slide="20" data-phase="CAST MODULE — EDITOR">
+  <div class="crew-shell">
+    <div class="crew-topbar">
+      <div class="crew-title">MEET THE CAST — FULL PAGE EDITOR</div>
+      <button class="action-btn" id="backToToolsBtn" type="button">BACK TO TOOLS SLIDE</button>
+    </div>
+    <div class="cast-grid cast-stage" id="castStage">
+      <div class="glass-block">
+        <div class="cast-stage-controls">
+          <button class="action-btn" id="uploadCastBgBtn" type="button">UPLOAD CAST BACKGROUND</button>
+          <button class="action-btn" id="resetCastBgBtn" type="button">RESET BACKGROUND</button>
+          <button class="action-btn" id="exportCastMemberPngBtn" type="button">EXPORT CURRENT CAST PNG</button>
+          <button class="action-btn" id="exportAllCastPngBtn" type="button">EXPORT ALL CAST PNG</button>
+          <input type="file" id="castBgUpload" accept="image/*" hidden>
+        </div>
+        <div class="cast-list" id="castList"></div>
+        <button class="action-btn" id="addCharacterBtn">+ ADD NEW CHARACTER</button>
+      </div>
+      <div class="glass-block cast-preview" id="castEditor"></div>
+    </div>
+  </div>
+</div>
 </div><!-- /slideshow -->
 
 <script>
@@ -2322,8 +2332,9 @@ const teleLines = [
   'Harbour House. This is the location. Be there May 16th. No excuses.'
 ];
 const teleVideos = {
+  0: { id: 'fD4Rk6hOjFk', title: 'First-message news clip' },
   2: { id: 'fD4Rk6hOjFk', title: 'News discourse clip' },
-  4: { id: 'Q6rG9X6i4mA', title: 'Map/location brief clip' }
+  4: { id: 'aQ7zH4A-k5s', title: 'Deptford location map clip' }
 };
 const teleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -2381,7 +2392,14 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
   const btn = ev.currentTarget;
   if (telegramRecorder && telegramRecorder.state === 'recording') { telegramRecorder.stop(); btn.textContent = 'START SCREEN RECORD'; return; }
   try {
-    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+    let stream;
+    if (navigator.mediaDevices?.getDisplayMedia) {
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+    } else {
+      const target = telegramViewerThread?.querySelector('.telegram-shell') || telegramViewerThread;
+      stream = target?.captureStream?.(30);
+      if (!stream) throw new Error('No capture method available');
+    }
     telegramChunks = [];
     telegramRecorder = new MediaRecorder(stream);
     telegramRecorder.ondataavailable = e => { if (e.data.size) telegramChunks.push(e.data); };
@@ -2503,6 +2521,22 @@ document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', ()
   const blob = new Blob([threadHtml], { type: 'text/html' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lionheart-telegram-thread.html'; a.click();
 });
+function exportCastCardAsImage(profile, filename) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext('2d');
+  const bg = ctx.createLinearGradient(0,0,1080,1350);
+  bg.addColorStop(0,'#122235'); bg.addColorStop(1,'#09131f');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = '#dff3ff'; ctx.font = '700 64px Barlow Condensed'; ctx.fillText(profile.character, 70, 120);
+  ctx.fillStyle = '#8ec5e8'; ctx.font = '600 38px Barlow Condensed'; ctx.fillText(profile.actor + ' · ' + profile.outlet, 70, 178);
+  ctx.fillStyle = '#c8d8e8'; ctx.font = '400 30px Arial';
+  const words=(profile.bio||'').split(' '); let line='', y=235;
+  words.forEach(w=>{ const t=line+w+' '; if(ctx.measureText(t).width>920){ctx.fillText(line,70,y); line=w+' '; y+=38;} else line=t;}); ctx.fillText(line,70,y);
+  canvas.toBlob(blob=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); }, 'image/png');
+}
+document.getElementById('exportCastMemberPngBtn')?.addEventListener('click',()=>{const c=castProfiles[castIndex]; exportCastCardAsImage(c,`${c.character.replace(/\s+/g,'-').toLowerCase()}.png`);});
+document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('.crew-tab').forEach(b => b.classList.toggle('active', b === btn));
   document.querySelectorAll('.crew-panel').forEach(p => p.classList.remove('active'));
@@ -2511,6 +2545,8 @@ document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('clic
 renderCastList();
 renderCastEditor();
 applyCastBackground();
+document.getElementById('openCastSlideBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-cast-module'))));
+document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-crew-menu'))));
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
