@@ -1175,10 +1175,16 @@ body::after {
 .telegram-header { display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 12px; display:grid; gap:9px; }
-.tele-msg { border: 1px solid rgba(255,255,255,.15); background: rgba(10,17,29,.65); padding: 10px; animation: pulse-bg 8s ease-in-out infinite; }
-.tele-msg h4 { color: #9ed7ff; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
-.tele-msg p { color: #f0f5ff; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.telegram-screen { padding: 12px; display:grid; gap:9px; animation:auto-scroll 15s linear infinite alternate; animation-delay:1s; }
+.tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
+.tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
+.tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.tele-msg:nth-child(1){ animation-delay:.35s; } .tele-msg:nth-child(2){ animation-delay:.65s; } .tele-msg:nth-child(3){ animation-delay:.95s; } .tele-msg:nth-child(4){ animation-delay:1.25s; } .tele-msg:nth-child(5){ animation-delay:1.55s; }
+.tele-photo { width:100%; height:130px; margin-bottom:8px; border-radius:8px; position:relative; background-size:cover; background-position:center; filter:saturate(.92) contrast(1.04); }
+.face-blur { position:absolute; width:42px; height:42px; border-radius:50%; background:rgba(224,232,241,.65); filter: blur(8px); }
+.tele-map-circle { position:absolute; top:42%; left:56%; width:46px; height:46px; border:3px solid red; border-radius:50%; box-shadow:0 0 10px rgba(255,0,0,.5); animation:pulse 1.5s infinite; }
+@keyframes tele-pop { from { opacity:0; transform:translateY(18px) scale(.98);} to { opacity:1; transform:translateY(0) scale(1);} }
+@keyframes auto-scroll { from { transform:translateY(0);} to { transform:translateY(-160px);} }
 .deptford-map { position: relative; min-height: 320px; background: linear-gradient(180deg,#8bbfd8,#82b1c7); overflow: hidden; }
 .deptford-map::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px); background-size: 36px 36px; }
 .creek-line { position: absolute; left: 45%; top: -10%; width: 12%; height: 120%; background: #5aa3c3; transform: rotate(14deg); border-radius: 999px; }
@@ -1186,6 +1192,7 @@ body::after {
 .map-pin::after { content: ''; position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #ffd9e1; left: 6px; top: 6px; }
 @keyframes pin-bounce { 0%,100%{transform:rotate(-45deg) translateY(0)}50%{transform:rotate(-45deg) translateY(-6px)} }
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
+@keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
 @media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 30vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } }
 
@@ -2285,11 +2292,15 @@ const teleLines = [
   "If the government won't protect the people, we will protect ourselves.",
   'Harbour House. This is the location. Be there May 16th. No excuses.'
 ];
+const teleImages = {
+  2: 'https://picsum.photos/id/237/600/380',
+  4: 'https://picsum.photos/id/433/600/380'
+};
 const feed = document.getElementById('telegramFeed');
 const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f7a56"/><stop offset="1" stop-color="#c8a65e"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#g)"/><text x="40" y="48" text-anchor="middle" font-size="26" font-family="Arial" fill="white">LC</text></svg>');
 function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   if (!feed) return;
-  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • CREW THREAD</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg"><h4>CREW UPDATE ${i+1}</h4><p>${t}</p></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">THREAD LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
+  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleImages[i] ? `<div class="tele-photo" style="background-image:url('${teleImages[i]}')"><div class="face-blur" style="top:38%;left:30%;"></div><div class="face-blur" style="top:44%;left:58%;"></div>${i===4 ? '<div class="tele-map-circle"></div>' : ''}</div>` : ''}<h4>CREW UPDATE ${i+1}</h4><p>${t}</p></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">THREAD LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
