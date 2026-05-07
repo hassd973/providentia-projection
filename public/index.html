@@ -1123,27 +1123,6 @@ body::after {
   margin-top: clamp(20px,4vmin,36px); text-align: center;
 }
 
-
-/* ══════════════════════════════════
-   SLIDE 17 — CREW CONTROL MENU
-══════════════════════════════════ */
-.slide-17{background:radial-gradient(circle at 20% 20%,#2b3f5f 0%,#0a101b 55%,#05070d 100%);padding:24px;align-items:stretch;justify-content:stretch}
-.crew-shell{width:min(1280px,100%);margin:0 auto;display:grid;grid-template-columns:260px 1fr;gap:16px;height:100%;}
-.crew-menu{background:rgba(140,180,220,.08);border:1px solid rgba(170,220,255,.35);backdrop-filter:blur(16px);border-radius:16px;padding:14px;display:grid;gap:10px;align-content:start}
-.crew-menu button{padding:10px;border:1px solid rgba(170,220,255,.3);background:rgba(5,15,24,.75);color:#cde9ff;text-align:left;cursor:pointer}
-.crew-menu button.active{border-color:#00d4ff;color:#00d4ff}
-.crew-pane{display:none;background:rgba(7,11,18,.72);border:1px solid rgba(170,220,255,.2);border-radius:16px;padding:16px;overflow:auto}
-.crew-pane.active{display:block}
-.cast-card{display:grid;grid-template-columns:200px 1fr;gap:14px;margin-top:12px;background:rgba(255,255,255,.03);padding:12px;border:1px solid rgba(255,255,255,.09)}
-.cast-card img{width:100%;height:200px;object-fit:cover}
-.cast-metrics{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.cast-metrics span{border:1px solid rgba(0,212,255,.4);padding:4px 8px;font:10px 'Share Tech Mono'}
-.form-grid{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}.form-grid input,.form-grid textarea{background:#0d1726;border:1px solid rgba(255,255,255,.2);color:#dbefff;padding:8px}
-.tg-stream{display:grid;gap:8px;margin-top:12px}.tg-bubble{padding:10px;border:1px solid rgba(255,45,85,.35);background:rgba(255,45,85,.08);animation:tense 8s ease-in-out infinite}
-@keyframes tense{0%,100%{background:rgba(60,80,110,.2)}50%{background:rgba(120,20,34,.35)}}
-.map-mini{margin-top:12px;height:320px;border:1px solid rgba(255,255,255,.2);border-radius:12px;overflow:hidden}
-.map-mini iframe{width:100%;height:100%;border:0;filter:grayscale(.1) contrast(1.05)}
-@media(max-width:900px){.crew-shell{grid-template-columns:1fr}.cast-card{grid-template-columns:1fr}}
-
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
 ══════════════════════════════════ */
@@ -1364,7 +1343,7 @@ body::after {
 
 <!-- CHROME -->
 <div id="phase-label">PHASE 01 — CORPORATE</div>
-<div id="slide-counter">01 / 17</div>
+<div id="slide-counter">01 / 16</div>
 <div id="key-hint">← → · SWIPE · CLICK</div>
 <button id="prev-btn">&#8249;</button>
 <button id="next-btn">&#8250;</button>
@@ -1953,43 +1932,7 @@ body::after {
   </div>
 </div>
 
-</div><!-- /slideshow --><!-- ─── SLIDE 17 — CREW MENU ───────────── -->
-<div class="slide slide-17" data-slide="17" data-phase="PHASE 04 — CREW TOOLS">
-  <div class="crew-shell">
-    <div class="crew-menu" id="crewMenu">
-      <button data-pane="cast" class="active">Meet The Cast</button>
-      <button data-pane="files">Files</button>
-      <button data-pane="telegram">Telegram + Map</button>
-    </div>
-    <section class="crew-pane active" data-pane="cast">
-      <h2>Meet the Cast · Glass UI Carousel</h2>
-      <div id="castCarousel"></div>
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button id="castPrev">← Prev</button><button id="castNext">Next →</button><button id="addCharacter">+ Add Character</button>
-        <button id="saveCast">Save Cast</button><button id="exportCast">Export Cast JSON</button>
-      </div>
-    </section>
-    <section class="crew-pane" data-pane="files">
-      <h2>Files</h2>
-      <p>Upload logos and production files for channels/companies in-play.</p>
-      <input type="file" id="logoUpload" accept="image/*" multiple>
-      <p style="margin-top:10px">Animation export presets:</p>
-      <div class="cast-metrics"><span>MP4 16:9</span><span>MP4 Portrait 9:16</span><span>Stage Master</span></div>
-      <button id="mockExport">Export Animation Package</button>
-    </section>
-    <section class="crew-pane" data-pane="telegram">
-      <h2>Lionheart Crusaders · Telegram Sequence</h2>
-      <div class="tg-stream">
-        <div class="tg-bubble">Illegal occupation, foreign invaders</div>
-        <div class="tg-bubble">Migrant rape gangs, take back control</div>
-        <div class="tg-bubble">Meet-up location dropped: Deptford Creek · Harbour House</div>
-      </div>
-      <div class="map-mini"><iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.046,51.470,-0.013,51.488&layer=mapnik&marker=51.478%2C-0.026"></iframe></div>
-    </section>
-  </div>
-</div>
-
-
+</div><!-- /slideshow -->
 
 <script>
 // ══════════════════════════════════
@@ -2364,27 +2307,8 @@ function animateMediaWall() {
   }
 })();
 
-
-// Crew menu + cast persistence
-const defaultCast=[
-{name:'Sebastian Senior',actor:'Simon Day',role:'Senior',bio:'Senior strategist under pressure.',photo:'https://picsum.photos/seed/seb/600/600',metrics:['Risk 82','Influence 94','Exposure High']},
-{name:'Sam Gibbons',actor:'James Harris',role:'Presenter',bio:'NBS presenter amplifying narratives.',photo:'https://picsum.photos/seed/sam/600/600',metrics:['Risk 74','Reach 88','Sentiment Polarized']}
-];
-let castData=JSON.parse(localStorage.getItem('crewCastData')||'null')||defaultCast; let castIndex=0;
-function renderCast(){const wrap=document.getElementById('castCarousel'); if(!wrap) return; const c=castData[castIndex]; if(!c) return; wrap.innerHTML=`<div class="cast-card"><img src="${c.photo}" alt="${c.name}"><div><h3>${c.name}</h3><div>${c.actor} · ${c.role}</div><p style="margin-top:8px">${c.bio}</p><div class="cast-metrics">${c.metrics.map(m=>`<span>${m}</span>`).join('')}</div><div class="form-grid"><input id="castName" value="${c.name}"><input id="castActor" value="${c.actor}"><input id="castRole" value="${c.role}"><input id="castPhoto" value="${c.photo}"><textarea id="castBio" style="grid-column:1/-1">${c.bio}</textarea></div></div></div>`;}
-function persistCast(){localStorage.setItem('crewCastData',JSON.stringify(castData));}
-document.querySelectorAll('#crewMenu button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#crewMenu button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.crew-pane').forEach(p=>p.classList.toggle('active',p.dataset.pane===b.dataset.pane));}));
-document.getElementById('castPrev')?.addEventListener('click',()=>{castIndex=(castIndex-1+castData.length)%castData.length;renderCast();});
-document.getElementById('castNext')?.addEventListener('click',()=>{castIndex=(castIndex+1)%castData.length;renderCast();});
-document.getElementById('addCharacter')?.addEventListener('click',()=>{castData.push({name:'New Character',actor:'TBD',role:'Role',bio:'Bio text',photo:'https://picsum.photos/seed/new'+Date.now()+'/600/600',metrics:['Risk 50','Influence 50','Exposure Medium']});castIndex=castData.length-1;persistCast();renderCast();});
-document.getElementById('saveCast')?.addEventListener('click',()=>{const c=castData[castIndex]; c.name=castName.value;c.actor=castActor.value;c.role=castRole.value;c.photo=castPhoto.value;c.bio=castBio.value;persistCast();renderCast();});
-document.getElementById('exportCast')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(castData,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meet-the-cast.json';a.click();});
-document.getElementById('mockExport')?.addEventListener('click',()=>alert('Export queued: cast + telegram + map storyboard (MP4 presets 16:9 and 9:16).'));
-renderCast();
-
 // Init counter
 counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
 </script>
 </body>
 </html>
-
