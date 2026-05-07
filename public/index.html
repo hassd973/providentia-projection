@@ -1151,7 +1151,14 @@ body::after {
 .form-row { display: grid; gap: 6px; }
 .form-row input, .form-row textarea { width: 100%; background: rgba(6,12,20,.9); color: #dceeff; border: 1px solid rgba(255,255,255,.18); padding: 8px; font: 12px 'Barlow Condensed', sans-serif; }
 .action-btn { border: 1px solid rgba(0,212,255,.45); background: rgba(0,212,255,.12); color: #dff6ff; padding: 8px 10px; font: 700 10px 'Share Tech Mono', monospace; cursor: pointer; }
-.telegram-feed { display: grid; gap: 9px; max-height: 55vh; overflow: auto; }
+.telegram-feed { display: grid; gap: 10px; max-height: 55vh; overflow: auto; }
+.files-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
+.telegram-frame { border:1px solid rgba(255,255,255,.2); border-radius:18px; background: linear-gradient(150deg, rgba(174,221,196,0.24), rgba(121,183,230,0.2) 48%, rgba(255,255,255,0.14)); padding: 10px; backdrop-filter: blur(14px) saturate(160%); }
+.telegram-shell { border-radius: 24px; border:1px solid rgba(255,255,255,.45); overflow: hidden; background: linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.55);}
+.telegram-header { display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
+.telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
+.telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
+.telegram-screen { padding: 12px; display:grid; gap:9px; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); background: rgba(10,17,29,.65); padding: 10px; animation: pulse-bg 8s ease-in-out infinite; }
 .tele-msg h4 { color: #9ed7ff; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #f0f5ff; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
@@ -1162,7 +1169,8 @@ body::after {
 .map-pin::after { content: ''; position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #ffd9e1; left: 6px; top: 6px; }
 @keyframes pin-bounce { 0%,100%{transform:rotate(-45deg) translateY(0)}50%{transform:rotate(-45deg) translateY(-6px)} }
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
-@media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
+@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 30vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -1994,6 +2002,10 @@ body::after {
       </div>
     </div>
     <div class="crew-panel" id="panel-files">
+      <div class="glass-block files-toolbar">
+        <button class="action-btn" id="downloadTelegramHtmlBtn">DOWNLOAD TELEGRAM THREAD (.HTML)</button>
+        <a class="action-btn" id="downloadTelegramMp4Btn" href="assets/lionheart-telegram-thread.mp4" download>DOWNLOAD TELEGRAM THREAD (.MP4)</a>
+      </div>
       <div class="glass-block telegram-feed" id="telegramFeed"></div>
       <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
     </div>
@@ -2233,13 +2245,30 @@ document.getElementById('exportCastBtn')?.addEventListener('click', () => {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'providentia-cast-export.json'; a.click();
 });
 const teleLines = [
-  'Illegal occupation, foreign invaders',
-  'Migrant rape gangs, take back control',
-  'Lionheart Crusaders: mobilise now',
-  'Final location: Deptford Creek — Harbour House circled'
+  'Dress rehearsal call moved to 18:30. Wardrobe check-in at stage left.',
+  'Sound cue check: thunder bed + foyer page in sequence C.',
+  'Front-of-house standby in 10 minutes. Doors open at 19:00.',
+  'All crew: final safety sweep complete. Show start locked.'
 ];
 const feed = document.getElementById('telegramFeed');
-if (feed) feed.innerHTML = teleLines.map((t, i) => `<div class="tele-msg"><h4>LIONHEART CRUSADERS / MSG ${i+1}</h4><p>${t}</p></div>`).join('');
+const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f7a56"/><stop offset="1" stop-color="#c8a65e"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#g)"/><text x="40" y="48" text-anchor="middle" font-size="26" font-family="Arial" fill="white">LC</text></svg>');
+function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
+  if (!feed) return;
+  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • CREW THREAD</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg"><h4>CREW UPDATE ${i+1}</h4><p>${t}</p></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">THREAD LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
+  document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
+    const f = ev.target.files?.[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = x => renderTelegramFeed(x.target.result);
+    r.readAsDataURL(f);
+  });
+}
+renderTelegramFeed();
+document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', () => {
+  const threadHtml = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lionheart Crew Thread</title></head><body style="margin:0;background:#0c121e;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;display:flex;justify-content:center;padding:20px;"><div style="max-width:380px;width:100%;background:linear-gradient(150deg,#95c8a7 0%,#77b2dc 52%,#d8e6f3 100%);border-radius:22px;padding:14px;"><h1 style="font-size:14px;margin:0 0 10px;color:#0f2d47;">LIONHEART CRUSADERS • CREW THREAD</h1>${teleLines.map(t => `<p style="background:rgba(255,255,255,.7);padding:10px;border-radius:10px;color:#0a1b2c;">${t}</p>`).join('')}</div></body></html>`;
+  const blob = new Blob([threadHtml], { type: 'text/html' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lionheart-telegram-thread.html'; a.click();
+});
 document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('.crew-tab').forEach(b => b.classList.toggle('active', b === btn));
   document.querySelectorAll('.crew-panel').forEach(p => p.classList.remove('active'));
