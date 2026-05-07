@@ -1168,6 +1168,18 @@ body::after {
 .form-row { display: grid; gap: 6px; }
 .form-row input, .form-row textarea { width: 100%; background: rgba(6,12,20,.9); color: #dceeff; border: 1px solid rgba(255,255,255,.18); padding: 8px; font: 12px 'Barlow Condensed', sans-serif; }
 .action-btn { border: 1px solid rgba(0,212,255,.45); background: rgba(0,212,255,.12); color: #dff6ff; padding: 8px 10px; font: 700 10px 'Share Tech Mono', monospace; cursor: pointer; }
+
+.telegram-screen { cursor: pointer; }
+.telegram-viewer { position: fixed; inset: 0; z-index: 1200; background: rgba(5,8,14,.92); display:none; align-items:center; justify-content:center; padding: 14px; }
+.telegram-viewer.open { display:flex; }
+.telegram-viewer-shell { width:min(980px,96vw); height:min(92vh,980px); border:1px solid rgba(255,255,255,.24); border-radius:16px; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto 1fr; overflow:hidden; }
+.telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px; background:rgba(8,14,24,.75); }
+.telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.telegram-viewer-thread { overflow:auto; padding:12px; }
+.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; }
+.telegram-typing { font:600 10px 'Share Tech Mono', monospace; color:#d7ecff; opacity:.9; }
+.crew-tab.active { box-shadow: 0 0 0 1px rgba(0,212,255,.55) inset, 0 0 18px rgba(0,212,255,.25); }
+@media (max-width: 640px) { .crew-tabs { position: sticky; top: 0; z-index: 2; } .crew-tab.active { transform: translateY(-1px); } }
 .telegram-feed { display: grid; gap: 10px; max-height: 55vh; overflow: auto; }
 .files-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
 .telegram-frame { border:1px solid rgba(255,255,255,.2); border-radius:18px; background: linear-gradient(150deg, rgba(174,221,196,0.24), rgba(121,183,230,0.2) 48%, rgba(255,255,255,0.14)); padding: 10px; backdrop-filter: blur(14px) saturate(160%); }
@@ -2035,7 +2047,7 @@ body::after {
     <div class="crew-panel" id="panel-files">
       <div class="glass-block files-toolbar">
         <button class="action-btn" id="downloadTelegramHtmlBtn">DOWNLOAD TELEGRAM THREAD (.HTML)</button>
-        <a class="action-btn" id="downloadTelegramMp4Btn" href="assets/lionheart-telegram-thread.mp4" download>DOWNLOAD TELEGRAM THREAD (.MP4)</a>
+        <button class="action-btn" id="openTelegramViewerBtn" type="button">OPEN TELEGRAM THREAD VIEWER</button>
       </div>
       <div class="glass-block telegram-feed" id="telegramFeed"></div>
       <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
@@ -2049,6 +2061,21 @@ body::after {
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+<div class="telegram-viewer" id="telegramViewer">
+  <div class="telegram-viewer-shell">
+    <div class="telegram-viewer-bar">
+      <strong style="font:700 11px 'Share Tech Mono';letter-spacing:1px;color:#dff3ff;">TELEGRAM THREAD VIEWER</strong>
+      <div class="telegram-viewer-actions">
+        <button class="action-btn" id="recordTelegramBtn" type="button">START SCREEN RECORD</button>
+        <button class="action-btn" id="downloadRecordingBtn" type="button" disabled>DOWNLOAD RECORDING</button>
+        <button class="action-btn" id="closeTelegramViewerBtn" type="button">CLOSE</button>
+      </div>
+    </div>
+    <div class="telegram-viewer-thread" id="telegramViewerThread"></div>
   </div>
 </div>
 
@@ -2319,6 +2346,64 @@ function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   });
 }
 renderTelegramFeed();
+
+const telegramViewer = document.getElementById('telegramViewer');
+const telegramViewerThread = document.getElementById('telegramViewerThread');
+const openTelegramViewer = () => {
+  if (!telegramViewer || !feed || !telegramViewerThread) return;
+  telegramViewerThread.innerHTML = feed.innerHTML;
+  telegramViewer.classList.add('open');
+  animateTelegramThread(telegramViewerThread.querySelector('.telegram-screen'));
+};
+document.getElementById('openTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
+feed?.addEventListener('click', openTelegramViewer);
+document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () => telegramViewer?.classList.remove('open'));
+
+function animateTelegramThread(screen) {
+  if (!screen) return;
+  const msgs = Array.from(screen.querySelectorAll('.tele-msg'));
+  msgs.forEach(m => m.style.display = 'none');
+  let i = 0;
+  const tick = () => {
+    if (i >= msgs.length) return;
+    const msg = msgs[i++];
+    const type = document.createElement('div');
+    type.className = 'telegram-typing';
+    type.textContent = `${msg.querySelector('h4')?.textContent.split(' · ')[0] || 'User'} is typing…`;
+    screen.appendChild(type);
+    setTimeout(() => { type.remove(); msg.style.display = 'block'; msg.scrollIntoView({behavior:'smooth', block:'end'}); tick(); }, 900);
+  };
+  tick();
+}
+
+let telegramRecorder, telegramChunks = [], telegramRecordingUrl = '';
+document.getElementById('recordTelegramBtn')?.addEventListener('click', async (ev) => {
+  const btn = ev.currentTarget;
+  if (telegramRecorder && telegramRecorder.state === 'recording') { telegramRecorder.stop(); btn.textContent = 'START SCREEN RECORD'; return; }
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+    telegramChunks = [];
+    telegramRecorder = new MediaRecorder(stream);
+    telegramRecorder.ondataavailable = e => { if (e.data.size) telegramChunks.push(e.data); };
+    telegramRecorder.onstop = () => {
+      const blob = new Blob(telegramChunks, { type: telegramRecorder.mimeType || 'video/webm' });
+      telegramRecordingUrl = URL.createObjectURL(blob);
+      const dl = document.getElementById('downloadRecordingBtn');
+      if (dl) dl.disabled = false;
+      stream.getTracks().forEach(t => t.stop());
+    };
+    telegramRecorder.start();
+    btn.textContent = 'STOP SCREEN RECORD';
+  } catch (e) { console.warn('Screen record unavailable', e); }
+});
+document.getElementById('downloadRecordingBtn')?.addEventListener('click', () => {
+  if (!telegramRecordingUrl) return;
+  const a = document.createElement('a');
+  a.href = telegramRecordingUrl;
+  a.download = 'lionheart-telegram-recording.webm';
+  a.click();
+});
+
 document.getElementById('uploadCastBgBtn')?.addEventListener('click', () => document.getElementById('castBgUpload')?.click());
 document.getElementById('castBgUpload')?.addEventListener('change', ev => {
   const f = ev.target.files?.[0];
