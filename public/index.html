@@ -1172,21 +1172,21 @@ body::after {
 .files-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
 .telegram-frame { border:1px solid rgba(255,255,255,.2); border-radius:18px; background: linear-gradient(150deg, rgba(174,221,196,0.24), rgba(121,183,230,0.2) 48%, rgba(255,255,255,0.14)); padding: 10px; backdrop-filter: blur(14px) saturate(160%); }
 .telegram-shell { border-radius: 24px; border:1px solid rgba(255,255,255,.45); overflow: hidden; background: linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.55);}
-.telegram-header { display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
+.telegram-header { position: relative; z-index: 2; display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 12px; display:grid; gap:9px; animation:auto-scroll 15s linear infinite alternate; animation-delay:1s; }
+.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 46vh; overflow: hidden; animation:auto-scroll 18s linear infinite alternate; animation-delay:1s; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
 .tele-msg .reactions { display:flex; gap:6px; margin-top:8px; }
 .tele-msg .pill { background:#f1f1f1; border-radius:12px; padding:3px 7px; font:700 10px 'Barlow Condensed',sans-serif; }
 .tele-msg:nth-child(1){ animation-delay:.35s; } .tele-msg:nth-child(2){ animation-delay:.65s; } .tele-msg:nth-child(3){ animation-delay:.95s; } .tele-msg:nth-child(4){ animation-delay:1.25s; } .tele-msg:nth-child(5){ animation-delay:1.55s; }
-.tele-photo { width:100%; height:130px; margin-bottom:8px; border-radius:8px; position:relative; background-size:cover; background-position:center; filter:saturate(.92) contrast(1.04); }
-.face-blur { position:absolute; width:42px; height:42px; border-radius:50%; background:rgba(224,232,241,.65); filter: blur(8px); }
+.tele-photo { width:100%; height:176px; margin-bottom:8px; border-radius:8px; position:relative; overflow:hidden; background:#0b1724; }
+.tele-photo iframe { width:100%; height:100%; border:0; }
 .tele-map-circle { position:absolute; top:42%; left:56%; width:46px; height:46px; border:3px solid red; border-radius:50%; box-shadow:0 0 10px rgba(255,0,0,.5); animation:pulse 1.5s infinite; }
 @keyframes tele-pop { from { opacity:0; transform:translateY(18px) scale(.98);} to { opacity:1; transform:translateY(0) scale(1);} }
-@keyframes auto-scroll { from { transform:translateY(0);} to { transform:translateY(-160px);} }
+@keyframes auto-scroll { from { transform:translateY(0);} to { transform:translateY(-120px);} }
 .deptford-map { position: relative; min-height: 320px; background: linear-gradient(180deg,#8bbfd8,#82b1c7); overflow: hidden; }
 .deptford-map::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px); background-size: 36px 36px; }
 .creek-line { position: absolute; left: 45%; top: -10%; width: 12%; height: 120%; background: #5aa3c3; transform: rotate(14deg); border-radius: 999px; }
@@ -2294,9 +2294,9 @@ const teleLines = [
   "If the government won't protect the people, we will protect ourselves.",
   'Harbour House. This is the location. Be there May 16th. No excuses.'
 ];
-const teleImages = {
-  2: 'https://picsum.photos/id/237/600/380',
-  4: 'https://picsum.photos/id/433/600/380'
+const teleVideos = {
+  2: { id: 'fD4Rk6hOjFk', title: 'News discourse clip' },
+  4: { id: 'Q6rG9X6i4mA', title: 'Map/location brief clip' }
 };
 const teleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -2309,7 +2309,7 @@ const feed = document.getElementById('telegramFeed');
 const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f7a56"/><stop offset="1" stop-color="#c8a65e"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#g)"/><text x="40" y="48" text-anchor="middle" font-size="26" font-family="Arial" fill="white">LC</text></svg>');
 function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   if (!feed) return;
-  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleImages[i] ? `<div class="tele-photo" style="background-image:url('${teleImages[i]}')"><div class="face-blur" style="top:38%;left:30%;"></div><div class="face-blur" style="top:44%;left:58%;"></div>${i===4 ? '<div class="tele-map-circle"></div>' : ''}</div>` : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
+  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>${i===4 ? '<div class=\"tele-map-circle\"></div>' : ''}</div>` : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
@@ -2407,9 +2407,9 @@ document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', ()
     <div class="chat-container">
         <div class="message msg-1"><div class="message-content"><span class="headline">ILLEGAL OCCUPATION</span><span class="sub-text">How long will we let them sit in our streets while we pay the bill?</span><div class="reactions"><div class="pill">🔥 402</div><div class="pill">😡 118</div></div></div></div>
         <div class="message msg-2"><div class="message-content"><span class="headline">FOREIGN INVADERS</span><span class="sub-text">The borders are wide open. They aren't coming to integrate.</span><div class="reactions"><div class="pill">👊 245</div><div class="pill">🚫 92</div></div></div></div>
-        <div class="message msg-3"><div class="message-image" style="background-image: url('https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=400');"></div><div class="message-content"><span class="headline">MIGRANT RAPE GANGS</span><span class="sub-text">Mainstream media is silent while our daughters are targeted.</span><div class="reactions"><div class="pill">🤮 531</div><div class="pill">🤬 204</div></div></div></div>
+        <div class="message msg-3"><div class="message-image"><iframe title="News discourse clip" src="https://www.youtube-nocookie.com/embed/fD4Rk6hOjFk?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width:100%;height:100%;border:0;"></iframe></div><div class="message-content"><span class="headline">MIGRANT RAPE GANGS</span><span class="sub-text">Mainstream media is silent while our daughters are targeted.</span><div class="reactions"><div class="pill">🤮 531</div><div class="pill">🤬 204</div></div></div></div>
         <div class="message msg-4"><div class="message-content"><span class="headline">TAKE BACK CONTROL</span><span class="sub-text">If the government won't protect the people, we will protect ourselves.</span><div class="reactions"><div class="pill">🇬🇧 1.2K</div><div class="pill">⚔️ 340</div></div></div></div>
-        <div class="message msg-5"><div class="message-image" style="background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=400'); position: relative;"><div class="map-circle"></div></div><div class="message-content"><span class="headline">DEPTFORD CREEK</span><span class="sub-text">Harbour House. This is the location. Be there May 16th. No excuses.</span><div class="reactions"><div class="pill">📍 890</div></div></div></div>
+        <div class="message msg-5"><div class="message-image" style="position: relative;"><iframe title="Map/location brief clip" src="https://www.youtube-nocookie.com/embed/Q6rG9X6i4mA?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width:100%;height:100%;border:0;"></iframe><div class="map-circle"></div></div><div class="message-content"><span class="headline">DEPTFORD CREEK</span><span class="sub-text">Harbour House. This is the location. Be there May 16th. No excuses.</span><div class="reactions"><div class="pill">📍 890</div></div></div></div>
     </div>
     <div class="footer">MUTE</div>
 </div>
