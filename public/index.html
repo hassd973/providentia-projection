@@ -1183,6 +1183,9 @@ body::after {
 .slide-cast-module .crew-shell { max-height: 100%; overflow: auto; }
 .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index: 3; background: rgba(7,14,24,.88); padding: 8px; border-radius: 12px; }
 
+
+/* Apple glass crew deck */
+.crew-glass-deck{border:1px solid rgba(255,255,255,.24);border-radius:24px;background:rgba(13,18,30,.58);backdrop-filter:blur(18px);padding:12px;min-height:78vh}.crew-glass-topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.crew-glass-title{font:700 14px 'Share Tech Mono';color:#dff3ff}.crew-glass-subtitle{font:600 9px 'Share Tech Mono';color:#98b3ca;letter-spacing:1.5px}.crew-return-btn,.crew-nav-btn,.glass-action-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#e9f4ff;border-radius:12px;padding:8px 10px;font:700 10px 'Share Tech Mono';cursor:pointer}.crew-glass-body{display:grid;grid-template-columns:190px 1fr;gap:10px;margin-top:10px;min-height:65vh}.crew-glass-nav{display:grid;gap:8px;align-content:start}.crew-nav-btn.active{border-color:#8cd3ff;background:rgba(89,167,255,.18)}.crew-glass-panel{display:none}.crew-glass-panel.active{display:block}.crew-glass-panels{border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px;overflow:auto}.tg-thread-block{max-height:40vh;overflow:auto}.tg-composer-textarea{width:100%;min-height:86px;background:rgba(8,14,24,.65);color:#eaf4ff;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px}.tg-composer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.crew-hint-banner{font:700 10px 'Share Tech Mono';color:#9fe2ff;margin-bottom:8px}.quick-crew-toggle{display:flex;align-items:center;gap:6px}@media (max-width:860px){.crew-glass-body{grid-template-columns:1fr}.crew-glass-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.crew-glass-deck{min-height:auto}}
 .telegram-composer { display:grid; gap:8px; }
 .telegram-composer textarea { min-height:70px; resize:vertical; }
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
@@ -2044,47 +2047,62 @@ body::after {
   </div>
 </div>
 
-<!-- ─── SLIDE 18 — CREW MENU ────────────────── -->
-<div class="slide slide-crew-menu" data-slide="19" data-phase="CREW TOOLS — FINAL MENU">
-  <div class="crew-shell">
-    <div class="crew-topbar">
-      <div class="crew-title">THEATRE CREW MENU</div>
-      <div class="crew-tabs">
-        <button class="crew-tab active" data-crew-tab="files">FILES</button>
-        <button class="crew-tab" data-crew-tab="map">MAP</button>
-        <button class="crew-tab" id="crewLightToggle" type="button">☀️ LIGHT</button>
+<!-- ─── SLIDE 18 — THEATRE CREW MENU (APPLE GLASS) ────────────────── -->
+<div class="slide slide-crew-menu" data-slide="19" data-phase="⬡ CREW TOOLS">
+  <div class="crew-glass-deck">
+    <div class="crew-glass-topbar">
+      <div class="crew-glass-title-group">
+        <div class="crew-glass-title">⬡ THEATRE CREW DECK</div>
+        <div class="crew-glass-subtitle">PROVIDENTIA PRODUCTION TOOLS</div>
       </div>
-      <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE</button>
+      <button class="crew-return-btn" id="crewReturnBtn" type="button">↩ RETURN TO SHOW</button>
+      <button class="crew-return-btn" id="crewLightToggle2" type="button">☀️</button>
     </div>
-    <div class="crew-panel active" id="panel-files">
-      <div class="glass-block files-toolbar">
-        <button class="action-btn" id="downloadTelegramHtmlBtn">DOWNLOAD TELEGRAM THREAD (.HTML)</button>
-        <button class="action-btn" id="openTelegramViewerBtn" type="button">OPEN TELEGRAM THREAD VIEWER</button>
-      </div>
-      <div class="glass-block telegram-feed" id="telegramFeed"></div>
-      <div class="glass-block telegram-composer">
-        <textarea id="telegramComposerText" placeholder="Type operator/audience message for thread…"></textarea>
-        <div class="files-toolbar">
-          <button class="action-btn" id="speechToTextBtn" type="button">🎙️ SPEECH TO TEXT</button>
-          <button class="action-btn" id="sendTelegramMsgBtn" type="button">SEND MESSAGE</button>
+    <div class="crew-glass-body">
+      <nav class="crew-glass-nav">
+        <button class="crew-nav-btn active" data-glass-tab="telegram">✉ TELEGRAM</button>
+        <button class="crew-nav-btn" data-glass-tab="cast">🎭 CAST EDITOR</button>
+        <button class="crew-nav-btn" data-glass-tab="files">📁 EXPORT</button>
+        <button class="crew-nav-btn" data-glass-tab="map">📍 LOCATION</button>
+      </nav>
+      <div class="crew-glass-panels">
+        <div class="crew-glass-panel active" id="gpanel-telegram">
+          <div class="crew-hint-banner">💡 OPERATOR HINT: Use 🎙️ VOICE INPUT for audience Q&A, then SEND to post in-thread.</div>
+          <div class="tg-thread-block" id="telegramFeed"></div>
+          <div class="tg-composer-block">
+            <textarea class="tg-composer-textarea" id="telegramComposerText" placeholder="Type operator or audience message…"></textarea>
+            <div class="tg-composer-actions">
+              <button class="glass-action-btn" id="speechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+              <button class="glass-action-btn" id="sendTelegramMsgBtn" type="button">⬆ SEND MESSAGE</button>
+              <button class="glass-action-btn" id="openTelegramViewerBtn" type="button">⧉ FULL VIEWER</button>
+            </div>
+          </div>
+          <div class="tg-composer-block">
+            <div class="tg-composer-actions">
+              <button class="glass-action-btn" id="glassRecordBtn" type="button">⏺ START RECORD</button>
+              <button class="glass-action-btn" id="glassDownloadRecordBtn" type="button">⬇ DOWNLOAD</button>
+              <button class="glass-action-btn" id="downloadTelegramHtmlBtn" type="button">⬇ THREAD (.HTML)</button>
+            </div>
+            <div class="tg-record-status" id="glassRecordStatus">Ready — screen recording requires browser permission</div>
+          </div>
         </div>
-        <small style="color:#9fd6ff;">Operator hint: audience Q&A can be captured with speech-to-text, then posted into thread.</small>
-      </div>
-      <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
-    </div>
-    <div class="crew-panel" id="panel-map">
-      <div class="glass-block">
-        <div style="font:700 12px 'Share Tech Mono'; color:#dff3ff; letter-spacing:2px; margin-bottom:8px;">DEPTFORD CREEK — HARBOUR HOUSE (LIONHEART CRUSADERS)</div>
-        <div class="deptford-map" id="deptfordMap">
-          <iframe title="Deptford Creek map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.0418%2C51.4783%2C0.0055%2C51.4996&layer=mapnik&marker=51.4886%2C-0.0181"></iframe>
+        <div class="crew-glass-panel" id="gpanel-cast">
+          <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE</button>
+          <p style="font:10px 'Share Tech Mono';color:#9fd6ff;">Mobile fix: cast tools open full-screen and can be closed with RETURN TO SHOW.</p>
+        </div>
+        <div class="crew-glass-panel" id="gpanel-files">
+          <div class="files-toolbar">
+            <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
+          </div>
+        </div>
+        <div class="crew-glass-panel" id="gpanel-map">
+          <div class="glass-block"><div class="deptford-map" id="deptfordMap"><iframe title="Deptford Creek map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.0418%2C51.4783%2C0.0055%2C51.4996&layer=mapnik&marker=51.4886%2C-0.0181"></iframe></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<button class="quick-crew-toggle" id="quickCrewToggle" type="button" aria-label="Open theatre crew menu">🛠️</button>
-
-
+<button class="quick-crew-toggle" id="quickCrewToggle" type="button" aria-label="Open theatre crew menu">🛠️ <span class="crew-toggle-label">CREW</span></button>
 <div class="telegram-viewer" id="telegramViewer">
   <div class="telegram-viewer-shell">
     <div class="telegram-viewer-bar">
@@ -2670,6 +2688,7 @@ document.getElementById('quickCrewToggle')?.addEventListener('click', () => {
   quickReturnIndex = current;
   goTo(crewIdx);
 });
+window.__crewReturnSlide = window.currentSlide || 1;
 
 
 const deptfordMap = document.getElementById('deptfordMap');
@@ -2876,6 +2895,17 @@ function animateMediaWall() {
 
 // Init counter
 counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
+
+const crewNavBtns=[...document.querySelectorAll('.crew-nav-btn')];
+const crewPanels={telegram:document.getElementById('gpanel-telegram'),cast:document.getElementById('gpanel-cast'),files:document.getElementById('gpanel-files'),map:document.getElementById('gpanel-map')};
+crewNavBtns.forEach(btn=>btn.addEventListener('click',()=>{crewNavBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');Object.values(crewPanels).forEach(p=>p&&p.classList.remove('active'));crewPanels[btn.dataset.glassTab]?.classList.add('active');}));
+document.getElementById('crewReturnBtn')?.addEventListener('click',()=>{const target=(window.__crewReturnSlide||window.currentSlide||1);goToSlide(target);});
+document.getElementById('crewLightToggle2')?.addEventListener('click',()=>document.getElementById('crewLightToggle')?.click());
+
+document.getElementById('glassRecordBtn')?.addEventListener('click',()=>document.getElementById('recordTelegramBtn')?.click());
+document.getElementById('glassDownloadRecordBtn')?.addEventListener('click',()=>document.getElementById('downloadRecordingBtn')?.click());
+
+
 </script>
 </body>
 </html>
