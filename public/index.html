@@ -1176,7 +1176,7 @@ body::after {
 .telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px; background:rgba(8,14,24,.75); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
 .telegram-viewer-thread { overflow:auto; padding:12px; }
-.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; padding-bottom:18px; }
+.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; padding-bottom:42px; }
 .telegram-typing { font:600 10px 'Share Tech Mono', monospace; color:#d7ecff; opacity:.9; }
 .crew-tab.active { box-shadow: 0 0 0 1px rgba(0,212,255,.55) inset, 0 0 18px rgba(0,212,255,.25); }
 @media (max-width: 640px) { .crew-tabs { position: sticky; top: 0; z-index: 2; } .crew-tab.active { transform: translateY(-1px); } }
@@ -1187,7 +1187,7 @@ body::after {
 .telegram-header { position: relative; z-index: 2; display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 62vh; overflow: auto; animation:auto-scroll 22s linear infinite alternate; animation-delay:1s; }
+.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 70vh; overflow: auto; animation:auto-scroll 26s linear infinite alternate; padding-bottom:24px; animation-delay:1s; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
@@ -2041,9 +2041,14 @@ body::after {
     <div class="crew-panel" id="panel-map">
       <div class="glass-block">
         <div style="font:700 12px 'Share Tech Mono'; color:#dff3ff; letter-spacing:2px; margin-bottom:8px;">DEPTFORD CREEK — HARBOUR HOUSE (LIONHEART CRUSADERS)</div>
-        <div class="deptford-map">
+        <div class="deptford-map" id="deptfordMap">
           <div class="creek-line"></div>
-          <div class="map-pin" title="Harbour House"></div>
+          <div class="map-pin" id="deptfordPin" title="Harbour House"></div>
+          <div class="map-controls" style="right:10px;top:10px;">
+            <button class="map-btn" id="deptfordZoomIn" type="button">+</button>
+            <button class="map-btn" id="deptfordZoomOut" type="button">−</button>
+            <button class="map-btn" id="deptfordReset" type="button">Reset</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2056,7 +2061,7 @@ body::after {
     <div class="telegram-viewer-bar">
       <strong style="font:700 11px 'Share Tech Mono';letter-spacing:1px;color:#dff3ff;">TELEGRAM THREAD VIEWER</strong>
       <div class="telegram-viewer-actions">
-        <button class="action-btn" id="recordTelegramBtn" type="button">START SCREEN RECORD</button>
+        <button class="action-btn" id="recordTelegramBtn" type="button">START SCREEN RECORD</button><small id="telegramRecordStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Ready</small>
         <button class="action-btn" id="downloadRecordingBtn" type="button" disabled>DOWNLOAD RECORDING</button>
         <button class="action-btn" id="closeTelegramViewerBtn" type="button">CLOSE</button>
       </div>
@@ -2080,6 +2085,8 @@ body::after {
           <button class="action-btn" id="resetCastBgBtn" type="button">RESET BACKGROUND</button>
           <button class="action-btn" id="exportCastMemberPngBtn" type="button">EXPORT CURRENT CAST PNG</button>
           <button class="action-btn" id="exportAllCastPngBtn" type="button">EXPORT ALL CAST PNG</button>
+          <button class="action-btn" id="exportCastSheetPngBtn" type="button">EXPORT FULL CAST SHEET PNG</button>
+          <button class="action-btn" id="exportAllCastJpgBtn" type="button">EXPORT ALL CAST JPG</button>
           <input type="file" id="castBgUpload" accept="image/*" hidden>
         </div>
         <div class="cast-list" id="castList"></div>
@@ -2332,9 +2339,9 @@ const teleLines = [
   'Harbour House. This is the location. Be there May 16th. No excuses.'
 ];
 const teleVideos = {
-  0: { id: 'fD4Rk6hOjFk', title: 'First-message news clip' },
+  0: { id: '21X5lGlDOfg', title: 'First-message news clip' },
   2: { id: 'fD4Rk6hOjFk', title: 'News discourse clip' },
-  4: { id: 'aQ7zH4A-k5s', title: 'Deptford location map clip' }
+  4: { id: 'Q6rG9X6i4mA', title: 'Deptford location map clip' }
 };
 const teleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -2391,7 +2398,9 @@ let telegramRecorder, telegramChunks = [], telegramRecordingUrl = '';
 document.getElementById('recordTelegramBtn')?.addEventListener('click', async (ev) => {
   const btn = ev.currentTarget;
   if (telegramRecorder && telegramRecorder.state === 'recording') { telegramRecorder.stop(); btn.textContent = 'START SCREEN RECORD'; return; }
+  const status = document.getElementById('telegramRecordStatus');
   try {
+    if (!telegramViewer?.classList.contains('open')) openTelegramViewer();
     let stream;
     if (navigator.mediaDevices?.getDisplayMedia) {
       stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
@@ -2401,18 +2410,24 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
       if (!stream) throw new Error('No capture method available');
     }
     telegramChunks = [];
-    telegramRecorder = new MediaRecorder(stream);
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+    telegramRecorder = new MediaRecorder(stream, { mimeType: mime });
     telegramRecorder.ondataavailable = e => { if (e.data.size) telegramChunks.push(e.data); };
     telegramRecorder.onstop = () => {
       const blob = new Blob(telegramChunks, { type: telegramRecorder.mimeType || 'video/webm' });
       telegramRecordingUrl = URL.createObjectURL(blob);
       const dl = document.getElementById('downloadRecordingBtn');
       if (dl) dl.disabled = false;
+      if (status) status.textContent = 'Recording complete. Ready to download.';
       stream.getTracks().forEach(t => t.stop());
     };
     telegramRecorder.start();
     btn.textContent = 'STOP SCREEN RECORD';
-  } catch (e) { console.warn('Screen record unavailable', e); }
+    if (status) status.textContent = 'Recording...';
+  } catch (e) {
+    if (status) status.textContent = 'Screen recording blocked by browser permissions.';
+    console.warn('Screen record unavailable', e);
+  }
 });
 document.getElementById('downloadRecordingBtn')?.addEventListener('click', () => {
   if (!telegramRecordingUrl) return;
@@ -2521,7 +2536,16 @@ document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', ()
   const blob = new Blob([threadHtml], { type: 'text/html' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lionheart-telegram-thread.html'; a.click();
 });
-function exportCastCardAsImage(profile, filename) {
+
+function downloadCanvas(canvas, filename, type = "image/png", quality = 0.92) {
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }, type, quality);
+}
+function renderCastCardToCanvas(profile) {
   const canvas = document.createElement('canvas');
   canvas.width = 1080; canvas.height = 1350;
   const ctx = canvas.getContext('2d');
@@ -2533,10 +2557,31 @@ function exportCastCardAsImage(profile, filename) {
   ctx.fillStyle = '#c8d8e8'; ctx.font = '400 30px Arial';
   const words=(profile.bio||'').split(' '); let line='', y=235;
   words.forEach(w=>{ const t=line+w+' '; if(ctx.measureText(t).width>920){ctx.fillText(line,70,y); line=w+' '; y+=38;} else line=t;}); ctx.fillText(line,70,y);
-  canvas.toBlob(blob=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); }, 'image/png');
+  return canvas;
+}
+function exportCastCardAsImage(profile, filename, type = "image/png") {
+  const canvas = renderCastCardToCanvas(profile);
+  downloadCanvas(canvas, filename, type, 0.9);
 }
 document.getElementById('exportCastMemberPngBtn')?.addEventListener('click',()=>{const c=castProfiles[castIndex]; exportCastCardAsImage(c,`${c.character.replace(/\s+/g,'-').toLowerCase()}.png`);});
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
+document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
+document.getElementById('exportCastSheetPngBtn')?.addEventListener('click',()=>{
+  const cols = 2, cardW = 900, cardH = 1125, pad = 40;
+  const rows = Math.ceil(castProfiles.length / cols);
+  const sheet = document.createElement('canvas');
+  sheet.width = cols * cardW + (cols + 1) * pad;
+  sheet.height = rows * cardH + (rows + 1) * pad;
+  const ctx = sheet.getContext('2d');
+  ctx.fillStyle = '#070b11'; ctx.fillRect(0,0,sheet.width,sheet.height);
+  castProfiles.forEach((profile, i) => {
+    const src = renderCastCardToCanvas(profile);
+    const x = pad + (i % cols) * (cardW + pad);
+    const y = pad + Math.floor(i / cols) * (cardH + pad);
+    ctx.drawImage(src, x, y, cardW, cardH);
+  });
+  downloadCanvas(sheet, 'providentia-cast-sheet.png');
+});
 document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('.crew-tab').forEach(b => b.classList.toggle('active', b === btn));
   document.querySelectorAll('.crew-panel').forEach(p => p.classList.remove('active'));
@@ -2547,6 +2592,23 @@ renderCastEditor();
 applyCastBackground();
 document.getElementById('openCastSlideBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-cast-module'))));
 document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-crew-menu'))));
+
+
+const deptfordMap = document.getElementById('deptfordMap');
+const deptfordPin = document.getElementById('deptfordPin');
+if (deptfordMap && deptfordPin) {
+  let scale = 1, x = 54, y = 48;
+  const applyDeptford = () => { deptfordMap.style.transform = `scale(${scale})`; deptfordPin.style.left = `${x}%`; deptfordPin.style.top = `${y}%`; };
+  deptfordMap.addEventListener('click', (e) => {
+    const r = deptfordMap.getBoundingClientRect();
+    x = ((e.clientX - r.left) / r.width) * 100;
+    y = ((e.clientY - r.top) / r.height) * 100;
+    applyDeptford();
+  });
+  document.getElementById('deptfordZoomIn')?.addEventListener('click', () => { scale = Math.min(1.8, scale + 0.1); applyDeptford(); });
+  document.getElementById('deptfordZoomOut')?.addEventListener('click', () => { scale = Math.max(1, scale - 0.1); applyDeptford(); });
+  document.getElementById('deptfordReset')?.addEventListener('click', () => { scale = 1; x = 54; y = 48; applyDeptford(); });
+}
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
