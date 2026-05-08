@@ -1127,10 +1127,11 @@ body::after {
    SLIDE 18 — CREW MENU SUITE
 ══════════════════════════════════ */
 .slide-crew-menu {
-  background: #000;
+  background: radial-gradient(circle at 50% 25%, #111 0%, #040404 45%, #000 100%);
   align-items: stretch;
   padding: clamp(16px,2.5vmin,26px);
 }
+.slide-crew-menu::before { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 45%); pointer-events:none; }
 .slide-crew-menu.light-mode { background: radial-gradient(circle at 20% 10%, #d8e4f2 0%, #b6cbe2 58%, #8eaaca 100%); }
 .crew-shell { width: 100%; border: 1px solid rgba(122,176,224,.38); border-radius: 18px; background: rgba(16,24,38,.5); backdrop-filter: blur(12px); padding: 16px; display: grid; gap: 14px; }
 .slide-crew-menu.light-mode .crew-shell { background: rgba(240,248,255,.72); border-color: rgba(61,117,162,.45); }
@@ -1174,6 +1175,14 @@ body::after {
 .quick-crew-toggle { position: fixed; right: 10px; bottom: max(8px, env(safe-area-inset-bottom)); z-index: 1300; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.4); background: rgba(8,12,18,.6); color: #fff; font-size: 16px; display: grid; place-items: center; cursor: pointer; opacity: .82; }
 .quick-crew-toggle:hover { opacity: 1; }
 .slide-crew-menu.light-mode .quick-crew-toggle { color: #18304a; background: rgba(255,255,255,.8); border-color: rgba(24,48,74,.35); }
+.slide-cast-module {
+  background: radial-gradient(circle at 50% 25%, #111 0%, #040404 45%, #000 100%);
+  align-items: stretch;
+  padding: clamp(16px,2.5vmin,26px);
+}
+.slide-cast-module .crew-shell { max-height: 100%; overflow: auto; }
+.slide-cast-module .crew-topbar { position: sticky; top: 0; z-index: 3; background: rgba(7,14,24,.88); padding: 8px; border-radius: 12px; }
+
 .telegram-composer { display:grid; gap:8px; }
 .telegram-composer textarea { min-height:70px; resize:vertical; }
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
@@ -1224,7 +1233,7 @@ body::after {
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
-@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 30vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } }
+@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 30vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; } #backToToolsBtn { width: 100%; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; } }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -2388,12 +2397,23 @@ function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   });
 }
 renderTelegramFeed();
+const appendTelegramBotResponse = (seedText) => {
+  const responses = [
+    '🤖 Mod bot: logged. Stage team to verify source before projection.',
+    '🤖 Q&A bot: thanks audience, next question queued for operator.',
+    `🤖 Auto-reply: received "${seedText.slice(0,48)}${seedText.length > 48 ? '…' : ''}"`
+  ];
+  const msg = responses[Math.floor(Math.random()*responses.length)];
+  teleLines.push(msg);
+  teleMeta.push({ user: '@LionheartBot', react1: '👍 ACK', react2: '🧠 AUTO' });
+};
 document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => {
   const input = document.getElementById('telegramComposerText');
   const text = input?.value?.trim();
   if (!text) return;
   teleLines.push(text);
   teleMeta.push({ user: '@Operator', react1: '🧵 NEW', react2: '🤖 BOT REPLY' });
+  appendTelegramBotResponse(text);
   renderTelegramFeed();
   if (input) input.value = '';
 });
@@ -2471,7 +2491,7 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
     btn.textContent = 'STOP SCREEN RECORD';
     if (status) status.textContent = 'Recording...';
   } catch (e) {
-    if (status) status.textContent = 'Screen recording blocked by browser permissions. Use Telegram HTML export as fallback.';
+    if (status) status.textContent = 'Screen recording blocked by browser permissions. Use Telegram HTML export as fallback (FILES → DOWNLOAD TELEGRAM THREAD).';
     console.warn('Screen record unavailable', e);
   }
 });
