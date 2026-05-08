@@ -1127,11 +1127,13 @@ body::after {
    SLIDE 18 — CREW MENU SUITE
 ══════════════════════════════════ */
 .slide-crew-menu {
-  background: radial-gradient(circle at 20% 10%, #1d2433 0%, #090d15 58%, #06080f 100%);
+  background: #000;
   align-items: stretch;
   padding: clamp(16px,2.5vmin,26px);
 }
+.slide-crew-menu.light-mode { background: radial-gradient(circle at 20% 10%, #d8e4f2 0%, #b6cbe2 58%, #8eaaca 100%); }
 .crew-shell { width: 100%; border: 1px solid rgba(122,176,224,.38); border-radius: 18px; background: rgba(16,24,38,.5); backdrop-filter: blur(12px); padding: 16px; display: grid; gap: 14px; }
+.slide-crew-menu.light-mode .crew-shell { background: rgba(240,248,255,.72); border-color: rgba(61,117,162,.45); }
 .crew-topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .crew-title { font: 700 clamp(14px,1.8vw,24px) 'Share Tech Mono', monospace; color: #a9e5ff; letter-spacing: 3px; }
 .crew-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1168,6 +1170,13 @@ body::after {
 .form-row { display: grid; gap: 6px; }
 .form-row input, .form-row textarea { width: 100%; background: rgba(6,12,20,.9); color: #dceeff; border: 1px solid rgba(255,255,255,.18); padding: 8px; font: 12px 'Barlow Condensed', sans-serif; }
 .action-btn { border: 1px solid rgba(0,212,255,.45); background: rgba(0,212,255,.12); color: #dff6ff; padding: 8px 10px; font: 700 10px 'Share Tech Mono', monospace; cursor: pointer; }
+.crew-tab, .action-btn, .crew-title, .tele-msg p { font-size: clamp(10px, 2.6vw, 12px); }
+.quick-crew-toggle { position: fixed; right: 10px; bottom: max(8px, env(safe-area-inset-bottom)); z-index: 1300; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.4); background: rgba(8,12,18,.6); color: #fff; font-size: 16px; display: grid; place-items: center; cursor: pointer; opacity: .82; }
+.quick-crew-toggle:hover { opacity: 1; }
+.slide-crew-menu.light-mode .quick-crew-toggle { color: #18304a; background: rgba(255,255,255,.8); border-color: rgba(24,48,74,.35); }
+.telegram-composer { display:grid; gap:8px; }
+.telegram-composer textarea { min-height:70px; resize:vertical; }
+.deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
 
 .telegram-screen { cursor: pointer; }
 .telegram-viewer { position: fixed; inset: 0; z-index: 1200; background: rgba(5,8,14,.92); display:none; align-items:center; justify-content:center; padding: 14px; }
@@ -2034,6 +2043,7 @@ body::after {
       <div class="crew-tabs">
         <button class="crew-tab active" data-crew-tab="files">FILES</button>
         <button class="crew-tab" data-crew-tab="map">MAP</button>
+        <button class="crew-tab" id="crewLightToggle" type="button">☀️ LIGHT</button>
       </div>
       <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE</button>
     </div>
@@ -2043,24 +2053,27 @@ body::after {
         <button class="action-btn" id="openTelegramViewerBtn" type="button">OPEN TELEGRAM THREAD VIEWER</button>
       </div>
       <div class="glass-block telegram-feed" id="telegramFeed"></div>
+      <div class="glass-block telegram-composer">
+        <textarea id="telegramComposerText" placeholder="Type operator/audience message for thread…"></textarea>
+        <div class="files-toolbar">
+          <button class="action-btn" id="speechToTextBtn" type="button">🎙️ SPEECH TO TEXT</button>
+          <button class="action-btn" id="sendTelegramMsgBtn" type="button">SEND MESSAGE</button>
+        </div>
+        <small style="color:#9fd6ff;">Operator hint: audience Q&A can be captured with speech-to-text, then posted into thread.</small>
+      </div>
       <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
     </div>
     <div class="crew-panel" id="panel-map">
       <div class="glass-block">
         <div style="font:700 12px 'Share Tech Mono'; color:#dff3ff; letter-spacing:2px; margin-bottom:8px;">DEPTFORD CREEK — HARBOUR HOUSE (LIONHEART CRUSADERS)</div>
         <div class="deptford-map" id="deptfordMap">
-          <div class="creek-line"></div>
-          <div class="map-pin" id="deptfordPin" title="Harbour House"></div>
-          <div class="map-controls" style="right:10px;top:10px;">
-            <button class="map-btn" id="deptfordZoomIn" type="button">+</button>
-            <button class="map-btn" id="deptfordZoomOut" type="button">−</button>
-            <button class="map-btn" id="deptfordReset" type="button">Reset</button>
-          </div>
+          <iframe title="Deptford Creek map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.0418%2C51.4783%2C0.0055%2C51.4996&layer=mapnik&marker=51.4886%2C-0.0181"></iframe>
         </div>
       </div>
     </div>
   </div>
 </div>
+<button class="quick-crew-toggle" id="quickCrewToggle" type="button" aria-label="Open theatre crew menu">🛠️</button>
 
 
 <div class="telegram-viewer" id="telegramViewer">
@@ -2346,9 +2359,9 @@ const teleLines = [
   'Harbour House. This is the location. Be there May 16th. No excuses.'
 ];
 const teleVideos = {
-  0: { id: 'ylgV8OyTIFg', title: 'First-message news clip' },
-  2: { id: 'fD4Rk6hOjFk', title: 'News discourse clip' },
-  4: { id: 'Q6rG9X6i4mA', title: 'Deptford location map clip' }
+  0: { id: 'H0Yirlo6WSU', title: 'Telegram safety and moderation explainer' },
+  2: { id: 'sY0M3mQ6M4I', title: 'How extremist narratives spread online' },
+  4: { id: '9zSxY4uR2aQ', title: 'Community reporting and misinformation response' }
 };
 const teleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -2375,6 +2388,28 @@ function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   });
 }
 renderTelegramFeed();
+document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => {
+  const input = document.getElementById('telegramComposerText');
+  const text = input?.value?.trim();
+  if (!text) return;
+  teleLines.push(text);
+  teleMeta.push({ user: '@Operator', react1: '🧵 NEW', react2: '🤖 BOT REPLY' });
+  renderTelegramFeed();
+  if (input) input.value = '';
+});
+document.getElementById('speechToTextBtn')?.addEventListener('click', () => {
+  const input = document.getElementById('telegramComposerText');
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Rec) { if (input) input.value = `${input.value}${input.value ? '\n' : ''}[Speech recognition unavailable in this browser]`; return; }
+  const rec = new Rec();
+  rec.lang = 'en-GB';
+  rec.interimResults = false;
+  rec.onresult = (event) => {
+    const transcript = event.results?.[0]?.[0]?.transcript || '';
+    if (input) input.value = `${input.value}${input.value ? '\n' : ''}${transcript}`;
+  };
+  rec.start();
+});
 
 const telegramViewer = document.getElementById('telegramViewer');
 const telegramViewerThread = document.getElementById('telegramViewerThread');
@@ -2603,23 +2638,22 @@ renderCastEditor();
 applyCastBackground();
 document.getElementById('openCastSlideBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-cast-module'))));
 document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-crew-menu'))));
+document.getElementById('crewLightToggle')?.addEventListener('click', (ev) => {
+  const crewSlide = document.querySelector('.slide-crew-menu');
+  crewSlide?.classList.toggle('light-mode');
+  ev.currentTarget.textContent = crewSlide?.classList.contains('light-mode') ? '🌙 DARK' : '☀️ LIGHT';
+});
+let quickReturnIndex = 0;
+document.getElementById('quickCrewToggle')?.addEventListener('click', () => {
+  const crewIdx = slides.findIndex(sl => sl.classList.contains('slide-crew-menu'));
+  if (current === crewIdx) return goTo(quickReturnIndex);
+  quickReturnIndex = current;
+  goTo(crewIdx);
+});
 
 
 const deptfordMap = document.getElementById('deptfordMap');
-const deptfordPin = document.getElementById('deptfordPin');
-if (deptfordMap && deptfordPin) {
-  let scale = 1, x = 54, y = 48;
-  const applyDeptford = () => { deptfordMap.style.transform = `scale(${scale})`; deptfordPin.style.left = `${x}%`; deptfordPin.style.top = `${y}%`; };
-  deptfordMap.addEventListener('click', (e) => {
-    const r = deptfordMap.getBoundingClientRect();
-    x = ((e.clientX - r.left) / r.width) * 100;
-    y = ((e.clientY - r.top) / r.height) * 100;
-    applyDeptford();
-  });
-  document.getElementById('deptfordZoomIn')?.addEventListener('click', () => { scale = Math.min(1.8, scale + 0.1); applyDeptford(); });
-  document.getElementById('deptfordZoomOut')?.addEventListener('click', () => { scale = Math.max(1, scale - 0.1); applyDeptford(); });
-  document.getElementById('deptfordReset')?.addEventListener('click', () => { scale = 1; x = 54; y = 48; applyDeptford(); });
-}
+if (deptfordMap) deptfordMap.style.touchAction = 'pan-x pan-y';
 
 // ══════════════════════════════════
 // MAP NODE INTERACTIVITY
