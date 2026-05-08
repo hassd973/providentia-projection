@@ -1180,9 +1180,6 @@ body::after {
   align-items: stretch;
   padding: clamp(16px,2.5vmin,26px);
 }
-.slide-cast-module::before { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 45%); pointer-events:none; }
-.slide-cast-module.light-mode { background: radial-gradient(circle at 20% 10%, #d8e4f2 0%, #b6cbe2 58%, #8eaaca 100%); }
-.slide-cast-module.light-mode .crew-shell { background: rgba(240,248,255,.72); border-color: rgba(61,117,162,.45); }
 .slide-cast-module .crew-shell { max-height: 100%; overflow: auto; }
 .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index: 3; background: rgba(7,14,24,.88); padding: 8px; border-radius: 12px; }
 
@@ -1236,7 +1233,7 @@ body::after {
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
-@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 34vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls { max-height: 28vh; overflow:auto; padding-right:2px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; } #backToToolsBtn { width: 100%; position: sticky; bottom: 0; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; } }
+@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 30vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; } #backToToolsBtn { width: 100%; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; } }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -2051,13 +2048,13 @@ body::after {
 <div class="slide slide-crew-menu" data-slide="19" data-phase="CREW TOOLS — FINAL MENU">
   <div class="crew-shell">
     <div class="crew-topbar">
-      <div class="crew-title">THEATRE CREW MENU — APPLE GLASS TOOL DECK</div>
+      <div class="crew-title">THEATRE CREW MENU</div>
       <div class="crew-tabs">
         <button class="crew-tab active" data-crew-tab="files">FILES</button>
         <button class="crew-tab" data-crew-tab="map">MAP</button>
         <button class="crew-tab" id="crewLightToggle" type="button">☀️ LIGHT</button>
       </div>
-      <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE (MOBILE FIXED)</button>
+      <button class="action-btn" id="openCastSlideBtn" type="button">OPEN MEET THE CAST SLIDE</button>
     </div>
     <div class="crew-panel active" id="panel-files">
       <div class="glass-block files-toolbar">
@@ -2085,7 +2082,7 @@ body::after {
     </div>
   </div>
 </div>
-<button class="quick-crew-toggle" id="quickCrewToggle" type="button" aria-label="Open theatre crew menu" title="Toggle Theatre Crew Menu">🛠️</button>
+<button class="quick-crew-toggle" id="quickCrewToggle" type="button" aria-label="Open theatre crew menu">🛠️</button>
 
 
 <div class="telegram-viewer" id="telegramViewer">
@@ -2664,18 +2661,8 @@ document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(
 document.getElementById('crewLightToggle')?.addEventListener('click', (ev) => {
   const crewSlide = document.querySelector('.slide-crew-menu');
   crewSlide?.classList.toggle('light-mode');
-  syncCrewThemeToCast();
   ev.currentTarget.textContent = crewSlide?.classList.contains('light-mode') ? '🌙 DARK' : '☀️ LIGHT';
 });
-
-const crewMenuSlide = document.querySelector('.slide-crew-menu');
-const castModuleSlide = document.querySelector('.slide-cast-module');
-const syncCrewThemeToCast = () => {
-  if (!crewMenuSlide || !castModuleSlide) return;
-  castModuleSlide.classList.toggle('light-mode', crewMenuSlide.classList.contains('light-mode'));
-};
-syncCrewThemeToCast();
-
 let quickReturnIndex = 0;
 document.getElementById('quickCrewToggle')?.addEventListener('click', () => {
   const crewIdx = slides.findIndex(sl => sl.classList.contains('slide-crew-menu'));
