@@ -1188,7 +1188,7 @@ body::after {
 
 
 /* Apple glass crew deck */
-.crew-glass-deck{border:1px solid rgba(255,255,255,.24);border-radius:24px;background:rgba(13,18,30,.58);backdrop-filter:blur(18px);padding:12px 12px calc(18px + env(safe-area-inset-bottom));min-height:78vh}.crew-glass-topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.crew-glass-title{font:700 14px 'Share Tech Mono';color:#dff3ff}.crew-glass-subtitle{font:600 9px 'Share Tech Mono';color:#98b3ca;letter-spacing:1.5px}.crew-return-btn,.crew-nav-btn,.glass-action-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#e9f4ff;border-radius:12px;padding:8px 10px;font:700 10px 'Share Tech Mono';cursor:pointer}.crew-glass-body{display:grid;grid-template-columns:190px 1fr;gap:10px;margin-top:10px;min-height:65vh}.crew-glass-nav{display:grid;gap:8px;align-content:start}.crew-nav-btn.active{border-color:#8cd3ff;background:rgba(89,167,255,.18)}.crew-glass-panel{display:none}.crew-glass-panel.active{display:block}.crew-glass-panels{border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px;overflow:auto}.tg-thread-block{max-height:40vh;overflow:auto}.tg-composer-textarea{width:100%;min-height:86px;background:rgba(8,14,24,.65);color:#eaf4ff;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px}.tg-composer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.crew-hint-banner{font:700 10px 'Share Tech Mono';color:#9fe2ff;margin-bottom:8px}.quick-crew-toggle{display:flex;align-items:center;gap:6px;padding-bottom:max(0px, env(safe-area-inset-bottom));transform:translateY(-2px)}@media (max-width:860px){.crew-glass-body{grid-template-columns:1fr}.crew-glass-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.crew-glass-deck{min-height:auto;padding-bottom:calc(98px + env(safe-area-inset-bottom));}.crew-glass-panels{padding-bottom:calc(92px + env(safe-area-inset-bottom));}}
+.crew-glass-deck{border:1px solid rgba(255,255,255,.24);border-radius:24px;background:rgba(13,18,30,.58);backdrop-filter:blur(18px);padding:12px 12px calc(18px + env(safe-area-inset-bottom));min-height:78vh}.crew-glass-topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.crew-glass-title{font:700 14px 'Share Tech Mono';color:#dff3ff}.crew-glass-subtitle{font:600 9px 'Share Tech Mono';color:#98b3ca;letter-spacing:1.5px}.crew-return-btn,.crew-nav-btn,.glass-action-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#e9f4ff;border-radius:12px;padding:8px 10px;font:700 10px 'Share Tech Mono';cursor:pointer}.glass-action-btn.compact{padding:6px 8px;min-width:34px;font-size:12px}.crew-glass-body{display:grid;grid-template-columns:190px 1fr;gap:10px;margin-top:10px;min-height:65vh}.crew-glass-nav{display:grid;gap:8px;align-content:start}.crew-nav-btn.active{border-color:#8cd3ff;background:rgba(89,167,255,.18)}.crew-glass-panel{display:none}.crew-glass-panel.active{display:block}.crew-glass-panels{border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px;overflow:auto}.tg-thread-block{max-height:40vh;overflow:auto}.tg-composer-textarea{width:100%;min-height:86px;background:rgba(8,14,24,.65);color:#eaf4ff;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px}.tg-composer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.crew-hint-banner{font:700 10px 'Share Tech Mono';color:#9fe2ff;margin-bottom:8px}.quick-crew-toggle{display:flex;align-items:center;gap:6px;padding-bottom:max(0px, env(safe-area-inset-bottom));transform:translateY(-2px)}@media (max-width:860px){.crew-glass-body{grid-template-columns:1fr}.crew-glass-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.crew-glass-deck{min-height:auto;padding-bottom:calc(98px + env(safe-area-inset-bottom));}.crew-glass-panels{padding-bottom:calc(92px + env(safe-area-inset-bottom));}}
 .telegram-composer { display:grid; gap:8px; }
 .telegram-composer textarea { min-height:70px; resize:vertical; }
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
@@ -2086,7 +2086,7 @@ body::after {
           </div>
           <div class="tg-composer-block">
             <div class="tg-composer-actions">
-              <button class="glass-action-btn" id="glassRecordBtn" type="button">⏺ START RECORD</button>
+              <button class="glass-action-btn compact" id="glassRecordBtn" type="button" title="Start or stop screen recording">⏺️</button>
               <button class="glass-action-btn" id="glassDownloadRecordBtn" type="button">⬇ DOWNLOAD</button>
               <button class="glass-action-btn" id="downloadTelegramHtmlBtn" type="button">⬇ THREAD (.HTML)</button>
             </div>
@@ -2122,7 +2122,7 @@ body::after {
     <div class="telegram-viewer-bar">
       <strong style="font:700 11px 'Share Tech Mono';letter-spacing:1px;color:#dff3ff;">TELEGRAM THREAD VIEWER</strong>
       <div class="telegram-viewer-actions">
-        <button class="action-btn" id="recordTelegramBtn" type="button">START MP4 RECORDING</button><small id="telegramRecordStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Ready</small>
+        <button class="action-btn" id="recordTelegramBtn" type="button" title="Start or stop screen recording">⏺️</button><small id="telegramRecordStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Ready</small>
         <button class="action-btn" id="downloadRecordingBtn" type="button" disabled>DOWNLOAD RECORDING</button>
         <button class="action-btn" id="closeTelegramViewerBtn" type="button">CLOSE</button>
       </div>
@@ -2225,6 +2225,9 @@ document.addEventListener('keydown', e => {
   const target = e.target;
   const isTypingTarget = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
   if (isTypingTarget) return;
+  const tag = (e.target?.tagName || '').toLowerCase();
+  const typing = e.target?.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select';
+  if (typing) return;
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
 });
@@ -2435,13 +2438,22 @@ const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<sv
 let currentTelegramLogo = defaultTelegramLogo;
 function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   if (!feed) return;
-  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
+  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input type="file" id="telegramLogoUpload" accept="image/png,image/*"><button class="glass-action-btn" id="telegramLogoSaveBtn" type="button">SAVE LOGO</button><small id="telegramLogoStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Current logo active</small></div>`;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
     const r = new FileReader();
-    r.onload = x => { currentTelegramLogo = x.target.result; renderTelegramFeed(currentTelegramLogo); };
+    r.onload = x => { window.__pendingTelegramLogo = x.target.result; const st=document.getElementById('telegramLogoStatus'); if(st) st.textContent='Preview ready — tap SAVE LOGO'; renderTelegramFeed(currentTelegramLogo); };
     r.readAsDataURL(f);
+  });
+
+  document.getElementById('telegramLogoSaveBtn')?.addEventListener('click', () => {
+    if (!window.__pendingTelegramLogo) return;
+    currentTelegramLogo = window.__pendingTelegramLogo;
+    window.__pendingTelegramLogo = '';
+    renderTelegramFeed(currentTelegramLogo);
+    const st = document.getElementById('telegramLogoStatus');
+    if (st) st.textContent = 'Logo updated successfully';
   });
 }
 renderTelegramFeed();
@@ -2456,24 +2468,47 @@ const triggerTelegramBan = () => {
   setTimeout(() => goTo(17), 500);
 };
 const appendTelegramBotResponse = (seedText) => {
-  const t = seedText.toLowerCase();
+  const t = seedText.toLowerCase().replace(/\s+/g, ' ').trim();
+  const instantBan = /\bi\s+love\s+immigration\b|\bi\s+love\s+immigrants\b/.test(t);
+  const praiseTrigger = /\bi\s+love\s+britain\b|\bno\s+more\s+boats\b/.test(t);
   const support = /(help|support|agree|thanks|good point|valid|interesting|informative)/.test(t);
   const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence)/.test(t);
   const question = /(\?|why|how|what|when|where|can we|should we)/.test(t);
-  let msg = '🤖 @LionheartBot: Logged. Thanks for contributing to the thread.';
-  let react1 = '👍 124'; let react2 = '🧠 61';
-  if (support) { msg = '🤖 @LionheartBot: Appreciate the constructive energy — keep replies specific so others can respond.'; react1 = '💬 286'; react2 = '❤️ 174'; liberalStrikeCount = Math.max(0, liberalStrikeCount - 1); }
-  if (question) { msg = '🤖 @LionheartBot: Great question. I flagged this for follow-up and added context in-thread.'; react1 = '❓ 149'; react2 = '📌 88'; }
-  if (concern) { liberalStrikeCount += 1; msg = `🤖 @LionheartBot: That language may violate community rules. Please rephrase. Warning ${liberalStrikeCount}/3.`; react1 = '⚠️ 401'; react2 = '🛡️ 211'; }
+
+  if (instantBan) {
+    teleLines.push('⛔ Moderator: Message removed for policy breach. Account immediately banned.');
+    teleMeta.push({ user: '@Moderator', react1: '🔨 1', react2: '🚫 BANNED' });
+    triggerTelegramBan();
+    return;
+  }
+
+  if (praiseTrigger) {
+    const hypeReplies = [
+      { user: '@Moderator', text: 'Approved — strong message. 🇬🇧', react1: '🇬🇧 1.9K', react2: '🎉 740' },
+      { user: '@Dockside_Dan', text: 'Finally someone says it properly. 🚤❌', react1: '👏 862', react2: '🇬🇧 404' },
+      { user: '@EssexNan', text: 'Tea, flags, and common sense. Love it! ☕🇬🇧', react1: '😂 533', react2: '🎊 228' }
+    ];
+    teleLines.push('🎉 CONFETTI BURST: Crowd applause across the channel. 🇬🇧🇬🇧🇬🇧');
+    teleMeta.push({ user: '@SystemFX', react1: '🎉 1.5K', react2: '🇬🇧 1.1K' });
+    hypeReplies.forEach((r)=>{ teleLines.push(r.text); teleMeta.push({ user:r.user, react1:r.react1, react2:r.react2 }); });
+    return;
+  }
+
+  let msg = '@Moderator: Logged. Thanks for contributing to the thread.';
+  let react1 = '👍 324'; let react2 = '💬 188';
+  if (support) { msg = '@Moderator: Strong point — pushing this to top comments.'; react1 = '💬 1.2K'; react2 = '🔥 680'; liberalStrikeCount = Math.max(0, liberalStrikeCount - 1); }
+  if (question) { msg = '@ThreadGuide: Great question. Added context and pinned replies.'; react1 = '❓ 540'; react2 = '📌 320'; }
+  if (concern) { liberalStrikeCount += 1; msg = `@Moderator: That language may violate community rules. Warning ${liberalStrikeCount}/3.`; react1 = '⚠️ 901'; react2 = '🛡️ 511'; }
   teleLines.push(msg);
-  teleMeta.push({ user: '@LionheartBot', react1, react2 });
+  teleMeta.push({ user: '@ThreadGuide', react1, react2 });
   if (liberalStrikeCount >= 3) triggerTelegramBan();
 };
 function sendTelegramMessage(input) {
   const text = input?.value?.trim();
   if (!text) return;
   teleLines.push(text);
-  teleMeta.push({ user: '@Operator', react1: '🧵 NEW', react2: '🤖 BOT REPLY' });
+  const boosted = 200 + Math.floor(Math.random()*1600);
+  teleMeta.push({ user: '@Operator', react1: `👍 ${boosted}`, react2: `👎 ${Math.floor(boosted/3)}` });
   appendTelegramBotResponse(text);
   renderTelegramFeed(currentTelegramLogo);
   if (telegramViewer?.classList.contains('open')) openTelegramViewer();
@@ -2558,7 +2593,7 @@ function animateTelegramThread(screen) {
 let telegramRecorder, telegramChunks = [], telegramRecordingUrl = '';
 document.getElementById('recordTelegramBtn')?.addEventListener('click', async (ev) => {
   const btn = ev.currentTarget;
-  if (telegramRecorder && telegramRecorder.state === 'recording') { telegramRecorder.stop(); btn.textContent = 'START MP4 RECORDING'; return; }
+  if (telegramRecorder && telegramRecorder.state === 'recording') { telegramRecorder.stop(); btn.textContent = '⏺️'; return; }
   const status = document.getElementById('telegramRecordStatus');
   try {
     if (!navigator.mediaDevices?.getDisplayMedia && !(telegramViewerThread?.querySelector('.telegram-shell') || telegramViewerThread)?.captureStream) {
@@ -2592,7 +2627,7 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
       stream.getTracks().forEach(t => t.stop());
     };
     telegramRecorder.start(1000);
-    btn.textContent = 'STOP RECORDING';
+    btn.textContent = '⏹️';
     if (status) status.textContent = 'Recording Telegram playback from start…';
     const glassStatus = document.getElementById('glassRecordStatus'); if (glassStatus) glassStatus.textContent = status.textContent;
   } catch (e) {
