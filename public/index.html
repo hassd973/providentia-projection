@@ -1239,7 +1239,9 @@ body::after {
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
-@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; } #backToToolsBtn { width: 100%; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:-1; min-height:56vh; } .slide-cast-module .cast-preview img { max-height:48vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
+@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index:5; } #backToToolsBtn { width: 100%; position: sticky; top: 46px; z-index:5; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:-1; min-height:46vh; } .slide-cast-module .cast-preview img { max-height:36vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
+.telegram-viewer-shell { grid-template-rows:auto 1fr auto; }
+.telegram-viewer-composer { padding:10px; border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.88); }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -2067,6 +2069,7 @@ body::after {
         <button class="crew-nav-btn" data-glass-tab="cast">🎭 CAST EDITOR</button>
         <button class="crew-nav-btn" data-glass-tab="files">📁 EXPORT</button>
         <button class="crew-nav-btn" data-glass-tab="map">📍 LOCATION</button>
+        <button class="crew-nav-btn" data-glass-tab="live">📸 LIVE FEED</button>
       </nav>
       <div class="crew-glass-panels">
         <div class="crew-glass-panel active" id="gpanel-telegram">
@@ -2101,6 +2104,12 @@ body::after {
         <div class="crew-glass-panel" id="gpanel-map">
           <div class="glass-block"><div class="deptford-map" id="deptfordMap"><iframe title="Deptford Creek map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.0418%2C51.4783%2C0.0055%2C51.4996&layer=mapnik&marker=51.4886%2C-0.0181"></iframe></div></div>
         </div>
+        <div class="crew-glass-panel" id="gpanel-live">
+          <div class="glass-block">
+            <p style="font:10px 'Share Tech Mono';color:#9fd6ff;margin-bottom:8px;">Instagram live feed launch.</p>
+            <a class="action-btn" href="https://www.instagram.com/repatriated_play?igsh=MTlwajlzbjlqMG1zaw==" target="_blank" rel="noopener noreferrer">OPEN @REPATRIATED_PLAY</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2117,6 +2126,13 @@ body::after {
       </div>
     </div>
     <div class="telegram-viewer-thread" id="telegramViewerThread"></div>
+    <div class="telegram-viewer-composer">
+      <textarea class="tg-composer-textarea" id="telegramViewerComposerText" placeholder="Type in fullscreen…"></textarea>
+      <div class="tg-composer-actions">
+        <button class="glass-action-btn" id="viewerSpeechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+        <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2403,6 +2419,7 @@ const baseTeleMeta = [
 const feed = document.getElementById('telegramFeed');
 let teleLines = [...baseTeleLines];
 let teleMeta = baseTeleMeta.map((m) => ({ ...m }));
+let liberalStrikeCount = 0;
 
 
 function renderMockMapCard() {
@@ -2421,18 +2438,29 @@ function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
   });
 }
 renderTelegramFeed();
-const appendTelegramBotResponse = (seedText) => {
-  const responses = [
-    '🤖 Mod bot: logged. Stage team to verify source before projection.',
-    '🤖 Q&A bot: thanks audience, next question queued for operator.',
-    `🤖 Auto-reply: received "${seedText.slice(0,48)}${seedText.length > 48 ? '…' : ''}"`
-  ];
-  const msg = responses[Math.floor(Math.random()*responses.length)];
-  teleLines.push(msg);
-  teleMeta.push({ user: '@LionheartBot', react1: '👍 ACK', react2: '🧠 AUTO' });
+const triggerTelegramBan = () => {
+  teleLines.push('🚫 @LionheartBot: 3 strikes. Channel access revoked.');
+  teleMeta.push({ user: '@LionheartBot', react1: '🔨 BAN', react2: '⚠️ POLICY' });
+  renderTelegramFeed();
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+  osc.type = 'square'; osc.frequency.value = 180; gain.gain.value = 0.08; osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+  setTimeout(() => goToSlide(17), 500);
 };
-document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => {
-  const input = document.getElementById('telegramComposerText');
+const appendTelegramBotResponse = (seedText) => {
+  const t = seedText.toLowerCase();
+  const conservative = /(border|security|patriot|nation|tradition|law|order)/.test(t);
+  const liberal = /(equality|inclusive|rights|solidarity|refugee|climate|justice)/.test(t);
+  let msg = '🤖 Mod bot: message logged.';
+  let react1 = '👍 ACK'; let react2 = '🧠 AUTO';
+  if (conservative) { msg = '🤖 @LionheartBot: based take. Keep it coming.'; react1 = '😎 AGREE'; react2 = '🔥'; liberalStrikeCount = Math.max(0, liberalStrikeCount - 1); }
+  if (liberal) { liberalStrikeCount += 1; msg = `🤖 @LionheartBot: 😂 weak take. Strike ${liberalStrikeCount}/3.`; react1 = '👎'; react2 = '😡'; }
+  teleLines.push(msg);
+  teleMeta.push({ user: '@LionheartBot', react1, react2 });
+  if (liberalStrikeCount >= 3) triggerTelegramBan();
+};
+function sendTelegramMessage(input) {
   const text = input?.value?.trim();
   if (!text) return;
   teleLines.push(text);
@@ -2440,7 +2468,9 @@ document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => {
   appendTelegramBotResponse(text);
   renderTelegramFeed();
   if (input) input.value = '';
-});
+}
+document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => sendTelegramMessage(document.getElementById('telegramComposerText')));
+document.getElementById('viewerSendTelegramMsgBtn')?.addEventListener('click', () => sendTelegramMessage(document.getElementById('telegramViewerComposerText')));
 document.getElementById('speechToTextBtn')?.addEventListener('click', () => {
   const input = document.getElementById('telegramComposerText');
   const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -2454,6 +2484,7 @@ document.getElementById('speechToTextBtn')?.addEventListener('click', () => {
   };
   rec.start();
 });
+document.getElementById('viewerSpeechToTextBtn')?.addEventListener('click', () => document.getElementById('speechToTextBtn')?.click());
 
 function resetTelegramThread() {
   teleLines = [...baseTeleLines];
@@ -2917,10 +2948,10 @@ function animateMediaWall() {
 counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
 
 const crewNavBtns=[...document.querySelectorAll('.crew-nav-btn')];
-const crewPanels={telegram:document.getElementById('gpanel-telegram'),cast:document.getElementById('gpanel-cast'),files:document.getElementById('gpanel-files'),map:document.getElementById('gpanel-map')};
+const crewPanels={telegram:document.getElementById('gpanel-telegram'),cast:document.getElementById('gpanel-cast'),files:document.getElementById('gpanel-files'),map:document.getElementById('gpanel-map'),live:document.getElementById('gpanel-live')};
 crewNavBtns.forEach(btn=>btn.addEventListener('click',()=>{crewNavBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');Object.values(crewPanels).forEach(p=>p&&p.classList.remove('active'));crewPanels[btn.dataset.glassTab]?.classList.add('active');}));
 document.getElementById('crewReturnBtn')?.addEventListener('click',()=>{const target=(window.__crewReturnSlide||window.currentSlide||1);goToSlide(target);});
-document.getElementById('crewLightToggle2')?.addEventListener('click',()=>document.getElementById('crewLightToggle')?.click());
+document.getElementById('crewLightToggle2')?.addEventListener('click',(ev)=>{const crewSlide=document.querySelector('.slide-crew-menu');crewSlide?.classList.toggle('light-mode');ev.currentTarget.textContent=crewSlide?.classList.contains('light-mode')?'🌙':'☀️';});
 
 document.getElementById('glassRecordBtn')?.addEventListener('click',()=>document.getElementById('recordTelegramBtn')?.click());
 document.getElementById('glassDownloadRecordBtn')?.addEventListener('click',()=>document.getElementById('downloadRecordingBtn')?.click());
