@@ -2107,7 +2107,8 @@ body::after {
         </div>
         <div class="crew-glass-panel" id="gpanel-live">
           <div class="glass-block">
-            <p style="font:10px 'Share Tech Mono';color:#9fd6ff;margin-bottom:8px;">Instagram live feed launch.</p>
+            <p style="font:10px 'Share Tech Mono';color:#9fd6ff;margin-bottom:8px;">Instagram profile feed (embedded when browser allows).</p>
+            <iframe title="@repatriated_play Instagram" src="https://www.instagram.com/repatriated_play/embed" style="width:100%;min-height:480px;border:1px solid rgba(255,255,255,.2);border-radius:12px;background:#fff;" loading="lazy"></iframe>
             <a class="action-btn" href="https://www.instagram.com/repatriated_play?igsh=MTlwajlzbjlqMG1zaw==" target="_blank" rel="noopener noreferrer">OPEN @REPATRIATED_PLAY</a>
           </div>
         </div>
@@ -2221,6 +2222,9 @@ function prevSlide() { if (current > 0) goTo(current - 1); }
 document.getElementById('next-btn').addEventListener('click', nextSlide);
 document.getElementById('prev-btn').addEventListener('click', prevSlide);
 document.addEventListener('keydown', e => {
+  const target = e.target;
+  const isTypingTarget = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+  if (isTypingTarget) return;
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
 });
@@ -2424,19 +2428,19 @@ let teleLines = [...baseTeleLines];
 let teleMeta = baseTeleMeta.map((m) => ({ ...m }));
 let liberalStrikeCount = 0;
 
-
 function renderMockMapCard() {
   return `<div class="tele-photo tele-map-photo"><div class="tele-map-grid"></div><div class="tele-map-river"></div><div class="tele-map-road"></div><div class="tele-map-label">DEPTFORD CREEK · HARBOUR HOUSE</div><div class="tele-map-pin"></div><div class="tele-map-circle"></div></div>`;
 }
 const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f7a56"/><stop offset="1" stop-color="#c8a65e"/></linearGradient></defs><rect width="80" height="80" rx="40" fill="url(#g)"/><text x="40" y="48" text-anchor="middle" font-size="26" font-family="Arial" fill="white">LC</text></svg>');
-function renderTelegramFeed(logoSrc = defaultTelegramLogo) {
+let currentTelegramLogo = defaultTelegramLogo;
+function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   if (!feed) return;
   feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><input type="file" id="telegramLogoUpload" accept="image/png,image/*">`;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
     const r = new FileReader();
-    r.onload = x => renderTelegramFeed(x.target.result);
+    r.onload = x => { currentTelegramLogo = x.target.result; renderTelegramFeed(currentTelegramLogo); };
     r.readAsDataURL(f);
   });
 }
@@ -2444,7 +2448,7 @@ renderTelegramFeed();
 const triggerTelegramBan = () => {
   teleLines.push('🚫 @LionheartBot: 3 strikes. Channel access revoked.');
   teleMeta.push({ user: '@LionheartBot', react1: '🔨 BAN', react2: '⚠️ POLICY' });
-  renderTelegramFeed();
+  renderTelegramFeed(currentTelegramLogo);
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
   osc.type = 'square'; osc.frequency.value = 180; gain.gain.value = 0.08; osc.connect(gain); gain.connect(audioCtx.destination);
@@ -2453,12 +2457,14 @@ const triggerTelegramBan = () => {
 };
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase();
-  const conservative = /(border|security|patriot|nation|tradition|law|order)/.test(t);
-  const liberal = /(equality|inclusive|rights|solidarity|refugee|climate|justice)/.test(t);
-  let msg = '🤖 Mod bot: message logged.';
-  let react1 = '👍 ACK'; let react2 = '🧠 AUTO';
-  if (conservative) { msg = '🤖 @LionheartBot: based take. Keep it coming.'; react1 = '😎 AGREE'; react2 = '🔥'; liberalStrikeCount = Math.max(0, liberalStrikeCount - 1); }
-  if (liberal) { liberalStrikeCount += 1; msg = `🤖 @LionheartBot: 😂 weak take. Strike ${liberalStrikeCount}/3.`; react1 = '👎'; react2 = '😡'; }
+  const support = /(help|support|agree|thanks|good point|valid|interesting|informative)/.test(t);
+  const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence)/.test(t);
+  const question = /(\?|why|how|what|when|where|can we|should we)/.test(t);
+  let msg = '🤖 @LionheartBot: Logged. Thanks for contributing to the thread.';
+  let react1 = '👍 124'; let react2 = '🧠 61';
+  if (support) { msg = '🤖 @LionheartBot: Appreciate the constructive energy — keep replies specific so others can respond.'; react1 = '💬 286'; react2 = '❤️ 174'; liberalStrikeCount = Math.max(0, liberalStrikeCount - 1); }
+  if (question) { msg = '🤖 @LionheartBot: Great question. I flagged this for follow-up and added context in-thread.'; react1 = '❓ 149'; react2 = '📌 88'; }
+  if (concern) { liberalStrikeCount += 1; msg = `🤖 @LionheartBot: That language may violate community rules. Please rephrase. Warning ${liberalStrikeCount}/3.`; react1 = '⚠️ 401'; react2 = '🛡️ 211'; }
   teleLines.push(msg);
   teleMeta.push({ user: '@LionheartBot', react1, react2 });
   if (liberalStrikeCount >= 3) triggerTelegramBan();
@@ -2469,7 +2475,7 @@ function sendTelegramMessage(input) {
   teleLines.push(text);
   teleMeta.push({ user: '@Operator', react1: '🧵 NEW', react2: '🤖 BOT REPLY' });
   appendTelegramBotResponse(text);
-  renderTelegramFeed();
+  renderTelegramFeed(currentTelegramLogo);
   if (telegramViewer?.classList.contains('open')) openTelegramViewer();
   if (input) input.value = '';
 }
@@ -2483,7 +2489,7 @@ function sendMediaMessage(file) {
     teleLines.push(mediaHtml);
     teleMeta.push({ user: '@Operator', react1: '📎 UPLOAD', react2: isVideo ? '🎬 VIDEO' : '🖼️ PHOTO' });
     appendTelegramBotResponse(`uploaded ${isVideo ? 'video' : 'photo'} ${file.name}`);
-    renderTelegramFeed();
+    renderTelegramFeed(currentTelegramLogo);
     if (telegramViewer?.classList.contains('open')) openTelegramViewer();
   };
   r.readAsDataURL(file);
@@ -2517,7 +2523,7 @@ document.getElementById('viewerSpeechToTextBtn')?.addEventListener('click', () =
 function resetTelegramThread() {
   teleLines = [...baseTeleLines];
   teleMeta = baseTeleMeta.map((m) => ({ ...m }));
-  renderTelegramFeed();
+  renderTelegramFeed(currentTelegramLogo);
 }
 
 const telegramViewer = document.getElementById('telegramViewer');
@@ -2581,14 +2587,17 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
       telegramRecordingUrl = URL.createObjectURL(blob);
       const dl = document.getElementById('downloadRecordingBtn');
       if (dl) dl.disabled = false;
-      if (status) status.textContent = 'Recording complete. Ready to download.';
+      if (status) status.textContent = 'Recording complete. Ready to download (.webm).';
+      const glassStatus = document.getElementById('glassRecordStatus'); if (glassStatus) glassStatus.textContent = status.textContent;
       stream.getTracks().forEach(t => t.stop());
     };
     telegramRecorder.start(1000);
     btn.textContent = 'STOP RECORDING';
     if (status) status.textContent = 'Recording Telegram playback from start…';
+    const glassStatus = document.getElementById('glassRecordStatus'); if (glassStatus) glassStatus.textContent = status.textContent;
   } catch (e) {
     if (status) status.textContent = 'Screen recording blocked by browser permissions. Use Telegram HTML export as fallback (FILES → DOWNLOAD TELEGRAM THREAD).';
+    const glassStatus = document.getElementById('glassRecordStatus'); if (glassStatus) glassStatus.textContent = status.textContent;
     console.warn('Screen record unavailable', e);
   }
 });
@@ -2596,7 +2605,7 @@ document.getElementById('downloadRecordingBtn')?.addEventListener('click', () =>
   if (!telegramRecordingUrl) return;
   const a = document.createElement('a');
   a.href = telegramRecordingUrl;
-  a.download = 'lionheart-telegram-recording.mp4';
+  a.download = 'lionheart-telegram-recording.webm';
   a.click();
 });
 
