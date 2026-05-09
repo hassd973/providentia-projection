@@ -1239,7 +1239,7 @@ body::after {
 @keyframes pulse-bg { 0%,100%{background:rgba(10,17,29,.65)}50%{background:rgba(55,18,30,.7)} }
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
-@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index:5; } #backToToolsBtn { width: 100%; position: sticky; top: 46px; z-index:5; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:-1; min-height:46vh; } .slide-cast-module .cast-preview img { max-height:36vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
+@media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index:5; } #backToToolsBtn { width: 100%; position: sticky; top: 46px; z-index:5; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:2; min-height:auto; } .slide-cast-module .cast-preview img { max-height:28vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
 .telegram-viewer-shell { grid-template-rows:auto 1fr auto; }
 .telegram-viewer-composer { padding:10px; border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.88); }
 
@@ -2079,6 +2079,7 @@ body::after {
             <textarea class="tg-composer-textarea" id="telegramComposerText" placeholder="Type operator or audience message…"></textarea>
             <div class="tg-composer-actions">
               <button class="glass-action-btn" id="speechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+              <button class="glass-action-btn" id="telegramUploadBtn" type="button">📎 PHOTO / VIDEO</button>
               <button class="glass-action-btn" id="sendTelegramMsgBtn" type="button">⬆ SEND MESSAGE</button>
               <button class="glass-action-btn" id="openTelegramViewerBtn" type="button">⧉ FULL VIEWER</button>
             </div>
@@ -2130,11 +2131,13 @@ body::after {
       <textarea class="tg-composer-textarea" id="telegramViewerComposerText" placeholder="Type in fullscreen…"></textarea>
       <div class="tg-composer-actions">
         <button class="glass-action-btn" id="viewerSpeechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+        <button class="glass-action-btn" id="viewerTelegramUploadBtn" type="button">📎 UPLOAD</button>
         <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND</button>
       </div>
     </div>
   </div>
 </div>
+<input type="file" id="telegramMediaUpload" accept="image/*,video/*" hidden>
 
 
 <!-- ─── SLIDE 19 — MEET THE CAST MODULE ────────────────── -->
@@ -2446,7 +2449,7 @@ const triggerTelegramBan = () => {
   const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
   osc.type = 'square'; osc.frequency.value = 180; gain.gain.value = 0.08; osc.connect(gain); gain.connect(audioCtx.destination);
   osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-  setTimeout(() => goToSlide(17), 500);
+  setTimeout(() => goTo(17), 500);
 };
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase();
@@ -2467,10 +2470,29 @@ function sendTelegramMessage(input) {
   teleMeta.push({ user: '@Operator', react1: '🧵 NEW', react2: '🤖 BOT REPLY' });
   appendTelegramBotResponse(text);
   renderTelegramFeed();
+  if (telegramViewer?.classList.contains('open')) openTelegramViewer();
   if (input) input.value = '';
+}
+function sendMediaMessage(file) {
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = (ev) => {
+    const src = ev.target?.result;
+    const isVideo = file.type.startsWith('video/');
+    const mediaHtml = isVideo ? `<video controls playsinline style="width:100%;border-radius:10px;"><source src="${src}" type="${file.type}"></video>` : `<img src="${src}" alt="${file.name}" style="width:100%;border-radius:10px;">`;
+    teleLines.push(mediaHtml);
+    teleMeta.push({ user: '@Operator', react1: '📎 UPLOAD', react2: isVideo ? '🎬 VIDEO' : '🖼️ PHOTO' });
+    appendTelegramBotResponse(`uploaded ${isVideo ? 'video' : 'photo'} ${file.name}`);
+    renderTelegramFeed();
+    if (telegramViewer?.classList.contains('open')) openTelegramViewer();
+  };
+  r.readAsDataURL(file);
 }
 document.getElementById('sendTelegramMsgBtn')?.addEventListener('click', () => sendTelegramMessage(document.getElementById('telegramComposerText')));
 document.getElementById('viewerSendTelegramMsgBtn')?.addEventListener('click', () => sendTelegramMessage(document.getElementById('telegramViewerComposerText')));
+document.getElementById('telegramUploadBtn')?.addEventListener('click', () => document.getElementById('telegramMediaUpload')?.click());
+document.getElementById('viewerTelegramUploadBtn')?.addEventListener('click', () => document.getElementById('telegramMediaUpload')?.click());
+document.getElementById('telegramMediaUpload')?.addEventListener('change', (ev) => sendMediaMessage(ev.target.files?.[0]));
 document.getElementById('speechToTextBtn')?.addEventListener('click', () => {
   const input = document.getElementById('telegramComposerText');
   const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -2481,10 +2503,16 @@ document.getElementById('speechToTextBtn')?.addEventListener('click', () => {
   rec.onresult = (event) => {
     const transcript = event.results?.[0]?.[0]?.transcript || '';
     if (input) input.value = `${input.value}${input.value ? '\n' : ''}${transcript}`;
+    sendTelegramMessage(input);
   };
   rec.start();
 });
 document.getElementById('viewerSpeechToTextBtn')?.addEventListener('click', () => document.getElementById('speechToTextBtn')?.click());
+['telegramComposerText','telegramViewerComposerText'].forEach((id)=>{
+  document.getElementById(id)?.addEventListener('keydown',(ev)=>{
+    if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); sendTelegramMessage(ev.currentTarget); }
+  });
+});
 
 function resetTelegramThread() {
   teleLines = [...baseTeleLines];
@@ -2950,7 +2978,7 @@ counter.textContent = '01 / ' + String(totalSlides).padStart(2,'0');
 const crewNavBtns=[...document.querySelectorAll('.crew-nav-btn')];
 const crewPanels={telegram:document.getElementById('gpanel-telegram'),cast:document.getElementById('gpanel-cast'),files:document.getElementById('gpanel-files'),map:document.getElementById('gpanel-map'),live:document.getElementById('gpanel-live')};
 crewNavBtns.forEach(btn=>btn.addEventListener('click',()=>{crewNavBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');Object.values(crewPanels).forEach(p=>p&&p.classList.remove('active'));crewPanels[btn.dataset.glassTab]?.classList.add('active');}));
-document.getElementById('crewReturnBtn')?.addEventListener('click',()=>{const target=(window.__crewReturnSlide||window.currentSlide||1);goToSlide(target);});
+document.getElementById('crewReturnBtn')?.addEventListener('click',()=>{const target=(window.__crewReturnSlide||window.currentSlide||1);goTo(Math.max(0,target-1));});
 document.getElementById('crewLightToggle2')?.addEventListener('click',(ev)=>{const crewSlide=document.querySelector('.slide-crew-menu');crewSlide?.classList.toggle('light-mode');ev.currentTarget.textContent=crewSlide?.classList.contains('light-mode')?'🌙':'☀️';});
 
 document.getElementById('glassRecordBtn')?.addEventListener('click',()=>document.getElementById('recordTelegramBtn')?.click());
