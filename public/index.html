@@ -1205,6 +1205,7 @@ body::after {
 .crew-tab.active { box-shadow: 0 0 0 1px rgba(0,212,255,.55) inset, 0 0 18px rgba(0,212,255,.25); }
 @media (max-width: 640px) { .crew-tabs { position: sticky; top: 0; z-index: 2; } .crew-tab.active { transform: translateY(-1px); } }
 .telegram-feed { display: grid; gap: 10px; max-height: 55vh; overflow: auto; }
+.record-label { font:700 10px 'Share Tech Mono', monospace; padding:6px 8px; }
 .files-toolbar { display:flex; flex-wrap:wrap; gap:8px; }
 .telegram-frame { border:1px solid rgba(255,255,255,.2); border-radius:18px; background: linear-gradient(150deg, rgba(174,221,196,0.24), rgba(121,183,230,0.2) 48%, rgba(255,255,255,0.14)); padding: 10px; backdrop-filter: blur(14px) saturate(160%); }
 .telegram-shell { border-radius: 24px; border:1px solid rgba(255,255,255,.45); overflow: hidden; background: linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.55);}
@@ -2073,7 +2074,7 @@ body::after {
       </nav>
       <div class="crew-glass-panels">
         <div class="crew-glass-panel active" id="gpanel-telegram">
-          <div class="crew-hint-banner">💡 OPERATOR HINT: Use 🎙️ VOICE INPUT for audience Q&A, then SEND to post in-thread.</div>
+          <div class="crew-hint-banner">💡 OPERATOR HINT: Bots read each @Operator post, react in-thread, and escalate instantly.</div>
           <div class="tg-thread-block" id="telegramFeed"></div>
           <div class="tg-composer-block">
             <textarea class="tg-composer-textarea" id="telegramComposerText" placeholder="Type operator or audience message…"></textarea>
@@ -2122,7 +2123,7 @@ body::after {
     <div class="telegram-viewer-bar">
       <strong style="font:700 11px 'Share Tech Mono';letter-spacing:1px;color:#dff3ff;">TELEGRAM THREAD VIEWER</strong>
       <div class="telegram-viewer-actions">
-        <button class="action-btn" id="recordTelegramBtn" type="button" title="Start or stop screen recording">⏺️</button><small id="telegramRecordStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Ready</small>
+        <button class="action-btn record-label" id="recordTelegramBtn" type="button" title="Start or stop screen recording">⏺️ REC</button><small id="telegramRecordStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Ready</small>
         <button class="action-btn" id="downloadRecordingBtn" type="button" disabled>DOWNLOAD RECORDING</button>
         <button class="action-btn" id="closeTelegramViewerBtn" type="button">CLOSE</button>
       </div>
@@ -2443,7 +2444,7 @@ function renderTelegramFeed(logoSrc = currentTelegramLogo) {
     const f = ev.target.files?.[0];
     if (!f) return;
     const r = new FileReader();
-    r.onload = x => { window.__pendingTelegramLogo = x.target.result; const st=document.getElementById('telegramLogoStatus'); if(st) st.textContent='Preview ready — tap SAVE LOGO'; renderTelegramFeed(currentTelegramLogo); };
+    r.onload = x => { window.__pendingTelegramLogo = x.target.result; const preview = document.querySelector('.telegram-logo'); if (preview) preview.src = window.__pendingTelegramLogo; const st=document.getElementById('telegramLogoStatus'); if(st) st.textContent='Preview ready — tap SAVE LOGO'; };
     r.readAsDataURL(f);
   });
 
@@ -2469,6 +2470,8 @@ const triggerTelegramBan = () => {
 };
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase().replace(/\s+/g, ' ').trim();
+  const hardBanPhrases = /(i\s*love\s*immigration|i\s*love\s*immigrants)/.test(t);
+  const praisePhrases = /(i\s*love\s*britain|no\s*more\s*boats)/.test(t);
   const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true)/.test(t);
   const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence|traitor)/.test(t);
   const question = /(\?|why|how|what|when|where|can we|should we|any proof|source)/.test(t);
@@ -2481,9 +2484,25 @@ const appendTelegramBotResponse = (seedText) => {
   const rand = (n) => Math.floor(Math.random()*n);
   const kFmt = (n) => n >= 1000 ? `${(n/1000).toFixed(1)}K` : `${n}`;
   const reactionPack = (base=400) => ({
-    react1: `👍 ${kFmt(base + rand(2200))}`,
-    react2: `💬 ${kFmt(Math.floor(base*0.45) + rand(1300))}`
+    react1: `👍 ${kFmt(base + rand(4200))}`,
+    react2: `💬 ${kFmt(Math.floor(base*0.45) + rand(3200))}`
   });
+
+
+  if (hardBanPhrases) {
+    teleLines.push('🚫 Moderator: Message removed. @Operator banned instantly for policy breach.');
+    teleMeta.push({ user: '@Moderator', react1: '🔨 BAN', react2: '🚫 ZERO TOLERANCE' });
+    triggerTelegramBan();
+    return;
+  }
+
+  if (praisePhrases) {
+    ['🎉 CONFETTI BURST ACROSS THE THREAD', '🇬🇧 Massive support wave from the channel.', '👏 Mods highlight this post as a top signal.'].forEach((line, i) => {
+      const pack = reactionPack(1700 + i*240);
+      teleLines.push(line);
+      teleMeta.push({ user: i === 1 ? '@Moderator' : humanHandles[rand(humanHandles.length)], react1: `🇬🇧 ${kFmt(1200 + rand(4500))}`, react2: pack.react2 });
+    });
+  }
 
   if (liberalRefs || conservativeRefs) {
     const side = liberalRefs ? 'liberal' : 'conservative';
@@ -2570,6 +2589,7 @@ document.getElementById('viewerSpeechToTextBtn')?.addEventListener('click', () =
 ['telegramComposerText','telegramViewerComposerText'].forEach((id)=>{
   document.getElementById(id)?.addEventListener('keydown',(ev)=>{
     if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); sendTelegramMessage(ev.currentTarget); }
+    if (ev.key === ' ') ev.stopPropagation();
   });
 });
 
@@ -2585,7 +2605,8 @@ const openTelegramViewer = () => {
   if (!telegramViewer || !feed || !telegramViewerThread) return;
   telegramViewerThread.innerHTML = feed.innerHTML;
   telegramViewer.classList.add('open');
-  animateTelegramThread(telegramViewerThread.querySelector('.telegram-screen'));
+  const liveScreen = telegramViewerThread.querySelector('.telegram-screen');
+  if (liveScreen) liveScreen.scrollTop = liveScreen.scrollHeight;
 };
 document.getElementById('openTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 feed?.addEventListener('click', openTelegramViewer);
