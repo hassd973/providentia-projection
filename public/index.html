@@ -1211,7 +1211,7 @@ body::after {
 .telegram-header { position: relative; z-index: 2; display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 70vh; overflow: auto; animation:auto-scroll 132s linear infinite alternate; padding-bottom:24px; animation-delay:1s; }
+.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 70vh; overflow: auto; animation:auto-scroll 58s linear infinite alternate; padding-bottom:24px; animation-delay:1s; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
@@ -2469,21 +2469,20 @@ const triggerTelegramBan = () => {
 };
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase().replace(/\s+/g, ' ').trim();
-  const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true|exactly|well said|facts)/.test(t);
-  const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence|traitor|racist|sexist|abuse)/.test(t);
-  const question = /(\?|why|how|what|when|where|can we|should we|any proof|source|receipts|evidence)/.test(t);
+  const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true)/.test(t);
+  const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence|traitor)/.test(t);
+  const question = /(\?|why|how|what|when|where|can we|should we|any proof|source)/.test(t);
   const liberalRefs = /(liberal|leftist|progressive|democrat|labour|aoc|bernie|biden|obama|green new deal|open borders|woke)/.test(t);
   const conservativeRefs = /(conservative|right wing|republican|tory|trump|farage|patriot|border control|law and order|traditional values|maga)/.test(t);
   const positiveTone = /(love|great|awesome|good|smart|based|brilliant|respect|agree|accurate)/.test(t);
   const negativeTone = /(bad|awful|hate|stupid|terrible|corrupt|liar|evil|wrong|nonsense)/.test(t);
 
-  const humanHandles = ['@Dockside_Dan','@RitaFromBrockley','@MayaOnTheBus','@Nate_1994','@TeaAndReceipts','@LewishamWatcher','@PolicyNerdUK','@StreetLevelSam','@MinaReports','@HannahAtDeptford','@CityRailTom'];
+  const humanHandles = ['@Dockside_Dan','@RitaFromBrockley','@MayaOnTheBus','@Nate_1994','@TeaAndReceipts','@LewishamWatcher'];
   const rand = (n) => Math.floor(Math.random()*n);
-  const pick = (arr) => arr[rand(arr.length)];
   const kFmt = (n) => n >= 1000 ? `${(n/1000).toFixed(1)}K` : `${n}`;
   const reactionPack = (base=400) => ({
-    react1: `👍 ${kFmt(base + rand(2600))}`,
-    react2: `💬 ${kFmt(Math.floor(base*0.5) + rand(1600))}`
+    react1: `👍 ${kFmt(base + rand(2200))}`,
+    react2: `💬 ${kFmt(Math.floor(base*0.45) + rand(1300))}`
   });
 
   if (liberalRefs || conservativeRefs) {
@@ -2491,56 +2490,42 @@ const appendTelegramBotResponse = (seedText) => {
     const mood = positiveTone ? 'supportive' : negativeTone ? 'hostile' : 'mixed';
     const lines = side === 'liberal'
       ? [
-        `Liberal topic landed and the chat just went ${mood} in seconds.`,
-        'Half the thread is posting policy clips, the other half is calling spin — it is chaos.',
-        'Mods are pinning context while quote-replies keep exploding.'
+        `That ${side} take just lit the room up — tone feels ${mood}.`,
+        'People are split hard in replies. Post evidence if you want to win this thread.',
+        'Mods watching this one because the conversation is moving fast.'
       ]
       : [
-        `Conservative topic landed and the room flipped ${mood} fast.`,
-        'Supporters are stacking examples while critics are challenging every claim line by line.',
-        'This is now a full dogpile debate — everyone is screenshotting everything.'
+        `Strong ${side} angle here — thread mood is ${mood}.`,
+        'Counterpoints rolling in fast. Keep it specific and factual.',
+        'This is peak debate traffic right now, everyone is quote-replying.'
       ];
+
     lines.forEach((text, i) => {
-      const pack = reactionPack(1200 + i*420);
+      const pack = reactionPack(700 + i*140);
       teleLines.push(text);
       teleMeta.push({ user: humanHandles[rand(humanHandles.length)], react1: pack.react1, react2: pack.react2 });
     });
+    if (liberalRefs) liberalStrikeCount += 1;
   }
 
-  const humanStyleReplies = question
-    ? [
-      'Fair question — people are already dropping links and timestamps below.',
-      'I asked the same thing; check the replies, there are receipts coming in now.'
-    ]
-    : support
-      ? [
-        'That tracks. I have seen three people say the same thing with examples.',
-        'Yeah this is landing — thread is backing you up hard.'
-      ]
-      : concern
-        ? [
-          'Keep it civil. Disagree all day, but threats get removed.',
-          'Tone is overheating. Debate is fine, abuse is not.'
-        ]
-        : [
-          'Noted. People are reacting to this in real time.',
-          'This sparked a fresh wave of replies — keep going.'
-        ];
+  let msg = 'Noted — adding this to the active discussion queue.';
+  if (support) msg = 'Fair point. That’s getting traction, people are backing it.';
+  if (question) msg = 'Good question — a few users are already posting sources below.';
+  if (concern) {
+    liberalStrikeCount += 1;
+    msg = `Tone check: keep it civil or mods step in (${liberalStrikeCount}/3).`;
+  }
 
-  const msg = pick(humanStyleReplies);
-  if (concern) liberalStrikeCount += 1;
-
-  const pack = reactionPack(900);
+  const pack = reactionPack(500);
   teleLines.push(msg);
   teleMeta.push({ user: humanHandles[rand(humanHandles.length)], react1: pack.react1, react2: pack.react2 });
-
   if (liberalStrikeCount >= 3) triggerTelegramBan();
 };
 function sendTelegramMessage(input) {
   const text = input?.value?.trim();
   if (!text) return;
   teleLines.push(text);
-  const boosted = 700 + Math.floor(Math.random()*6200);
+  const boosted = 200 + Math.floor(Math.random()*1600);
   teleMeta.push({ user: '@Operator', react1: `👍 ${boosted}`, react2: `👎 ${Math.floor(boosted/3)}` });
   appendTelegramBotResponse(text);
   renderTelegramFeed(currentTelegramLogo);
