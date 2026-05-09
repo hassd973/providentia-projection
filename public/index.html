@@ -1185,6 +1185,13 @@ body::after {
 .slide-cast-module .cast-grid { min-height: 72vh; align-items: stretch; }
 .slide-cast-module .cast-preview { display: grid; align-content: start; }
 .slide-cast-module .cast-preview img { width: 100%; max-height: min(62vh, 560px); object-fit: cover; }
+.slide-cast-module .cast-preview-full { display:grid; gap:12px; }
+.slide-cast-module .cast-hero { min-height: min(58vh, 520px); border:1px solid rgba(255,255,255,.22); border-radius:16px; padding:14px; background:linear-gradient(160deg, rgba(148,203,235,.15), rgba(255,255,255,.05)); }
+.slide-cast-module .cast-hero img { width:100%; height:min(52vh,460px); max-height:none; border-radius:12px; object-fit:cover; object-position:center top; }
+.slide-cast-module .cast-hero-meta { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.slide-cast-module .cast-hero-name { font:700 clamp(18px,2.4vw,30px) 'Cormorant Garamond',serif; color:#eaf5ff; letter-spacing:.8px; }
+.slide-cast-module .cast-hero-role { font:700 11px 'Share Tech Mono',monospace; color:#9fd6ff; letter-spacing:1.4px; }
+.slide-cast-module .cast-details { border:1px solid rgba(255,255,255,.16); border-radius:12px; padding:12px; background:rgba(9,16,27,.6); }
 
 
 /* Apple glass crew deck */
@@ -1240,6 +1247,7 @@ body::after {
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
 @media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; } #backToToolsBtn { width: 100%; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:-1; min-height:56vh; } .slide-cast-module .cast-preview img { max-height:48vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
+@media (max-width: 640px) { .slide-crew-menu, .slide-cast-module { padding-bottom: calc(104px + env(safe-area-inset-bottom)); } .slide-cast-module .crew-shell { padding-bottom: calc(132px + env(safe-area-inset-bottom)); } .slide-cast-module .cast-hero img { height:44vh; } .quick-crew-toggle { bottom: max(34px, calc(env(safe-area-inset-bottom) + 26px)); } }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -2354,12 +2362,11 @@ function renderCastList() {
 function renderCastEditor() {
   const e = document.getElementById('castEditor'); if (!e) return;
   const c = castProfiles[castIndex];
-  e.innerHTML = `<img src="${c.photo || prismProfiles[0].photo}" alt="${c.character}">
-    <div class="metric-chips">${(c.metrics||[]).map(m => `<span>${m}</span>`).join('')}</div>
-    <div class="form-row"><input id="castCharacter" value="${c.character}"><input id="castActor" value="${c.actor}"><input id="castOutlet" value="${c.outlet}" placeholder="News channel / company"></div>
-    <div class="form-row"><textarea id="castBio" rows="4">${c.bio||''}</textarea></div>
+  e.innerHTML = `<div class="cast-preview-full"><div class="cast-hero"><img src="${c.photo || prismProfiles[0].photo}" alt="${c.character}"><div class="cast-hero-meta"><div><div class="cast-hero-name">${c.character}</div><div class="cast-hero-role">PLAYED BY ${c.actor}</div></div><div class="metric-chips">${(c.metrics||[]).map(m => `<span>${m}</span>`).join('')}</div></div></div>
+    <div class="cast-details"><div class="form-row"><input id="castCharacter" value="${c.character}"><input id="castActor" value="${c.actor}"><input id="castOutlet" value="${c.outlet}" placeholder="News channel / company"></div>
+    <div class="form-row"><textarea id="castBio" rows="4">${c.bio||''}</textarea></div></div>
     <div class="form-row"><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">PHOTO</label><input type="file" id="castPhotoUpload" accept="image/*"><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">LOGO</label><input type="file" id="castLogoUpload" accept="image/*"></div>
-    <button class="action-btn" id="saveCastBtn">SAVE CHARACTER</button>`;
+    <button class="action-btn" id="saveCastBtn">SAVE CHARACTER</button></div>`;
   document.getElementById('saveCastBtn')?.addEventListener('click', () => {
     c.character = document.getElementById('castCharacter').value.trim() || c.character;
     c.actor = document.getElementById('castActor').value.trim() || c.actor;
@@ -2476,6 +2483,7 @@ document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () 
 function animateTelegramThread(screen) {
   if (!screen) return;
   const msgs = Array.from(screen.querySelectorAll('.tele-msg'));
+  screen.querySelectorAll('.telegram-typing').forEach(t => t.remove());
   msgs.forEach(m => m.style.display = 'none');
   let i = 0;
   const tick = () => {
@@ -2501,9 +2509,6 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
     }
     resetTelegramThread();
     if (!telegramViewer?.classList.contains('open')) openTelegramViewer();
-    const activeScreen = telegramViewerThread?.querySelector('.telegram-screen');
-    if (activeScreen) animateTelegramThread(activeScreen);
-    await new Promise(res => setTimeout(res, 120));
     let stream;
     if (navigator.mediaDevices?.getDisplayMedia) {
       if (status) status.textContent = 'Requesting browser screen-record permission…';
@@ -2525,7 +2530,9 @@ document.getElementById('recordTelegramBtn')?.addEventListener('click', async (e
       if (status) status.textContent = 'Recording complete. Ready to download.';
       stream.getTracks().forEach(t => t.stop());
     };
-    telegramRecorder.start(1000);
+    const activeScreen = telegramViewerThread?.querySelector('.telegram-screen');
+    if (activeScreen) animateTelegramThread(activeScreen);
+    telegramRecorder.start(250);
     btn.textContent = 'STOP RECORDING';
     if (status) status.textContent = 'Recording Telegram playback from start…';
   } catch (e) {
