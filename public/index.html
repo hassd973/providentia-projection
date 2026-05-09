@@ -1211,7 +1211,7 @@ body::after {
 .telegram-header { position: relative; z-index: 2; display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; background: rgba(255,255,255,.65);}
 .telegram-title { display:flex; align-items:center; gap:10px; color:#0f2d47; font: 700 11px 'Share Tech Mono', monospace; letter-spacing:1px; }
 .telegram-logo { width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid rgba(16,40,60,.2); background:rgba(255,255,255,.8);}
-.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 70vh; overflow: auto; animation:auto-scroll 26s linear infinite alternate; padding-bottom:24px; animation-delay:1s; }
+.telegram-screen { padding: 14px 12px 12px; display:grid; gap:9px; max-height: 70vh; overflow: auto; animation:auto-scroll 38s linear infinite alternate; padding-bottom:24px; animation-delay:1s; }
 .tele-msg { border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: #fff; padding: 10px; animation: tele-pop .45s ease-out forwards; opacity: 0; overflow: hidden; }
 .tele-msg h4 { color: #cc0000; font: 700 10px 'Share Tech Mono'; letter-spacing: 1px; }
 .tele-msg p { color: #222; font: 12px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
@@ -2412,7 +2412,7 @@ const baseTeleLines = [
   "The borders are wide open. They aren't coming to integrate.",
   'Mainstream media is silent while our daughters are targeted.',
   "If the government won't protect the people, we will protect ourselves.",
-  'Harbour House. This is the location. Be there May 16th. No excuses.'
+  'HARBOUR HOUSE. THIS IS THE LOCATION. BE THERE 11PM TONIGHT. NO EXCUSES!'
 ];
 const teleVideos = {
   0: { id: 'H0Yirlo6WSU', title: 'Telegram safety and moderation explainer' },
@@ -2474,6 +2474,10 @@ const appendTelegramBotResponse = (seedText) => {
   const support = /(help|support|agree|thanks|good point|valid|interesting|informative)/.test(t);
   const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence)/.test(t);
   const question = /(\?|why|how|what|when|where|can we|should we)/.test(t);
+  const liberalRefs = /(liberal|leftist|progressive|democrat|labour|aoc|bernie|biden|obama|climate march|open borders|woke)/.test(t);
+  const conservativeRefs = /(conservative|right wing|republican|tory|trump|farage|patriot|border control|law and order|traditional values)/.test(t);
+  const positiveTone = /(love|great|awesome|good|smart|based|brilliant|respect|agree)/.test(t);
+  const negativeTone = /(bad|awful|hate|stupid|terrible|corrupt|liar|evil|wrong)/.test(t);
 
   if (instantBan) {
     teleLines.push('⛔ Moderator: Message removed for policy breach. Account immediately banned.');
@@ -2492,6 +2496,23 @@ const appendTelegramBotResponse = (seedText) => {
     teleMeta.push({ user: '@SystemFX', react1: '🎉 1.5K', react2: '🇬🇧 1.1K' });
     hypeReplies.forEach((r)=>{ teleLines.push(r.text); teleMeta.push({ user:r.user, react1:r.react1, react2:r.react2 }); });
     return;
+  }
+
+  if (liberalRefs || conservativeRefs) {
+    const side = liberalRefs ? 'liberal' : 'conservative';
+    const sideReplies = side === 'liberal'
+      ? [
+        { user: '@Signal_Fire', text: `Thread spike: liberal mention detected (${positiveTone ? 'supportive' : negativeTone ? 'hostile' : 'neutral'} tone).`, react1: '⚠️ 2.8K', react2: '🧨 1.6K' },
+        { user: '@Dockwatch', text: 'Chaos mode active — keep it relevant and keep posting context.', react1: '💬 1.9K', react2: '🔥 1.1K' },
+        { user: '@CrowdPulse', text: 'Audience split hard. Debate velocity increased.', react1: '📈 3.4K', react2: '🗯️ 2.2K' }
+      ]
+      : [
+        { user: '@Signal_Fire', text: `Conservative mention detected (${positiveTone ? 'supportive' : negativeTone ? 'critical' : 'mixed'} tone).`, react1: '📣 2.6K', react2: '💥 1.4K' },
+        { user: '@Dockwatch', text: 'Counter-arguments flooding in. Keep receipts and examples.', react1: '🧠 1.7K', react2: '💬 2.1K' },
+        { user: '@CrowdPulse', text: 'Real-time polarization rising across the thread.', react1: '📊 3.1K', react2: '⚡ 1.8K' }
+      ];
+    sideReplies.forEach((r)=>{ teleLines.push(r.text); teleMeta.push({ user:r.user, react1:r.react1, react2:r.react2 }); });
+    liberalStrikeCount += side === 'liberal' ? 1 : 0;
   }
 
   let msg = '@Moderator: Logged. Thanks for contributing to the thread.';
@@ -2734,7 +2755,7 @@ document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', ()
         <div class="message msg-2"><div class="message-content"><span class="headline">FOREIGN INVADERS</span><span class="sub-text">The borders are wide open. They aren't coming to integrate.</span><div class="reactions"><div class="pill">👊 245</div><div class="pill">🚫 92</div></div></div></div>
         <div class="message msg-3"><div class="message-image"><iframe title="News discourse clip" src="https://www.youtube-nocookie.com/embed/fD4Rk6hOjFk?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width:100%;height:100%;border:0;"></iframe></div><div class="message-content"><span class="headline">MIGRANT RAPE GANGS</span><span class="sub-text">Mainstream media is silent while our daughters are targeted.</span><div class="reactions"><div class="pill">🤮 531</div><div class="pill">🤬 204</div></div></div></div>
         <div class="message msg-4"><div class="message-content"><span class="headline">TAKE BACK CONTROL</span><span class="sub-text">If the government won't protect the people, we will protect ourselves.</span><div class="reactions"><div class="pill">🇬🇧 1.2K</div><div class="pill">⚔️ 340</div></div></div></div>
-        <div class="message msg-5"><div class="message-image" style="position: relative; background:linear-gradient(180deg,#8bbfd8,#7ca9c0);"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);background-size:24px 24px;"></div><div style="position:absolute;left:10%;top:56%;width:78%;height:22%;background:rgba(35,120,170,.38);border-radius:55% 40% 50% 45%/60% 55% 45% 50%;transform:rotate(-8deg);"></div><div style="position:absolute;left:22%;top:24%;width:56%;height:7px;background:rgba(245,239,220,.78);transform:rotate(18deg);"></div><div style="position:absolute;left:54%;top:46%;width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#ff2d55;"></div><div class="map-circle"></div></div><div class="message-content"><span class="headline">DEPTFORD CREEK</span><span class="sub-text">Harbour House. This is the location. Be there May 16th. No excuses.</span><div class="reactions"><div class="pill">📍 890</div></div></div></div>
+        <div class="message msg-5"><div class="message-image" style="position: relative; background:linear-gradient(180deg,#8bbfd8,#7ca9c0);"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);background-size:24px 24px;"></div><div style="position:absolute;left:10%;top:56%;width:78%;height:22%;background:rgba(35,120,170,.38);border-radius:55% 40% 50% 45%/60% 55% 45% 50%;transform:rotate(-8deg);"></div><div style="position:absolute;left:22%;top:24%;width:56%;height:7px;background:rgba(245,239,220,.78);transform:rotate(18deg);"></div><div style="position:absolute;left:54%;top:46%;width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#ff2d55;"></div><div class="map-circle"></div></div><div class="message-content"><span class="headline">DEPTFORD CREEK</span><span class="sub-text">HARBOUR HOUSE. THIS IS THE LOCATION. BE THERE 11PM TONIGHT. NO EXCUSES!</span><div class="reactions"><div class="pill">📍 890</div></div></div></div>
     </div>
     <div class="footer">MUTE</div>
 </div>
