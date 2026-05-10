@@ -1192,28 +1192,32 @@ body::after {
 .prism-stage-toggle button.active { border-color: var(--sys-cyan); color: var(--sys-cyan); }
 .prism-upload-row { display:flex; gap:10px; align-items:center; margin:10px 0 14px; flex-wrap:wrap; }
 .prism-upload-row input { color:#d7e3ef; font: 11px 'Share Tech Mono', monospace; }
-.prism-stage-controls { margin-top: 12px; border: 1px solid rgba(0,212,255,0.25); background: rgba(5,8,16,0.75); }
+.prism-stage-controls { margin-top: 10px; border: 1px solid rgba(0,212,255,0.12); background: rgba(5,8,16,0.42); opacity: .46; transition: opacity .2s ease, border-color .2s ease; }
+.prism-stage-controls:hover, .prism-stage-controls[open] { opacity: .95; border-color: rgba(0,212,255,0.25); }
 .prism-stage-controls summary {
   list-style: none;
   cursor: pointer;
-  padding: 8px 10px;
-  color: #9ec7df;
-  font: 700 10px 'Share Tech Mono', monospace;
+  padding: 6px 8px;
+  color: rgba(158,199,223,.72);
+  font: 700 8px 'Share Tech Mono', monospace;
   letter-spacing: 1px;
 }
 .prism-stage-controls summary::-webkit-details-marker { display: none; }
 .prism-stage-controls[open] summary { border-bottom: 1px solid rgba(0,212,255,0.2); }
 .prism-stage-controls-body { padding: 10px; }
 .prism-view-switch {
-  border: 1px solid var(--sys-cyan);
-  background: rgba(0,212,255,.08);
-  color: var(--sys-cyan);
-  padding: 8px 12px;
-  font:700 10px 'Share Tech Mono', monospace;
+  border: 1px solid rgba(0,212,255,.28);
+  background: rgba(0,212,255,.045);
+  color: rgba(155,225,245,.72);
+  padding: 5px 9px;
+  font:700 8px 'Share Tech Mono', monospace;
   letter-spacing:1px;
   justify-self: end;
   cursor:pointer;
+  opacity:.58;
+  transition: opacity .2s ease, color .2s ease, border-color .2s ease;
 }
+.prism-view-switch:hover { opacity: 1; color: var(--sys-cyan); border-color: var(--sys-cyan); }
 @media (max-width: 600px) {
   .s3-detail { font-size: 12px; line-height: 1.35; max-width: 100%; }
   .s3-col { padding: 16px 12px; }
@@ -2378,12 +2382,23 @@ document.addEventListener('touchend', e => {
 // PRISM DASHBOARD
 // ══════════════════════════════════
 
+const profilePhotoDefaults = {
+  MAREK: 'assets/profiles/IMG_5016.jpeg',
+  IBRAHIM: 'assets/profiles/IMG_5017.jpeg',
+  RAHMAN: 'assets/profiles/IMG_5018.jpeg',
+  SELAM: 'assets/profiles/IMG_5019.jpeg',
+  JO: 'assets/profiles/IMG_5024.jpeg',
+  SIMON: 'assets/profiles/IMG_5025.jpeg'
+};
+
 const prismProfiles = [
   {
     id: 1,
+    key: "SIMON",
     name: "Simon Day",
-    photo: "https://picsum.photos/id/64/600/400",
+    photo: profilePhotoDefaults.SIMON,
     humanDesc: "I make films about people who don’t get heard. I didn’t think I’d become one of them.",
+    personalStory: "Simon built a life around documenting people the state preferred to file away: neighbours, migrants, families waiting outside offices with stamped papers in their hands. When Providentia flags his footage as agitation, his archive becomes evidence against him and the lens turns back on the person holding the camera.",
     score: "84",
     level: "critical",
     dossier: {
@@ -2416,9 +2431,11 @@ const prismProfiles = [
   },
   {
     id: 2,
+    key: "SELAM",
     name: "Selam Tesfae",
-    photo: "https://picsum.photos/id/1011/600/400",
+    photo: profilePhotoDefaults.SELAM,
     humanDesc: "I packed everything I owned into one bag. I thought I was travelling somewhere safe.",
+    personalStory: "Selam arrived with one bag, a phone full of dead numbers, and a practiced way of staying quiet in queues. Safety was supposed to mean sleeping without rehearsing an escape route; instead, the system reduces her journey to paperwork, removability, and the spectacle of whether anyone will fight for her in public.",
     score: "34.5",
     level: "med",
     dossier: {
@@ -2441,9 +2458,11 @@ const prismProfiles = [
   },
   {
     id: 3,
+    key: "IBRAHIM",
     name: "Ibrahim Musa",
-    photo: "https://picsum.photos/id/201/600/400",
+    photo: profilePhotoDefaults.IBRAHIM,
     humanDesc: "I’ve never been to Nigeria. I don’t know who I am there.",
+    personalStory: "Ibrahim knows the streets, bus routes, football cages, and shopkeepers of the place that raised him. Providentia knows a different Ibrahim: a set of inherited possibilities, a country listed through parentage, and a removal pathway that treats belonging as an administrative inconvenience.",
     score: "68.9",
     level: "high",
     dossier: {
@@ -2469,9 +2488,11 @@ const prismProfiles = [
   },
   {
     id: 4,
+    key: "RAHMAN",
     name: "Khalid Rahman",
-    photo: "https://picsum.photos/id/823/600/400",
+    photo: profilePhotoDefaults.RAHMAN,
     humanDesc: "I help people stay out of trouble. Now I’m the one they’ve locked away.",
+    personalStory: "Rahman has spent years answering late-night calls, translating official letters, and talking younger people down before fear becomes a fight. His community sees a trusted mediator; Providentia sees influence, proximity, and the dangerous possibility that care itself can organise resistance.",
     score: "61.1",
     level: "high",
     dossier: {
@@ -2497,9 +2518,11 @@ const prismProfiles = [
   },
   {
     id: 5,
+    key: "MAREK",
     name: "Marek Kowalski",
-    photo: "https://picsum.photos/id/1005/600/400",
+    photo: profilePhotoDefaults.MAREK,
     humanDesc: "I came to work. I sent money home. I kept my head down. I thought that was enough.",
+    personalStory: "Marek measures time in shifts, rent weeks, remittances, and the ache in his hands at the end of a job. He believed that being useful would make him invisible in the safest way, but the system finds him anyway and calls his quiet survival a pending case.",
     score: "19.2",
     level: "low",
     dossier: {
@@ -2524,9 +2547,11 @@ const prismProfiles = [
   },
   {
     id: 6,
+    key: "JO",
     name: "Jo Rivers",
-    photo: "https://picsum.photos/id/669/600/400",
+    photo: profilePhotoDefaults.JO,
     humanDesc: "I came here for a year. I stayed because people needed help. I didn’t think that would count against me.",
+    personalStory: "Jo arrived with a return date and kept postponing it because someone needed a witness, a lift, a call made in English, or one more pair of hands at the community table. Providentia translates that care network into a map of facilitation and decides whether compassion is useful, suspicious, or removable.",
     score: "52",
     level: "med",
     dossier: {
@@ -2551,6 +2576,31 @@ const prismProfiles = [
     }
   }
 ];
+
+
+async function loadPersonalStoryFiles() {
+  const extensions = ['txt', 'md', 'text', ''];
+  await Promise.all(prismProfiles.map(async (profile) => {
+    const names = [profile.key, profile.name?.split(' ')[0]?.toUpperCase()].filter(Boolean);
+    for (const name of names) {
+      for (const ext of extensions) {
+        const suffix = ext ? `.${ext}` : '';
+        try {
+          const response = await fetch(`assets/profiles/${name}${suffix}`, { cache: 'no-store' });
+          if (!response.ok) continue;
+          const text = (await response.text()).trim();
+          if (text) {
+            profile.personalStory = text;
+            return;
+          }
+        } catch (_) {
+          // Static installs may omit story files; keep the embedded story fallback.
+        }
+      }
+    }
+  }));
+  renderCharacterCarousel();
+}
 
 function renderProfileMeta(profile) {
   const d = profile.dossier || {};
@@ -2623,7 +2673,9 @@ let carouselIndex = 0;
 let carouselPrismView = false;
 
 prismProfiles.forEach(p => {
-  p.stagePhotos = p.stagePhotos || { before: p.photo, during: p.photo, after: p.photo };
+  const defaultPhoto = profilePhotoDefaults[p.key] || p.photo;
+  p.photo = defaultPhoto;
+  p.stagePhotos = p.stagePhotos || { before: defaultPhoto, during: defaultPhoto, after: defaultPhoto };
 });
 
 function renderCharacterCarousel() {
@@ -2632,6 +2684,7 @@ function renderCharacterCarousel() {
   if (!card || !switchBtn) return;
   const p = prismProfiles[carouselIndex];
   const d = p.dossier || {};
+  const personalStory = p.personalStory || p.humanDesc;
   p.activeStage = p.activeStage || 'before';
   const activePhoto = p.stagePhotos[p.activeStage] || p.photo;
   switchBtn.textContent = carouselPrismView ? 'RETURN TO PERSONAL STORY ←' : 'SWITCH TO PRISM ASSESSMENT →';
@@ -2659,7 +2712,7 @@ function renderCharacterCarousel() {
     </div>` : `
     <div class="character-section">
       <div class="character-section-title">Personal story</div>
-      <div style="font: clamp(18px,2.1vw,30px)/1.18 'Cormorant Garamond', serif;color:#f6f1e9;">${p.humanDesc}</div>
+      <div style="font: clamp(17px,1.75vw,26px)/1.2 'Cormorant Garamond', serif;color:#f6f1e9;">${personalStory}</div>
     </div>
     <div class="character-section">
       <div class="character-section-title">System record preview</div>
@@ -2674,7 +2727,7 @@ function renderCharacterCarousel() {
         <div>
           <div class="character-story">“${p.humanDesc}”</div>
           <details class="prism-stage-controls">
-            <summary>🎭 STAGE CREW PHOTO UPLOAD</summary>
+            <summary>PHOTO OVERRIDE</summary>
             <div class="prism-stage-controls-body">
               <div class="prism-stage-toggle">${stageButtons}</div>
               <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Replace selected production photo:</strong><input type="file" accept="image/*" data-stage-upload></div>
@@ -2726,18 +2779,39 @@ document.getElementById('carouselViewSwitch')?.addEventListener('click', () => {
   renderCharacterCarousel();
 });
 renderCharacterCarousel();
+loadPersonalStoryFiles();
 
 // ══════════════════════════════════
 // CREW MENU (CAST + FILES + MAP)
 // ══════════════════════════════════
 const CREW_STORAGE_KEY = 'providentia_cast_profiles_v1';
 const CAST_BG_STORAGE_KEY = 'providentia_cast_bg_v1';
-const defaultCast = [
-  { character: 'Sebastian Senior', actor: 'Simon Day', outlet: 'Providentia', logo: '', photo: prismProfiles[0].photo, bio: 'Architect of the predictive-state narrative.', metrics: ['Influence 94','Credibility 71','Escalation 88'] },
-  { character: 'Sam Gibbons', actor: 'James Harris', outlet: 'NBS News', logo: '', photo: prismProfiles[1].photo, bio: 'Prime-time host shaping public consent.', metrics: ['Influence 90','Reach 95','Escalation 74'] },
-  { character: 'Martha Cranston', actor: 'Anna Thompson', outlet: '4th Estate', logo: '', photo: prismProfiles[2].photo, bio: 'Presenter balancing outrage and authority.', metrics: ['Influence 82','Reach 80','Escalation 69'] }
-];
-let castProfiles = JSON.parse(localStorage.getItem(CREW_STORAGE_KEY) || 'null') || defaultCast;
+const defaultCast = prismProfiles.map((p) => ({
+  character: p.name,
+  actor: p.name,
+  outlet: 'Providentia',
+  logo: '',
+  photo: profilePhotoDefaults[p.key] || p.photo,
+  bio: p.personalStory || p.humanDesc,
+  metrics: [`Risk ${p.score}`, `Tier ${p.level.toUpperCase()}`, p.dossier?.primaryAction || 'Monitored']
+}));
+function hydrateCastProfiles(profiles) {
+  const byName = Object.fromEntries(prismProfiles.map((p) => [p.name, p]));
+  const legacyDefaultNames = ['Sebastian Senior', 'Sam Gibbons', 'Martha Cranston'];
+  const sourceProfiles = !profiles || profiles.every((profile) => legacyDefaultNames.includes(profile.character)) ? defaultCast : profiles;
+  return sourceProfiles.map((profile) => {
+    const source = byName[profile.character] || byName[profile.actor];
+    if (!source) return profile;
+    const defaultPhoto = profilePhotoDefaults[source.key] || source.photo;
+    const hasCrewUpload = profile.photo && profile.photo.startsWith('data:image');
+    return {
+      ...profile,
+      photo: hasCrewUpload ? profile.photo : defaultPhoto,
+      bio: profile.bio && profile.bio !== 'Short bio.' ? profile.bio : (source.personalStory || source.humanDesc)
+    };
+  });
+}
+let castProfiles = hydrateCastProfiles(JSON.parse(localStorage.getItem(CREW_STORAGE_KEY) || 'null'));
 let castIndex = 0;
 const castStage = document.getElementById('castStage');
 function applyCastBackground(bgSrc = localStorage.getItem(CAST_BG_STORAGE_KEY) || '') {
