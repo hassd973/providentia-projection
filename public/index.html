@@ -1540,20 +1540,19 @@ body::after {
 .slide-14 .media-wall {
   position: absolute; inset: 0;
   display: grid;
-  grid-template-columns: minmax(0,1fr) clamp(112px, 16vw, 220px) minmax(0,1fr);
-  grid-template-rows: minmax(0,1fr) clamp(68px, 10vh, 108px) minmax(0,1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "cam1 . cam2"
-    ". align ."
-    "cam3 . cam4";
-  gap: clamp(6px, 1.2vmin, 12px);
-  padding: clamp(8px, 1.4vmin, 16px);
+    "cam1 cam2"
+    "cam3 cam4";
+  gap: 0;
+  padding: 0;
 }
 .cctv-cell {
   position: relative; overflow: hidden;
   background: #080a0d;
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: clamp(8px, 1.4vmin, 16px);
+  border-radius: 0;
   display: flex; flex-direction: column;
   min-width: 0; min-height: 0;
 }
@@ -1586,7 +1585,8 @@ body::after {
   opacity: 0;
   transition: opacity 1.2s ease, filter 1.2s ease;
   pointer-events: none;
-  object-fit: cover;
+  object-fit: contain;
+  background: #030407;
   filter: contrast(1.08) saturate(.88) brightness(.9);
 }
 .cctv-iframe.loaded, .cctv-video.loaded { opacity: 1; }
@@ -1611,22 +1611,24 @@ body::after {
 .cctv-cell.cctv-on { opacity: 1; transform: scale(1); }
 /* Center signal cell */
 .cctv-center-module {
-  grid-area: align;
-  align-self: center; justify-self: center;
-  width: min(100%, 220px);
-  height: min(100%, 108px);
-  position: relative; z-index: 14;
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(132px, 13vw, 184px);
+  min-height: clamp(54px, 7vh, 78px);
+  z-index: 14;
   display: grid; place-items: center;
-  padding: clamp(8px, 1.2vmin, 14px);
-  border: 1px solid rgba(255,45,85,0.58);
-  border-radius: clamp(12px, 1.8vmin, 20px);
+  padding: clamp(6px, 0.8vmin, 10px);
+  border: 1px solid rgba(255,45,85,0.42);
+  border-radius: clamp(8px, 1.2vmin, 14px);
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,45,85,0.24), rgba(255,45,85,0.08) 42%, rgba(6,10,18,0.86) 72%),
-    linear-gradient(150deg, rgba(28,34,48,0.96), rgba(8,12,20,0.94));
+    radial-gradient(circle at 50% 50%, rgba(255,45,85,0.16), rgba(255,45,85,0.05) 48%, rgba(6,10,18,0.36) 76%),
+    linear-gradient(150deg, rgba(28,34,48,0.42), rgba(8,12,20,0.34));
   box-shadow:
-    0 0 28px rgba(255,45,85,0.42),
-    0 18px 48px rgba(0,0,0,0.58),
-    inset 0 0 18px rgba(255,45,85,0.18);
+    0 0 18px rgba(255,45,85,0.28),
+    0 10px 28px rgba(0,0,0,0.32),
+    inset 0 0 12px rgba(255,45,85,0.12);
+  backdrop-filter: blur(2px);
   overflow: hidden;
   pointer-events: none;
 }
@@ -1646,24 +1648,24 @@ body::after {
 }
 .sentiment-label {
   position: relative; z-index: 1;
-  display: grid; gap: clamp(3px, 0.6vmin, 7px);
+  display: grid; gap: clamp(2px, 0.35vmin, 4px);
   text-align: center;
   font-family: 'Share Tech Mono', monospace;
   text-transform: uppercase;
-  letter-spacing: clamp(1.6px, 0.42vw, 4px);
+  letter-spacing: clamp(1px, 0.26vw, 2.5px);
 }
 .sentiment-kicker {
   color: rgba(0,212,255,0.68);
-  font-size: clamp(6px, 0.8vw, 9px);
+  font-size: clamp(5px, 0.58vw, 7px);
 }
 .sentiment-title {
   color: #ff2d55;
-  font: 800 clamp(12px, 1.65vw, 24px)/0.95 'Barlow Condensed', sans-serif;
+  font: 800 clamp(9px, 1.05vw, 16px)/0.95 'Barlow Condensed', sans-serif;
   text-shadow: 0 0 8px rgba(255,45,85,0.85), 0 0 18px rgba(255,45,85,0.52);
 }
 .sentiment-status {
   color: rgba(255,230,236,0.82);
-  font-size: clamp(6px, 0.78vw, 9px);
+  font-size: clamp(5px, 0.56vw, 7px);
 }
 @keyframes sentiment-glow {
   0%,100% { box-shadow: 0 0 8px rgba(255,45,85,0.25), inset 0 0 8px rgba(255,45,85,0.12); opacity: 0.62; }
@@ -1677,10 +1679,11 @@ body::after {
 
 @media (max-width: 700px) {
   .slide-14 .media-wall {
-    grid-template-columns: minmax(0,1fr) clamp(88px, 24vw, 120px) minmax(0,1fr);
-    grid-template-rows: minmax(0,1fr) clamp(56px, 10vh, 76px) minmax(0,1fr);
-    gap: 5px; padding: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 0; padding: 0;
   }
+  .cctv-center-module { width: clamp(106px, 30vw, 138px); min-height: 48px; }
   .cctv-overlay { padding: 5px 6px; }
   .cctv-text { font-size: clamp(8px, 2.2vw, 11px); }
   .cctv-source, .cctv-cam, .cctv-rec { font-size: 6px; letter-spacing: 1px; }
