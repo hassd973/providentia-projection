@@ -1338,6 +1338,14 @@ body::after {
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
 .telegram-viewer-thread { overflow:auto; padding:12px; }
 .telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; padding-bottom:42px; }
+.telegram-ops-module { width: min(clamp(260px,34vw,440px), 92vw); background: linear-gradient(160deg, rgba(18,22,36,.62), rgba(7,12,20,.82)); }
+.telegram-ops-module .tg-thread-block { max-height: min(48vh, 430px); overflow:auto; }
+.telegram-ops-module .telegram-frame { border-color: rgba(0,212,255,.24); background: linear-gradient(150deg, rgba(0,212,255,.12), rgba(255,255,255,.08)); }
+.telegram-ops-module .telegram-shell { border-radius: 18px; }
+.telegram-ops-actions, .moderator-toggle-row { display:flex; gap:6px; flex-wrap:wrap; padding: 0 12px 12px; }
+.telegram-ops-actions .glass-action-btn, .moderator-toggle-row .glass-action-btn { padding:6px 8px; font-size:8px; }
+.moderator-thread { display:none; margin:0 12px 12px; padding:10px; border:1px solid rgba(240,180,41,.28); border-radius:12px; background:rgba(240,180,41,.08); color:#f8ecd1; font:9px/1.45 'Share Tech Mono', monospace; letter-spacing:.4px; }
+.moderator-thread.open { display:grid; gap:6px; }
 .telegram-typing { font:600 10px 'Share Tech Mono', monospace; color:#d7ecff; opacity:.9; }
 .crew-tab.active { box-shadow: 0 0 0 1px rgba(0,212,255,.55) inset, 0 0 18px rgba(0,212,255,.25); }
 @media (max-width: 640px) { .crew-tabs { position: sticky; top: 0; z-index: 2; } .crew-tab.active { transform: translateY(-1px); } }
@@ -1557,13 +1565,15 @@ body::after {
   position: absolute; inset: 0;
   overflow: hidden;
 }
-.cctv-iframe {
+.cctv-iframe, .cctv-video {
   width: 100%; height: 100%;
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 1.2s ease, filter 1.2s ease;
   pointer-events: none;
+  object-fit: cover;
+  filter: contrast(1.08) saturate(.88) brightness(.9);
 }
-.cctv-iframe.loaded { opacity: 1; }
+.cctv-iframe.loaded, .cctv-video.loaded { opacity: 1; }
 .cctv-open-link { position:absolute;right:6px;bottom:6px;z-index:12;font:10px/1 "Share Tech Mono",monospace;padding:4px 6px;text-decoration:none;color:rgba(255,255,255,.95);background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);border-radius:2px; }
 /* Overlay text on top of video */
 .cctv-overlay {
@@ -2055,17 +2065,25 @@ body::after {
 <!-- ─── SLIDE 14 — MEDIA WALL ────────────── -->
 <div class="slide slide-14" data-slide="15" data-phase="PHASE 04 — MEDIA">
 
-  <!-- DRAGGABLE GLASS CHAT PANEL -->
-  <div class="glass-chat" id="glassChat" aria-label="Live ops board">
+  <!-- FLOATING TELEGRAM OPS MODULE -->
+  <div class="glass-chat telegram-ops-module" id="glassChat" aria-label="Lionheart Crusaders Telegram ops board">
     <div class="glass-chat-handle" id="glassChatHandle">
-      <span class="glass-chat-title">&#9679; ops-board &nbsp;·&nbsp; live</span>
+      <span class="glass-chat-title">&#9679; lionheart telegram &nbsp;·&nbsp; live</span>
       <span class="glass-chat-drag-hint">drag to move</span>
     </div>
-    <div class="glass-chat-msgs">
-      <div class="gmsg gmsg-out"><span class="gmsg-name">Aurora Bentley</span><span class="gmsg-text">CLIP_01 mirrors Atlas Nexus route data from Phase 03.</span></div>
-      <div class="gmsg gmsg-in"><span class="gmsg-name">Simon Day</span><span class="gmsg-text">My district feed amplifies fear headlines every 20 minutes.</span></div>
-      <div class="gmsg gmsg-out"><span class="gmsg-name">Selam Tesfae</span><span class="gmsg-text">Port Meridian mentions rising. Framing as protection.</span></div>
-      <div class="gmsg gmsg-in"><span class="gmsg-name">Ibrahim Musa</span><span class="gmsg-text">Archive everything before tonight's briefing.</span></div>
+    <div class="tg-thread-block" id="slideTelegramFeed"></div>
+    <div class="telegram-ops-actions">
+      <button class="glass-action-btn" id="slideOpenTelegramViewerBtn" type="button">⧉ FULL SCREEN</button>
+      <button class="glass-action-btn" id="slideSpeakTelegramBtn" type="button">🔊 TEXT TO VOICE</button>
+      <button class="glass-action-btn" id="slideTelegramResetBtn" type="button">↺ RESET THREAD</button>
+    </div>
+    <div class="moderator-toggle-row">
+      <button class="glass-action-btn" id="moderatorThreadToggle" type="button" aria-expanded="false" aria-controls="moderatorThread">SHOW MODERATOR THREAD</button>
+    </div>
+    <div class="moderator-thread" id="moderatorThread" aria-hidden="true">
+      <div>MOD · Keep the channel visible as Telegram unless this toggle is opened.</div>
+      <div>BOT · Trigger phrases auto-react: liberal, support, question, concern, upload, location.</div>
+      <div>STAGE · Full-screen viewer preserves voice input, uploads, recording, downloads, and automated responses.</div>
     </div>
   </div>
 
@@ -2078,36 +2096,36 @@ body::after {
 
   <!-- CCTV MEDIA WALL -->
   <div class="media-wall" id="media-wall">
-    <div class="cctv-cell" data-ytid="21X5lGlDOfg" data-delay="0">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-video-src="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-delay="0">
       <div class="cctv-header"><span class="cctv-cam">CAM 01</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=21X5lGlDOfg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: COASTAL BORDER OPERATIONS</div>
-        <div class="cctv-source">NATIONAL HERALD</div>
+        <div class="cctv-text">LIVE FEED: MARK VANCE — NATION FIRST</div>
+        <div class="cctv-source">NATION FIRST</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="1200">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-video-src="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-delay="1200">
       <div class="cctv-header"><span class="cctv-cam">CAM 02</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: BORDER CHECKPOINT BRIEFING</div>
-        <div class="cctv-source">EVENING STANDARD</div>
+        <div class="cctv-text">LIVE FEED: JAMES HARRIS — NBS NEWS</div>
+        <div class="cctv-source">NBS NEWS</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="gCNeDWCI0vo" data-delay="2400">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" data-video-src="assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" data-delay="2400">
       <div class="cctv-header"><span class="cctv-cam">CAM 03</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=gCNeDWCI0vo" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: REGIONAL ARRIVAL TRENDS</div>
-        <div class="cctv-source">DAILY POST</div>
+        <div class="cctv-text">LIVE FEED: JAMES HARRIS — NBS FOLLOW-UP</div>
+        <div class="cctv-source">NBS NEWS</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="3600">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" data-video-src="assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" data-delay="3600">
       <div class="cctv-header"><span class="cctv-cam">CAM 04</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: COMMUNITY IMPACT PANEL</div>
-        <div class="cctv-source">THE OBSERVER</div>
+        <div class="cctv-text">LIVE FEED: ANNA THOMPSON — 4TH ESTATE</div>
+        <div class="cctv-source">4TH ESTATE</div>
       </div>
     </div>
     <div class="cctv-cell cctv-center" data-delay="0">
@@ -2119,36 +2137,36 @@ body::after {
         </div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="fr_hXLDLc38" data-delay="4800">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-video-src="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-delay="4800">
+      <div class="cctv-header"><span class="cctv-cam">CAM 05</span><span class="cctv-rec">&#9679; REC</span></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-overlay">
+        <div class="cctv-text">LIVE FEED: MARK VANCE — NATION FIRST</div>
+        <div class="cctv-source">NATION FIRST</div>
+      </div>
+    </div>
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-video-src="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-delay="6000">
       <div class="cctv-header"><span class="cctv-cam">CAM 06</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=fr_hXLDLc38" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: SECURITY POLICY UPDATE</div>
-        <div class="cctv-source">SECURITY TODAY</div>
+        <div class="cctv-text">LIVE FEED: JAMES HARRIS — NBS NEWS</div>
+        <div class="cctv-source">NBS NEWS</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="ylgV8OyTIFg" data-delay="6000">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" data-video-src="assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" data-delay="7200">
       <div class="cctv-header"><span class="cctv-cam">CAM 07</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=ylgV8OyTIFg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 2- JAMES HARRIS - NBS NEWS - V2.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: PUBLIC SERVICES PRESSER</div>
-        <div class="cctv-source">METRO VOICE</div>
+        <div class="cctv-text">LIVE FEED: JAMES HARRIS — NBS FOLLOW-UP</div>
+        <div class="cctv-source">NBS NEWS</div>
       </div>
     </div>
-    <div class="cctv-cell" data-ytid="21X5lGlDOfg" data-delay="7200">
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" data-video-src="assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" data-delay="8400">
       <div class="cctv-header"><span class="cctv-cam">CAM 08</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=21X5lGlDOfg" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" muted playsinline loop preload="metadata"></video><a class="cctv-open-link" href="assets/broadcast/ANNA THOMPSON - 4TH ESTATE - V3 3.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
       <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: NATIONAL SENTIMENT TRACKER</div>
-        <div class="cctv-source">NATIONWIDE SURVEY</div>
-      </div>
-    </div>
-    <div class="cctv-cell" data-ytid="gCNeDWCI0vo" data-delay="8400">
-      <div class="cctv-header"><span class="cctv-cam">CAM 09</span><span class="cctv-rec">&#9679; REC</span></div>
-      <div class="cctv-yt-wrap"><iframe class="cctv-iframe" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><a class="cctv-open-link" href="https://www.youtube.com/watch?v=gCNeDWCI0vo" target="_blank" rel="noopener noreferrer">Open</a></div>
-      <div class="cctv-overlay">
-        <div class="cctv-text">LIVE FEED: EDUCATION CAPACITY REPORT</div>
-        <div class="cctv-source">EDUCATION WEEKLY</div>
+        <div class="cctv-text">LIVE FEED: ANNA THOMPSON — 4TH ESTATE</div>
+        <div class="cctv-source">4TH ESTATE</div>
       </div>
     </div>
   </div>
@@ -2217,6 +2235,7 @@ body::after {
             <textarea class="tg-composer-textarea" id="telegramComposerText" placeholder="Type operator or audience message…"></textarea>
             <div class="tg-composer-actions">
               <button class="glass-action-btn" id="speechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+              <button class="glass-action-btn" id="crewSpeakTelegramBtn" type="button">🔊 TEXT TO VOICE</button>
               <button class="glass-action-btn" id="telegramUploadBtn" type="button">📎 PHOTO / VIDEO</button>
               <button class="glass-action-btn" id="sendTelegramMsgBtn" type="button">⬆ SEND MESSAGE</button>
               <button class="glass-action-btn" id="openTelegramViewerBtn" type="button">⧉ FULL VIEWER</button>
@@ -2270,6 +2289,7 @@ body::after {
       <textarea class="tg-composer-textarea" id="telegramViewerComposerText" placeholder="Type in fullscreen…"></textarea>
       <div class="tg-composer-actions">
         <button class="glass-action-btn" id="viewerSpeechToTextBtn" type="button">🎙️ VOICE INPUT</button>
+        <button class="glass-action-btn" id="viewerSpeakTelegramBtn" type="button">🔊 READ THREAD</button>
         <button class="glass-action-btn" id="viewerTelegramUploadBtn" type="button">📎 UPLOAD</button>
         <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND</button>
       </div>
@@ -2880,6 +2900,7 @@ const baseTeleMeta = [
   { user: '@Lionheart_Locate', react1: '📍 890', react2: '' }
 ];
 const feed = document.getElementById('telegramFeed');
+const slideTelegramFeed = document.getElementById('slideTelegramFeed');
 let teleLines = [...baseTeleLines];
 let teleMeta = baseTeleMeta.map((m) => ({ ...m }));
 let liberalStrikeCount = 0;
@@ -2891,7 +2912,9 @@ const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<sv
 let currentTelegramLogo = defaultTelegramLogo;
 function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   if (!feed) return;
-  feed.innerHTML = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input type="file" id="telegramLogoUpload" accept="image/png,image/*"><button class="glass-action-btn" id="telegramLogoSaveBtn" type="button">SAVE LOGO</button><small id="telegramLogoStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Current logo active</small></div>`;
+  const threadMarkup = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div>`;
+  if (feed) feed.innerHTML = `${threadMarkup}<label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input type="file" id="telegramLogoUpload" accept="image/png,image/*"><button class="glass-action-btn" id="telegramLogoSaveBtn" type="button">SAVE LOGO</button><small id="telegramLogoStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Current logo active</small></div>`;
+  if (slideTelegramFeed) slideTelegramFeed.innerHTML = threadMarkup;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
     const f = ev.target.files?.[0];
     if (!f) return;
@@ -3063,6 +3086,28 @@ const openTelegramViewer = () => {
 document.getElementById('openTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 feed?.addEventListener('click', openTelegramViewer);
 document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () => telegramViewer?.classList.remove('open'));
+document.getElementById('slideOpenTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
+document.getElementById('slideTelegramResetBtn')?.addEventListener('click', resetTelegramThread);
+function speakTelegramThread() {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const text = teleLines.map((line, i) => `${teleMeta[i]?.user || 'Channel'} says ${String(line).replace(/<[^>]*>/g, ' ')}`).join('. ');
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-GB';
+  utterance.rate = 0.96;
+  window.speechSynthesis.speak(utterance);
+}
+document.getElementById('slideSpeakTelegramBtn')?.addEventListener('click', speakTelegramThread);
+document.getElementById('viewerSpeakTelegramBtn')?.addEventListener('click', speakTelegramThread);
+document.getElementById('crewSpeakTelegramBtn')?.addEventListener('click', speakTelegramThread);
+document.getElementById('moderatorThreadToggle')?.addEventListener('click', (ev) => {
+  const thread = document.getElementById('moderatorThread');
+  const open = !thread?.classList.contains('open');
+  thread?.classList.toggle('open', open);
+  thread?.setAttribute('aria-hidden', String(!open));
+  ev.currentTarget.setAttribute('aria-expanded', String(open));
+  ev.currentTarget.textContent = open ? 'HIDE MODERATOR THREAD' : 'SHOW MODERATOR THREAD';
+});
 
 function animateTelegramThread(screen) {
   if (!screen) return;
@@ -3402,7 +3447,7 @@ document.querySelectorAll('.map-leg-item[data-map-filter]').forEach(item => {
 syncMapLegend();
 
 // ══════════════════════════════════
-// CCTV MEDIA WALL — staggered turn-on + YouTube embed
+// CCTV MEDIA WALL — staggered turn-on + local broadcast video
 // ══════════════════════════════════
 let mediaWallInitialized = false;
 
@@ -3422,18 +3467,22 @@ function animateMediaWall() {
 
     setTimeout(() => {
       cell.classList.add('cctv-on');
-      // 5s after cell turns on, fade in the YouTube video
-      const iframe = cell.querySelector('.cctv-iframe');
-      const openLink = cell.querySelector('.cctv-open-link');
-      const ytId = (openLink?.href.match(/[?&]v=([\w-]{11})/)||[])[1] || cell.dataset.ytid;
-      if (ytId && iframe) {
+      // 5s after cell turns on, fade in the local broadcast video
+      const video = cell.querySelector('.cctv-video');
+      const videoSrc = cell.dataset.videoSrc;
+      if (videoSrc && video) {
         setTimeout(() => {
-          iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&playsinline=1&loop=1&playlist=${ytId}&controls=1&modestbranding=1&rel=0&enablejsapi=1&iv_load_policy=3`;
-          iframe.addEventListener('load', () => {
-            setTimeout(() => { iframe.classList.add('loaded'); iframe.style.pointerEvents = 'auto'; }, 800);
-          }, { once: true });
-          // Fallback if load event doesn't fire
-          setTimeout(() => { iframe.classList.add('loaded'); iframe.style.pointerEvents = 'auto'; }, 3000);
+          if (!video.querySelector('source')) {
+            const source = document.createElement('source');
+            source.src = videoSrc;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            video.load();
+          }
+          const showVideo = () => { video.classList.add('loaded'); video.style.pointerEvents = 'auto'; };
+          video.addEventListener('canplay', showVideo, { once: true });
+          video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+          setTimeout(showVideo, 3000);
         }, 5000);
       }
     }, onDelay);
