@@ -1059,7 +1059,134 @@ body::after {
   background: rgba(10,14,24,0.95);
   border: 1px solid rgba(0,212,255,0.2);
   padding: 16px;
+  max-height: calc(100vh - var(--film-top) - var(--film-bot) - 42px);
+  overflow: auto;
 }
+.prism-review-kicker {
+  font: 700 clamp(9px,1vw,12px) 'Share Tech Mono', monospace;
+  color: rgba(0,212,255,.7);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.prism-review-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px,4vw,58px);
+  line-height: .92;
+  color: #f2f7ff;
+  margin: 3px 0 10px;
+  letter-spacing: .02em;
+}
+.character-review-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, .82fr) minmax(420px, 1.55fr);
+  gap: clamp(14px,2vw,28px);
+  align-items: stretch;
+}
+.character-portrait-panel {
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.22));
+  padding: 10px;
+  display: grid;
+  grid-template-rows: minmax(240px, 1fr) auto;
+  min-height: 100%;
+}
+.character-review-photo {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  max-height: 58vh;
+  object-fit: cover;
+  border: 1px solid rgba(0,212,255,.22);
+  filter: contrast(1.05) saturate(.82);
+}
+.character-story {
+  margin-top: 10px;
+  padding: 12px;
+  border-left: 3px solid rgba(240,180,41,.7);
+  background: rgba(240,180,41,.06);
+  color: #f8ecd1;
+  font: italic clamp(16px,1.6vw,24px)/1.22 'Cormorant Garamond', serif;
+}
+.character-dossier-panel {
+  display: grid;
+  gap: 10px;
+}
+.character-profile-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+  border-bottom: 1px solid rgba(0,212,255,.18);
+  padding-bottom: 10px;
+}
+.character-subject {
+  color: #fff;
+  font: 800 clamp(30px,4vw,64px)/.88 'Barlow Condensed', sans-serif;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.character-meta-grid, .character-score-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 14px;
+}
+.character-meta-item, .character-score-row, .character-factor-list li, .character-rationale-list li {
+  font: 10px/1.25 'Share Tech Mono', monospace;
+  color: rgba(210,230,242,.82);
+  letter-spacing: .04em;
+}
+.character-label { color: rgba(0,212,255,.58); }
+.character-score-badge {
+  width: clamp(92px,11vw,132px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 4px solid var(--sys-red);
+  background: radial-gradient(circle at 50% 45%, rgba(255,45,85,.24), rgba(5,8,16,.96) 62%);
+  color: #fff;
+  box-shadow: 0 0 34px rgba(255,45,85,.28);
+}
+.character-score-badge .score-value { font: 800 clamp(26px,3.6vw,46px)/1 'Share Tech Mono', monospace; color: var(--sys-red); }
+.character-score-badge .score-label { font: 700 9px 'Share Tech Mono', monospace; color: rgba(255,255,255,.62); letter-spacing: 1px; }
+.character-section {
+  border: 1px solid rgba(0,212,255,.16);
+  background: rgba(5,8,16,.58);
+  padding: 10px;
+}
+.character-section-title {
+  font: 700 10px 'Share Tech Mono', monospace;
+  color: var(--sys-cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.character-score-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: 4px 0;
+}
+.character-score-row:last-child { border-bottom: 0; }
+.character-score-row strong { color: #fff; }
+.character-factor-list, .character-rationale-list { list-style: none; display: grid; gap: 5px; }
+.character-factor-list li::before, .character-rationale-list li::before { content: '→ '; color: var(--sys-red); }
+.character-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.character-action-box {
+  border: 1px solid rgba(255,45,85,.28);
+  background: rgba(255,45,85,.07);
+  padding: 8px;
+  font: 700 11px/1.25 'Share Tech Mono', monospace;
+  color: #ffd8df;
+  min-height: 48px;
+}
+.character-action-box span { display:block; color: rgba(255,255,255,.48); font-size: 8px; letter-spacing: 1px; margin-bottom: 4px; }
+.prism-score.low { border-color: #6b9bb8; color: #6b9bb8; }
+.prism-score.critical { border-color: #ff2d55; color: #ff2d55; box-shadow: 0 0 16px rgba(255,45,85,.25); }
 .prism-stage-toggle { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
 .prism-stage-toggle button { border:1px solid rgba(255,255,255,.2); background:#111726; color:#d7e3ef; padding:6px 10px; cursor:pointer; }
 .prism-stage-toggle button.active { border-color: var(--sys-cyan); color: var(--sys-cyan); }
@@ -1091,6 +1218,12 @@ body::after {
   .s3-detail { font-size: 12px; line-height: 1.35; max-width: 100%; }
   .s3-col { padding: 16px 12px; }
   .prism-carousel { grid-template-columns: 38px 1fr 38px; }
+  .prism-character-card { padding: 12px; max-height: calc(100vh - var(--film-top) - var(--film-bot) - 20px); }
+  .character-review-layout { grid-template-columns: 1fr; }
+  .character-portrait-panel { grid-template-rows: auto auto; }
+  .character-review-photo { min-height: 180px; max-height: 32vh; }
+  .character-profile-top, .character-meta-grid, .character-score-grid, .character-action-grid { grid-template-columns: 1fr; }
+  .character-score-badge { width: 92px; justify-self: start; }
 }
 
 /* ══════════════════════════════════
@@ -2246,13 +2379,206 @@ document.addEventListener('touchend', e => {
 // ══════════════════════════════════
 
 const prismProfiles = [
-  { id: 1, name: "Simon Day", photo: "https://picsum.photos/id/64/600/400", humanDesc: "Loving father of two. Community gardener and amateur musician.", score: "87", level: "high", criteria: ["Attended unregistered assembly", "Social media activity flagged as dissent", "Known association with reform groups"] },
-  { id: 2, name: "Selam Tesfae", photo: "https://picsum.photos/id/1011/600/400", humanDesc: "Dedicated nurse. Volunteers at local youth centre.", score: "94", level: "high", criteria: ["Origin from high-risk corridor", "Family ties to prior flagged individuals", "Employment in public health sector"] },
-  { id: 3, name: "Ibrahim Musa", photo: "https://picsum.photos/id/201/600/400", humanDesc: "Skilled mechanic. Soccer coach for neighbourhood kids.", score: "79", level: "high", criteria: ["Failed loyalty questionnaire", "Travel history outside approved zones", "Religious observance pattern"] },
-  { id: 4, name: "Jo Rivers", photo: "https://picsum.photos/id/669/600/400", humanDesc: "School teacher. Environmental activist and mother.", score: "82", level: "high", criteria: ["Signed open letter against charter cities", "Digital footprint shows anti-corporate sentiment", "Frequent contact with migrant advocacy networks"] },
-  { id: 5, name: "Khalid Rahman", photo: "https://picsum.photos/id/823/600/400", humanDesc: "Taxi driver. Devoted husband and father of three.", score: "71", level: "med", criteria: ["Repeated route anomalies near border zones", "Financial transactions flagged", "Community mosque attendance"] },
-  { id: 6, name: "Marek Kowalski", photo: "https://picsum.photos/id/1005/600/400", humanDesc: "Construction worker. Amateur boxer and volunteer firefighter.", score: "88", level: "high", criteria: ["Eastern European migration background", "Participation in labour rights rally", "Encrypted messaging detected"] }
+  {
+    id: 1,
+    name: "Simon Day",
+    photo: "https://picsum.photos/id/64/600/400",
+    humanDesc: "I make films about people who don’t get heard. I didn’t think I’d become one of them.",
+    score: "84",
+    level: "critical",
+    dossier: {
+      dob: "11/11/1988 (AGE: 42)",
+      nationality: "BRITISH",
+      secondNationality: "ELIGIBLE (JAMAICA)",
+      occupation: "DOCUMENTARY FILMMAKER",
+      location: "LONDON, UK",
+      status: "ACTIVE – UNDER REVIEW",
+      metrics: [
+        ["ASSOCIATION INDEX (AI)", "14"],
+        ["BEHAVIOURAL DEVIATION (BDS)", "11"],
+        ["DIGITAL SENTIMENT (DSI)", "9"],
+        ["PROXIMITY INDEX (PTI)", "8"],
+        ["HISTORICAL FLAGS (HF)", "10"],
+        ["IDEOLOGICAL DIVERGENCE (IDI)", "8"]
+      ],
+      baseScore: "60",
+      citizenshipElasticity: "1.4 (HIGH)",
+      finalScore: "84",
+      riskTier: "4 (CRITICAL)",
+      threatTypology: "NARRATIVE AMPLIFIER",
+      contagionPotential: "HIGH",
+      catalystRisk: "MEDIUM",
+      primaryAction: "EXPLOITATION (INTELLIGENCE VALUE)",
+      secondaryAction: "REMOVAL (FAST-TRACK)",
+      factors: ["Eligible for Jamaican citizenship (descent)", "No statelessness risk", "Clear legal removability"],
+      rationale: ["High narrative influence and reach", "Strong ideological divergence", "Legally removable without statelessness", "Temporary intelligence value before removal"]
+    }
+  },
+  {
+    id: 2,
+    name: "Selam Tesfae",
+    photo: "https://picsum.photos/id/1011/600/400",
+    humanDesc: "I packed everything I owned into one bag. I thought I was travelling somewhere safe.",
+    score: "34.5",
+    level: "med",
+    dossier: {
+      dob: "14/02/2004 (AGE: 27)",
+      nationality: "ERITREAN",
+      status: "DETAINED – REMOVAL SCHEDULED",
+      location: "IMMIGRATION REMOVAL CENTRE",
+      metrics: [["ASSOCIATION INDEX (AI)", "6"], ["BEHAVIOURAL DEVIATION (BDS)", "4"], ["DIGITAL SENTIMENT (DSI)", "2"], ["PROXIMITY INDEX (PTI)", "3"], ["HISTORICAL FLAGS (HF)", "5"], ["IDEOLOGICAL DIVERGENCE (IDI)", "3"]],
+      baseScore: "23",
+      citizenshipElasticity: "1.5 (VERY HIGH)",
+      finalScore: "34.5",
+      riskTier: "2 (MODERATE)",
+      threatTypology: "SYMBOLIC FIGURE",
+      contagionPotential: "HIGH",
+      catalystRisk: "HIGH",
+      primaryAction: "REMOVAL (ACCELERATED)",
+      factors: ["Non-UK national", "Recognised country of return", "Minimal legal barriers to removal"],
+      rationale: ["Low behavioural risk", "High symbolic value if mobilised publicly", "Extremely high removability", "Removal prevents narrative escalation"]
+    }
+  },
+  {
+    id: 3,
+    name: "Ibrahim Musa",
+    photo: "https://picsum.photos/id/201/600/400",
+    humanDesc: "I’ve never been to Nigeria. I don’t know who I am there.",
+    score: "68.9",
+    level: "high",
+    dossier: {
+      dob: "08/09/1995 (AGE: 35)",
+      nationality: "BRITISH",
+      secondNationality: "ELIGIBLE (NIGERIA)",
+      background: "NIGERIAN PARENTAGE",
+      status: "DETAINED – REMOVAL PIPELINE",
+      location: "IMMIGRATION REMOVAL CENTRE",
+      metrics: [["ASSOCIATION INDEX (AI)", "15"], ["BEHAVIOURAL DEVIATION (BDS)", "10"], ["DIGITAL SENTIMENT (DSI)", "8"], ["PROXIMITY INDEX (PTI)", "7"], ["HISTORICAL FLAGS (HF)", "6"], ["IDEOLOGICAL DIVERGENCE (IDI)", "7"]],
+      baseScore: "53",
+      citizenshipElasticity: "1.3 (HIGH)",
+      finalScore: "68.9",
+      riskTier: "3 (HIGH)",
+      threatTypology: "NETWORK CONNECTOR",
+      contagionPotential: "MEDIUM",
+      catalystRisk: "HIGH",
+      primaryAction: "REMOVAL",
+      secondaryAction: "DISRUPTION (NETWORK)",
+      factors: ["Eligible for Nigerian citizenship (descent)", "Statelessness threshold not triggered", "Removability legally viable"],
+      rationale: ["Strong community connectivity", "Capable of mobilising local networks", "Legal pathway exists for nationality transfer", "Removal reduces network cohesion efficiently"]
+    }
+  },
+  {
+    id: 4,
+    name: "Khalid Rahman",
+    photo: "https://picsum.photos/id/823/600/400",
+    humanDesc: "I help people stay out of trouble. Now I’m the one they’ve locked away.",
+    score: "61.1",
+    level: "high",
+    dossier: {
+      dob: "21/05/2002 (AGE: 29)",
+      nationality: "BRITISH",
+      secondNationality: "ELIGIBLE (PAKISTAN)",
+      status: "DETAINED – REMOVAL PIPELINE",
+      location: "IMMIGRATION REMOVAL CENTRE",
+      occupation: "COMMUNITY OUTREACH WORKER",
+      metrics: [["ASSOCIATION INDEX (AI)", "13"], ["BEHAVIOURAL DEVIATION (BDS)", "9"], ["DIGITAL SENTIMENT (DSI)", "7"], ["PROXIMITY INDEX (PTI)", "6"], ["HISTORICAL FLAGS (HF)", "5"], ["IDEOLOGICAL DIVERGENCE (IDI)", "7"]],
+      baseScore: "47",
+      citizenshipElasticity: "1.3 (HIGH)",
+      finalScore: "61.1",
+      riskTier: "3 (HIGH)",
+      threatTypology: "COMMUNITY CATALYST",
+      contagionPotential: "MEDIUM",
+      catalystRisk: "HIGH",
+      primaryAction: "REMOVAL",
+      secondaryAction: "DISRUPTION",
+      factors: ["Eligible for Pakistani citizenship (descent)", "No statelessness risk under Section 40 logic", "Removal legally supportable"],
+      rationale: ["High influence within local community", "Trusted intermediary figure", "Potential to mobilise coordinated action", "Removal disrupts community stability efficiently"]
+    }
+  },
+  {
+    id: 5,
+    name: "Marek Kowalski",
+    photo: "https://picsum.photos/id/1005/600/400",
+    humanDesc: "I came to work. I sent money home. I kept my head down. I thought that was enough.",
+    score: "19.2",
+    level: "low",
+    dossier: {
+      dob: "03/11/1994 (AGE: 36)",
+      nationality: "POLISH",
+      status: "DETAINED – IMMIGRATION REMOVAL CENTRE",
+      location: "UK",
+      occupation: "CONSTRUCTION WORKER",
+      metrics: [["ASSOCIATION INDEX (AI)", "3"], ["BEHAVIOURAL DEVIATION (BDS)", "4"], ["DIGITAL SENTIMENT (DSI)", "2"], ["PROXIMITY INDEX (PTI)", "2"], ["HISTORICAL FLAGS (HF)", "3"], ["IDEOLOGICAL DIVERGENCE (IDI)", "2"]],
+      baseScore: "16",
+      citizenshipElasticity: "1.2 (MEDIUM-HIGH)",
+      finalScore: "19.2",
+      riskTier: "1 (LOW)",
+      threatTypology: "LATENT ADHERENT",
+      contagionPotential: "LOW",
+      catalystRisk: "LOW",
+      primaryAction: "CONTAINMENT",
+      secondaryAction: "REMOVAL (PENDING)",
+      factors: ["EU national", "Deportation legally viable", "Administrative / diplomatic friction"],
+      rationale: ["Low threat profile", "Already detained", "Removal delayed due to administrative constraints"]
+    }
+  },
+  {
+    id: 6,
+    name: "Jo Rivers",
+    photo: "https://picsum.photos/id/669/600/400",
+    humanDesc: "I came here for a year. I stayed because people needed help. I didn’t think that would count against me.",
+    score: "52",
+    level: "med",
+    dossier: {
+      dob: "08/11/2000 (AGE: 30)",
+      nationality: "AMERICAN",
+      status: "ACTIVE – MONITORED",
+      visaStatus: "TEMPORARY RESIDENCE (UK)",
+      location: "LONDON, UK",
+      occupation: "COMMUNITY ORGANISER (STITCH THE SYSTEM)",
+      metrics: [["ASSOCIATION INDEX (AI)", "8"], ["BEHAVIOURAL DEVIATION (BDS)", "7"], ["DIGITAL SENTIMENT (DSI)", "8"], ["PROXIMITY INDEX (PTI)", "6"], ["HISTORICAL FLAGS (HF)", "4"], ["IDEOLOGICAL DIVERGENCE (IDI)", "7"]],
+      baseScore: "40",
+      citizenshipElasticity: "1.3 (HIGH)",
+      finalScore: "52",
+      riskTier: "2 (MODERATE)",
+      threatTypology: "NETWORK SUPPORTER",
+      contagionPotential: "MEDIUM",
+      catalystRisk: "MEDIUM",
+      primaryAction: "DISRUPTION",
+      secondaryAction: "MONITORING",
+      factors: ["Non-UK national (US passport)", "Clear return destination", "Visa-dependent residency"],
+      rationale: ["Active in support networks", "Facilitates activist coordination", "Removable if required, but currently more valuable in network mapping"]
+    }
+  }
 ];
+
+function renderProfileMeta(profile) {
+  const d = profile.dossier || {};
+  return [
+    ['D.O.B', d.dob],
+    ['NATIONALITY', d.nationality],
+    ['SECOND NATIONALITY', d.secondNationality],
+    ['VISA STATUS', d.visaStatus],
+    ['BACKGROUND', d.background],
+    ['OCCUPATION', d.occupation],
+    ['LOCATION', d.location],
+    ['STATUS', d.status]
+  ].filter(([, value]) => value).map(([label, value]) => `<div class="character-meta-item"><span class="character-label">${label}:</span> ${value}</div>`).join('');
+}
+
+function renderDossierSummary(profile) {
+  const d = profile.dossier || {};
+  const summaryRows = [
+    ['BASE SCORE', d.baseScore],
+    ['CITIZENSHIP ELASTICITY (CE)', d.citizenshipElasticity],
+    ['FINAL SCORE', d.finalScore],
+    ['RISK TIER', d.riskTier],
+    ['THREAT TYPOLOGY', d.threatTypology],
+    ['CONTAGION POTENTIAL', d.contagionPotential],
+    ['CATALYST RISK', d.catalystRisk]
+  ];
+  return summaryRows.filter(([, value]) => value).map(([label, value]) => `<div class="character-score-row"><span>${label}</span><strong>${value}</strong></div>`).join('');
+}
 
 function renderPrismCards(isHumanView = false) {
   const grid = document.getElementById('prismGrid');
@@ -2260,11 +2586,12 @@ function renderPrismCards(isHumanView = false) {
   grid.innerHTML = '';
   prismProfiles.forEach((profile, index) => {
     const card = document.createElement('div');
+    const d = profile.dossier || {};
     card.className = `prism-card ${isHumanView ? 'human' : ''}`;
     card.style.transitionDelay = `${index * 80}ms`;
     card.innerHTML = isHumanView
       ? `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">HUMAN PROFILE • CITIZEN ID: X-${10000 + index}</div><div style="font-size:13px; line-height:1.4; color:#c8d8e8;">${profile.humanDesc}</div>`
-      : `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">SUBJECT ID: PRM-${10000 + index} • RISK CLASS: ${profile.level.toUpperCase()}</div><div class="prism-score ${profile.level}">${profile.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${profile.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>`;
+      : `<img src="${profile.photo}" class="prism-photo" alt="${profile.name}"><div class="prism-name">${profile.name}</div><div class="prism-meta">SUBJECT ID: PRM-${10000 + index} • RISK CLASS: ${profile.level.toUpperCase()}</div><div class="prism-score ${profile.level}">${profile.score}</div><div class="prism-criteria"><strong>PRISM SCORE:</strong><ul><li>Base score: ${d.baseScore}</li><li>Citizenship Elasticity: ${d.citizenshipElasticity}</li><li>Final score: ${d.finalScore}</li><li>Risk tier: ${d.riskTier}</li><li>Primary action: ${d.primaryAction}</li></ul></div>`;
     grid.appendChild(card);
     setTimeout(() => card.classList.add('visible'), 100);
   });
@@ -2304,20 +2631,71 @@ function renderCharacterCarousel() {
   const switchBtn = document.getElementById('carouselViewSwitch');
   if (!card || !switchBtn) return;
   const p = prismProfiles[carouselIndex];
+  const d = p.dossier || {};
   p.activeStage = p.activeStage || 'before';
   const activePhoto = p.stagePhotos[p.activeStage] || p.photo;
-  switchBtn.textContent = carouselPrismView ? 'RETURN TO HUMAN PROFILE ←' : 'SWITCH TO PRISM ASSESSMENT →';
+  switchBtn.textContent = carouselPrismView ? 'RETURN TO PERSONAL STORY ←' : 'SWITCH TO PRISM ASSESSMENT →';
+  const stageButtons = stageKeys.map(key => `<button type="button" data-stage="${key}" class="${p.activeStage === key ? 'active' : ''}">${stageLabels[key]}</button>`).join('');
+  const assessmentMarkup = carouselPrismView ? `
+    <div class="character-section">
+      <div class="character-section-title">Assessment index</div>
+      <div class="character-score-grid">${(d.metrics || []).map(([label, value]) => `<div class="character-score-row"><span>${label}</span><strong>${value}</strong></div>`).join('')}</div>
+    </div>
+    <div class="character-section">
+      <div class="character-section-title">Prism score</div>
+      ${renderDossierSummary(p)}
+    </div>
+    <div class="character-action-grid">
+      <div class="character-action-box"><span>PRIMARY ACTION</span>${d.primaryAction || '—'}</div>
+      <div class="character-action-box"><span>SECONDARY ACTION</span>${d.secondaryAction || '—'}</div>
+    </div>
+    <div class="character-section">
+      <div class="character-section-title">Citizenship elasticity factors</div>
+      <ul class="character-factor-list">${(d.factors || []).map(item => `<li>${item}</li>`).join('')}</ul>
+    </div>
+    <div class="character-section">
+      <div class="character-section-title">Rationale</div>
+      <ul class="character-rationale-list">${(d.rationale || []).map(item => `<li>${item}</li>`).join('')}</ul>
+    </div>` : `
+    <div class="character-section">
+      <div class="character-section-title">Personal story</div>
+      <div style="font: clamp(18px,2.1vw,30px)/1.18 'Cormorant Garamond', serif;color:#f6f1e9;">${p.humanDesc}</div>
+    </div>
+    <div class="character-section">
+      <div class="character-section-title">System record preview</div>
+      <div class="character-meta-grid">${renderProfileMeta(p)}</div>
+    </div>`;
   card.innerHTML = `
-    <img src="${activePhoto}" class="prism-photo" alt="${p.name}">
-    <div class="prism-name">${p.name}</div>
-    <div class="prism-meta">${carouselPrismView ? `SUBJECT ID: PRM-${10000 + carouselIndex} • RISK CLASS: ${p.level.toUpperCase()}` : `HUMAN PROFILE • CITIZEN ID: X-${10000 + carouselIndex}`}</div>
-    ${carouselPrismView ? `<div class="prism-score ${p.level}">${p.score}</div><div class="prism-criteria"><strong>FLAGGED CRITERIA:</strong><ul>${p.criteria.map(c => `<li>${c}</li>`).join('')}</ul></div>` : `<div style="font-size:13px;line-height:1.4;color:#c8d8e8;">${p.humanDesc}</div>`}
-    <details class="prism-stage-controls">
-      <summary>🎭 🖼️</summary>
-      <div class="prism-stage-controls-body">
-        <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Stage production photos:</strong><input type="file" accept="image/*" data-stage-upload></div>
+    <div class="prism-review-kicker">Full Character Review / Personal Stories Update</div>
+    <div class="prism-review-title">${carouselPrismView ? 'PRISM SCORE' : 'PERSONAL STORY'} <span style="color:var(--sys-cyan);">// ${String(carouselIndex + 1).padStart(2,'0')}</span></div>
+    <div class="character-review-layout">
+      <div class="character-portrait-panel">
+        <img src="${activePhoto}" class="character-review-photo" alt="${p.name}">
+        <div>
+          <div class="character-story">“${p.humanDesc}”</div>
+          <details class="prism-stage-controls">
+            <summary>🎭 STAGE CREW PHOTO UPLOAD</summary>
+            <div class="prism-stage-controls-body">
+              <div class="prism-stage-toggle">${stageButtons}</div>
+              <div class="prism-upload-row"><strong style="font-size:11px;color:#c8d8e8;">Replace selected production photo:</strong><input type="file" accept="image/*" data-stage-upload></div>
+            </div>
+          </details>
+        </div>
       </div>
-    </details>
+      <div class="character-dossier-panel">
+        <div class="character-profile-top">
+          <div>
+            <div class="prism-meta">${carouselPrismView ? `SUBJECT ID: PRM-${10000 + carouselIndex} • RISK CLASS: ${p.level.toUpperCase()}` : `HUMAN PROFILE • CITIZEN ID: X-${10000 + carouselIndex}`}</div>
+            <div class="character-subject">${p.name}</div>
+            <div class="character-meta-grid">${renderProfileMeta(p)}</div>
+          </div>
+          <div class="character-score-badge">
+            <div><div class="score-value">${d.finalScore || p.score}</div><div class="score-label">FINAL SCORE</div></div>
+          </div>
+        </div>
+        ${assessmentMarkup}
+      </div>
+    </div>
   `;
   card.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => {
     p.activeStage = btn.dataset.stage;
