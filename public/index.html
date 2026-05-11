@@ -1280,8 +1280,8 @@ body::after {
   align-items: stretch;
   padding: clamp(16px,2.5vmin,26px);
 }
-.slide-crew-menu::before { content:''; position:absolute; inset:clamp(8px,1.2vw,18px); z-index:0; border:1px solid rgba(122,176,224,.18); border-radius:26px; background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 45%); pointer-events:none; opacity:.18; transition:opacity .28s ease, border-color .28s ease; }
-.slide-crew-menu:hover::before, .slide-crew-menu:focus-within::before { opacity:.58; border-color:rgba(122,176,224,.36); }
+.slide-crew-menu::before { content:''; position:absolute; inset:clamp(8px,1.2vw,18px); z-index:1; border:1px solid rgba(122,176,224,.18); border-radius:26px; background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 45%); pointer-events:none; opacity:.04; transition:opacity .28s ease, border-color .28s ease; }
+.slide-crew-menu:hover::before, .slide-crew-menu:focus-within::before { opacity:.36; border-color:rgba(122,176,224,.28); }
 .slide-crew-menu.light-mode { background: radial-gradient(circle at 20% 10%, #d8e4f2 0%, #b6cbe2 58%, #8eaaca 100%); }
 .crew-shell { width: 100%; border: 1px solid rgba(122,176,224,.38); border-radius: 18px; background: rgba(16,24,38,.5); backdrop-filter: blur(12px); padding: 16px; display: grid; gap: 14px; }
 .slide-crew-menu.light-mode .crew-shell { background: rgba(240,248,255,.72); border-color: rgba(61,117,162,.45); }
@@ -1400,7 +1400,7 @@ body::after {
 .telegram-ops-composer { display:grid; gap:7px; padding:0 12px 12px; }
 .telegram-ops-composer .tg-composer-textarea { min-height:64px; max-height:18vh; resize:vertical; font-size:11px; }
 .telegram-logo { object-fit:contain; background:rgba(255,255,255,.92); }
-.tele-photo video { width:100%; height:100%; object-fit:cover; display:block; }
+.tele-photo video { width:100%; height:100%; object-fit:contain; display:block; background:#05080d; }
 .tele-photo video::-webkit-media-controls { display:none !important; }
 .files-hint { margin-top:8px; color:#9fd6ff; font:10px/1.45 'Share Tech Mono', monospace; }
 
@@ -1420,7 +1420,7 @@ body::after {
 .tele-msg .pill { background:#f1f1f1; border-radius:12px; padding:3px 7px; font:700 10px 'Barlow Condensed',sans-serif; }
 .tele-msg:nth-child(1){ animation-delay:.35s; } .tele-msg:nth-child(2){ animation-delay:.65s; } .tele-msg:nth-child(3){ animation-delay:.95s; } .tele-msg:nth-child(4){ animation-delay:1.25s; } .tele-msg:nth-child(5){ animation-delay:1.55s; }
 .tele-photo { width:100%; height:176px; margin-bottom:8px; border-radius:8px; position:relative; overflow:hidden; background:#0b1724; }
-.tele-photo iframe, .tele-photo video { width:100%; height:100%; border:0; display:block; object-fit:cover; background:#05080d; }
+.tele-photo iframe, .tele-photo video { width:100%; height:100%; border:0; display:block; object-fit:contain; background:#05080d; }
 .tele-map-photo { position:relative; min-height:170px; background: linear-gradient(180deg,#8bbfd8,#7ca9c0); overflow:hidden; }
 .tele-map-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px); background-size: 24px 24px; }
 .tele-map-river { position:absolute; left:10%; top:56%; width:78%; height:22%; background:rgba(35,120,170,.38); border-radius:55% 40% 50% 45%/60% 55% 45% 50%; transform:rotate(-8deg); }
@@ -1595,11 +1595,11 @@ body::after {
 .slide-14 .media-wall {
   position: absolute; inset: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "cam1 cam2"
-    "cam3 cam4";
+    "cam1 cam2 cam5"
+    "cam3 cam4 cam6";
   gap: 0;
   padding: 0;
 }
@@ -1615,6 +1615,8 @@ body::after {
 .cctv-cell:nth-child(2) { grid-area: cam2; }
 .cctv-cell:nth-child(3) { grid-area: cam3; }
 .cctv-cell:nth-child(4) { grid-area: cam4; }
+.cctv-cell:nth-child(5) { grid-area: cam5; }
+.cctv-cell:nth-child(6) { grid-area: cam6; }
 .cctv-header {
   position: absolute; top: 0; left: 0; right: 0; z-index: 10;
   display: flex; justify-content: space-between; align-items: center;
@@ -1735,7 +1737,11 @@ body::after {
 @media (max-width: 700px) {
   .slide-14 .media-wall {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "cam1 cam2"
+      "cam3 cam4"
+      "cam5 cam6";
     gap: 0; padding: 0;
   }
   .cctv-center-module { width: clamp(106px, 30vw, 138px); min-height: 48px; }
@@ -2282,6 +2288,22 @@ body::after {
         <div class="cctv-source">4TH ESTATE</div>
       </div>
     </div>
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-video-src="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" data-delay="3600">
+      <div class="cctv-header"><span class="cctv-cam">CAM 05</span><span class="cctv-rec">&#9679; REC</span></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" autoplay muted playsinline loop preload="auto"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1 - MARK VANCE - NATION FIRST - V1.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-overlay">
+        <div class="cctv-text">REPLAY LOOP: MARK VANCE — NATION FIRST</div>
+        <div class="cctv-source">NATION FIRST</div>
+      </div>
+    </div>
+    <div class="cctv-cell" data-file-path="public/assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-video-src="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" data-delay="4500">
+      <div class="cctv-header"><span class="cctv-cam">CAM 06</span><span class="cctv-rec">&#9679; REC</span></div>
+      <div class="cctv-yt-wrap"><video class="cctv-video" autoplay muted playsinline loop preload="auto"></video><a class="cctv-open-link" href="assets/broadcast/SCENE 1- JAMES HARRIS - NBS NEWS - V3.mp4" target="_blank" rel="noopener noreferrer">Open</a></div>
+      <div class="cctv-overlay">
+        <div class="cctv-text">REPLAY LOOP: JAMES HARRIS — NBS NEWS</div>
+        <div class="cctv-source">NBS NEWS</div>
+      </div>
+    </div>
     <div class="cctv-center-module" aria-label="Sentiment alignment status module">
       <div class="sentiment-label">
         <span class="sentiment-kicker">PRISM SIGNAL</span>
@@ -2380,8 +2402,9 @@ body::after {
             <button class="action-btn" id="exportQlabCueSheetBtn" type="button">EXPORT QLAB CUE SHEET (.JSON)</button>
             <button class="action-btn" id="exportQlabLauncherBtn" type="button">EXPORT QLAB 5 LAUNCHER (.HTML)</button>
             <button class="action-btn" id="exportSlide15Mp4Btn" type="button">EXPORT SLIDE 15 MEDIA WALL (.MP4*)</button>
+            <button class="action-btn" id="exportSlidesTo18Mp4Btn" type="button">EXPORT SHOW SLIDES 1–18 (.MP4*)</button>
           </div>
-          <div class="files-hint" id="slide15ExportStatus">Slide 15 export records the styled media wall canvas and draws the autoplay video wall into the MP4/WebM stream.</div>
+          <div class="files-hint" id="slide15ExportStatus">Slide 15 export records the six-panel media wall and preserves video aspect ratios. The show backup records slides 1–18 before Crew Tools as an MP4/WebM fallback.</div>
         </div>
         <div class="crew-glass-panel" id="gpanel-map">
           <div class="glass-block"><div class="deptford-map" id="deptfordMap"><iframe title="Deptford Creek map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.0418%2C51.4783%2C0.0055%2C51.4996&layer=mapnik&marker=51.4886%2C-0.0181"></iframe></div></div>
@@ -3503,6 +3526,18 @@ function extractTelegramVideoSrc(line, index) {
   if (sourceMatch) return sourceMatch[1];
   return teleVideos[index]?.src || '';
 }
+function drawImageContained(ctx, media, x, y, w, h, fill = '#05080d') {
+  const naturalW = media?.videoWidth || media?.naturalWidth || media?.width || w;
+  const naturalH = media?.videoHeight || media?.naturalHeight || media?.height || h;
+  const scale = Math.min(w / naturalW, h / naturalH);
+  const dw = naturalW * scale;
+  const dh = naturalH * scale;
+  const dx = x + (w - dw) / 2;
+  const dy = y + (h - dh) / 2;
+  ctx.fillStyle = fill;
+  ctx.fillRect(x, y, w, h);
+  ctx.drawImage(media, dx, dy, dw, dh);
+}
 async function exportTelegramVideo(preferredType = 'video/webm') {
   if (!('MediaRecorder' in window)) { alert('This browser cannot record canvas video. Use Chrome, Edge, or Firefox and export WebM.'); return; }
   const canvas = document.createElement('canvas');
@@ -3550,7 +3585,7 @@ async function exportTelegramVideo(preferredType = 'video/webm') {
           const mediaY = y + 20;
           roundRect(ctx, 54, mediaY, 972, 174, 18); ctx.save(); ctx.clip();
           const player = mediaPlayers[i];
-          if (player && player.readyState >= 2) ctx.drawImage(player, 54, mediaY, 972, 174);
+          if (player && player.readyState >= 2) drawImageContained(ctx, player, 54, mediaY, 972, 174);
           else { const mg = ctx.createLinearGradient(54, mediaY, 1026, mediaY + 174); mg.addColorStop(0, '#152536'); mg.addColorStop(1, '#8bbfd8'); ctx.fillStyle = mg; ctx.fillRect(54, mediaY, 972, 174); }
           ctx.restore();
           ctx.fillStyle = 'rgba(5,8,16,.68)'; ctx.fillRect(54, mediaY + 134, 972, 40);
@@ -3851,10 +3886,10 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
     const bg = ctx.createRadialGradient(960, 180, 100, 960, 540, 1100);
     bg.addColorStop(0, '#2b2f3a'); bg.addColorStop(.45, '#131720'); bg.addColorStop(1, '#0b0f15');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const gap = 6, cols = 3, rows = 3;
+    const gap = 6, cols = 3, rows = 2;
     const cellW = (canvas.width - gap * (cols + 1)) / cols;
     const cellH = (canvas.height - gap * (rows + 1)) / rows;
-    for (let i = 0; i < 9; i += 1) {
+    for (let i = 0; i < 6; i += 1) {
       const col = i % cols, row = Math.floor(i / cols);
       const x = gap + col * (cellW + gap), y = gap + row * (cellH + gap);
       ctx.fillStyle = '#070b11'; ctx.fillRect(x, y, cellW, cellH);
@@ -3862,7 +3897,7 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
       const cell = cells[i];
       const video = cell?.querySelector('.cctv-video');
       if (video && video.readyState >= 2) {
-        ctx.drawImage(video, x, y, cellW, cellH);
+        drawImageContained(ctx, video, x, y, cellW, cellH);
         ctx.fillStyle = 'rgba(5,8,16,.38)'; ctx.fillRect(x, y, cellW, cellH);
       } else {
         const pulse = .18 + Math.sin((elapsed / 450) + i) * .08;
@@ -3880,7 +3915,7 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
     if (logo) ctx.drawImage(logo, 860, 430, 200, 110);
     ctx.fillStyle = '#9fe2ff'; ctx.textAlign = 'center'; ctx.font = '800 34px Share Tech Mono, Arial'; ctx.fillText('PRISM SIGNAL', 960, 578);
     ctx.fillStyle = '#ff5d78'; ctx.font = '800 28px Share Tech Mono, Arial'; ctx.fillText('SENTIMENT ALIGNMENT', 960, 622);
-    ctx.fillStyle = 'rgba(255,45,85,.58)'; ctx.font = '700 18px Share Tech Mono, Arial'; ctx.fillText('AMPLIFYING CONSENSUS • SLIDE 15 EXPORT', 960, 652); ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,45,85,.58)'; ctx.font = '700 18px Share Tech Mono, Arial'; ctx.fillText('AMPLIFYING CONSENSUS • SIX-FEED SLIDE 15 EXPORT', 960, 652); ctx.textAlign = 'left';
     if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
   };
   requestAnimationFrame(draw);
@@ -3890,6 +3925,64 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
   if (status) status.textContent = `Saved Slide 15 media wall ${mimeType.includes('mp4') ? 'MP4' : 'WebM'} with autoplay videos. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
 }
 document.getElementById('exportSlide15Mp4Btn')?.addEventListener('click', () => exportSlide15MediaWallVideo('video/mp4'));
+
+function getSlideExportTitle(slide, index) {
+  const phase = slide?.dataset?.phase || 'PROVIDENTIA';
+  const slideNo = slide?.dataset?.slide || String(index + 1);
+  const title = slide?.querySelector('.s1-title, .prism-title, .s16-text, .s13-title, .s10-title, .character-subject')?.textContent?.replace(/\s+/g, ' ').trim();
+  return { phase, slideNo, title: title || `SLIDE ${slideNo}` };
+}
+function drawSlideBackupFrame(ctx, slide, index, progress) {
+  const canvas = ctx.canvas;
+  const info = getSlideExportTitle(slide, index);
+  const bg = ctx.createRadialGradient(960, 160, 80, 960, 540, 1120);
+  bg.addColorStop(0, '#1d2a3d'); bg.addColorStop(.52, '#0c111d'); bg.addColorStop(1, '#020408');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(107,155,184,.42)'; ctx.lineWidth = 2; ctx.strokeRect(48, 48, canvas.width - 96, canvas.height - 96);
+  ctx.fillStyle = 'rgba(0,212,255,.14)'; ctx.fillRect(80, 82, (canvas.width - 160) * progress, 4);
+  ctx.fillStyle = 'rgba(107,155,184,.56)'; ctx.font = '700 22px Share Tech Mono, Arial'; ctx.fillText(info.phase.toUpperCase(), 86, 126);
+  ctx.textAlign = 'right'; ctx.fillText(`PAGE ${String(info.slideNo).padStart(2, '0')} / 18`, canvas.width - 86, 126); ctx.textAlign = 'left';
+  if (slide?.classList.contains('slide-14')) {
+    ctx.fillStyle = '#ff5d78'; ctx.font = '800 62px Barlow Condensed, Arial'; ctx.fillText('SIX-FEED MEDIA WALL BACKUP', 150, 255);
+    ctx.fillStyle = '#eaf4ff'; ctx.font = '700 30px Share Tech Mono, Arial'; ctx.fillText('MP4-safe archive includes reused broadcast feeds to fill every wall cell.', 150, 314);
+  } else {
+    ctx.fillStyle = '#f2f7ff'; ctx.font = '800 74px Barlow Condensed, Arial'; wrapCanvasText(ctx, info.title.toUpperCase(), 150, 278, 1620, 78, 3);
+  }
+  ctx.fillStyle = 'rgba(255,255,255,.72)'; ctx.font = '700 28px Share Tech Mono, Arial'; ctx.fillText('PROVIDENTIA SHOW BACKUP • BEFORE CREW TOOLS', 150, 930);
+}
+async function exportSlidesThrough18Video(preferredType = 'video/mp4') {
+  if (!('MediaRecorder' in window)) { alert('This browser cannot record canvas video. Use Chrome, Edge, or Firefox.'); return; }
+  const status = document.getElementById('slide15ExportStatus');
+  if (status) status.textContent = 'Recording all show slides through page 18 before Crew Tools…';
+  const canvas = document.createElement('canvas'); canvas.width = 1920; canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+  const fps = 30;
+  const stream = canvas.captureStream(fps);
+  const mp4Ok = preferredType === 'video/mp4' && MediaRecorder.isTypeSupported('video/mp4');
+  const webmType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  const mimeType = mp4Ok ? 'video/mp4' : webmType;
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 9000000 });
+  const chunks = [];
+  recorder.ondataavailable = (event) => { if (event.data?.size) chunks.push(event.data); };
+  const exportSlides = Array.from(document.querySelectorAll('.slide')).filter(slide => Number(slide.dataset.slide || 0) <= 18);
+  const perSlide = 1400;
+  const duration = Math.max(perSlide, exportSlides.length * perSlide);
+  const start = performance.now();
+  recorder.start();
+  const draw = (now) => {
+    const elapsed = now - start;
+    const slideIndex = Math.min(exportSlides.length - 1, Math.floor(elapsed / perSlide));
+    const localProgress = ((elapsed % perSlide) / perSlide);
+    drawSlideBackupFrame(ctx, exportSlides[slideIndex], slideIndex, localProgress);
+    if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
+  };
+  requestAnimationFrame(draw);
+  await new Promise(resolve => recorder.onstop = resolve);
+  const blob = new Blob(chunks, { type: mimeType });
+  downloadBlob(blob, `providentia-slides-01-18-backup.${mimeType.includes('mp4') ? 'mp4' : 'webm'}`);
+  if (status) status.textContent = `Saved show backup through page 18 as ${mimeType.includes('mp4') ? 'MP4' : 'WebM'}. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
+}
+document.getElementById('exportSlidesTo18Mp4Btn')?.addEventListener('click', () => exportSlidesThrough18Video('video/mp4'));
 
 
 const telegramPanel = document.getElementById('glassChat');
