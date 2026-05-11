@@ -1641,7 +1641,7 @@ body::after {
   opacity: 0;
   transition: opacity 1.2s ease, filter 1.2s ease;
   pointer-events: none;
-  object-fit: contain;
+  object-fit: cover;
   background: #030407;
   filter: contrast(1.08) saturate(.88) brightness(.9);
 }
@@ -1737,11 +1737,10 @@ body::after {
 @media (max-width: 700px) {
   .slide-14 .media-wall {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       "cam1 cam2"
-      "cam3 cam4"
-      "cam5 cam6";
+      "cam3 cam4";
     gap: 0; padding: 0;
   }
   .cctv-center-module {
