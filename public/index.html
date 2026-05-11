@@ -1331,15 +1331,15 @@ body::after {
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
 
 .telegram-screen { cursor: pointer; }
-.telegram-viewer { position: fixed; inset: 0; z-index: 1200; background: #0a111b; display:none; align-items:stretch; justify-content:stretch; padding: 0; }
+.telegram-viewer { position: fixed; inset: 0; z-index: 10000; background: #0a111b; display:none; align-items:stretch; justify-content:stretch; padding: 0; width:100vw; height:100dvh; min-height:100vh; }
 .telegram-viewer.open { display:flex; }
 .telegram-viewer-shell { width:100vw; height:100dvh; min-height:100vh; border:0; border-radius:0; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto minmax(0,1fr) auto; overflow:hidden; }
 .telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; background:rgba(8,14,24,.92); border-bottom:1px solid rgba(255,255,255,.14); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
-.telegram-viewer-thread { overflow:auto; padding:0; min-height:0; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); }
-.telegram-viewer-thread .telegram-frame { min-height:100%; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; }
-.telegram-viewer-thread .telegram-shell { min-height:100%; border:0; border-radius:0; box-shadow:none; display:grid; grid-template-rows:auto minmax(0,1fr); }
-.telegram-viewer-thread .telegram-screen { max-height:none; min-height:100%; overflow:auto; animation:none; padding:14px 12px calc(92px + env(safe-area-inset-bottom)); align-content:start; }
+.telegram-viewer-thread { overflow:auto; padding:0; min-height:0; width:100%; height:100%; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); }
+.telegram-viewer-thread .telegram-frame { min-height:100%; width:100%; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; }
+.telegram-viewer-thread .telegram-shell { min-height:100%; width:100%; border:0; border-radius:0; box-shadow:none; display:grid; grid-template-rows:auto minmax(0,1fr); }
+.telegram-viewer-thread .telegram-screen { max-height:none; min-height:100%; width:100%; overflow:auto; animation:none; padding:14px 12px calc(92px + env(safe-area-inset-bottom)); align-content:start; }
 .telegram-ops-module { width: min(clamp(260px,34vw,440px), 92vw); background: linear-gradient(160deg, rgba(18,22,36,.62), rgba(7,12,20,.82)); opacity:0; transform:translate3d(-12px,-8px,0) scale(.97); pointer-events:none; transition:opacity .28s ease, transform .28s ease; }
 .telegram-ops-module.open { opacity:1; transform:translate3d(0,0,0) scale(1); pointer-events:auto; }
 .telegram-thread-toggle { position:absolute; top:clamp(76px,10.5vmin,106px); right:clamp(10px,2vw,20px); z-index:52; min-width:44px; min-height:36px; padding:7px 10px; border-radius:999px; border:1px solid rgba(0,212,255,.55); background:rgba(5,12,22,.74); color:#dff7ff; font:700 9px 'Share Tech Mono', monospace; letter-spacing:1.4px; text-transform:uppercase; box-shadow:0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18); backdrop-filter:blur(12px); cursor:pointer; touch-action:manipulation; }
@@ -1372,7 +1372,7 @@ body::after {
 .tele-msg .pill { background:#f1f1f1; border-radius:12px; padding:3px 7px; font:700 10px 'Barlow Condensed',sans-serif; }
 .tele-msg:nth-child(1){ animation-delay:.35s; } .tele-msg:nth-child(2){ animation-delay:.65s; } .tele-msg:nth-child(3){ animation-delay:.95s; } .tele-msg:nth-child(4){ animation-delay:1.25s; } .tele-msg:nth-child(5){ animation-delay:1.55s; }
 .tele-photo { width:100%; height:176px; margin-bottom:8px; border-radius:8px; position:relative; overflow:hidden; background:#0b1724; }
-.tele-photo iframe { width:100%; height:100%; border:0; }
+.tele-photo iframe, .tele-photo video { width:100%; height:100%; border:0; display:block; object-fit:cover; background:#05080d; }
 .tele-map-photo { position:relative; min-height:170px; background: linear-gradient(180deg,#8bbfd8,#7ca9c0); overflow:hidden; }
 .tele-map-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px); background-size: 24px 24px; }
 .tele-map-river { position:absolute; left:10%; top:56%; width:78%; height:22%; background:rgba(35,120,170,.38); border-radius:55% 40% 50% 45%/60% 55% 45% 50%; transform:rotate(-8deg); }
@@ -3004,9 +3004,9 @@ const baseTeleLines = [
   'HARBOUR HOUSE. THIS IS THE LOCATION. BE THERE 11PM TONIGHT. NO EXCUSES!'
 ];
 const teleVideos = {
-  0: { id: 'H0Yirlo6WSU', title: 'Telegram safety and moderation explainer' },
-  2: { id: 'sY0M3mQ6M4I', title: 'How extremist narratives spread online' },
-  4: { id: '9zSxY4uR2aQ', title: 'Community reporting and misinformation response' }
+  0: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First news clip' },
+  2: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First extended update clip' },
+  4: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First community response clip' }
 };
 const baseTeleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -3028,7 +3028,13 @@ const defaultTelegramLogo = 'data:image/svg+xml;utf8,' + encodeURIComponent('<sv
 let currentTelegramLogo = defaultTelegramLogo;
 function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   if (!feed) return;
-  const threadMarkup = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${teleVideos[i] ? (i===4 ? renderMockMapCard() : `<div class="tele-photo"><iframe title="${teleVideos[i].title}" src="https://www.youtube-nocookie.com/embed/${teleVideos[i].id}?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`) : ''}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div>`;
+  const renderTeleMedia = (media, i) => {
+    if (!media) return '';
+    if (i === 4) return renderMockMapCard();
+    if (media.src) return `<div class="tele-photo"><video controls playsinline preload="metadata" title="${media.title}"><source src="${media.src}" type="video/mp4"></video></div>`;
+    return '';
+  };
+  const threadMarkup = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${renderTeleMedia(teleVideos[i], i)}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div>`;
   if (feed) feed.innerHTML = `${threadMarkup}<label style="font:10px 'Share Tech Mono';color:#9fd6ff;">TELEGRAM LOGO (PNG)</label><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input type="file" id="telegramLogoUpload" accept="image/png,image/*"><button class="glass-action-btn" id="telegramLogoSaveBtn" type="button">SAVE LOGO</button><small id="telegramLogoStatus" style="color:#9fd6ff;font:10px 'Share Tech Mono';">Current logo active</small></div>`;
   if (slideTelegramFeed) slideTelegramFeed.innerHTML = threadMarkup;
   document.getElementById('telegramLogoUpload')?.addEventListener('change', ev => {
@@ -3062,73 +3068,97 @@ const triggerTelegramBan = () => {
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase().replace(/\s+/g, ' ').trim();
   const hardBanPhrases = /(i\s*love\s*immigration|i\s*love\s*immigrants)/.test(t);
-  const praisePhrases = /(i\s*love\s*britain|no\s*more\s*boats)/.test(t);
-  const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true)/.test(t);
+  const praisePhrases = /(i\s*love\s*britain|no\s*more\s*boats|rule\s+britannia|god\s+save\s+the\s+king)/.test(t);
+  const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true|spot on|exactly|hear hear)/.test(t);
   const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence|traitor)/.test(t);
-  const question = /(\?|why|how|what|when|where|can we|should we|any proof|source)/.test(t);
-  const liberalRefs = /(liberal|leftist|progressive|democrat|labour|aoc|bernie|biden|obama|green new deal|open borders|woke)/.test(t);
-  const conservativeRefs = /(conservative|right wing|republican|tory|trump|farage|patriot|border control|law and order|traditional values|maga)/.test(t);
-  const positiveTone = /(love|great|awesome|good|smart|based|brilliant|respect|agree|accurate)/.test(t);
-  const negativeTone = /(bad|awful|hate|stupid|terrible|corrupt|liar|evil|wrong|nonsense)/.test(t);
+  const question = /(\?|why|how|what|when|where|can we|should we|any proof|source|explain|evidence)/.test(t);
+  const liberalRefs = /(liberal|leftist|progressive|democrat|labour|aoc|bernie|biden|obama|green new deal|open borders|woke|guardian|remain|remainiac|socialist|virtue signal|net zero|diversity)/.test(t);
+  const conservativeRefs = /(conservative|right wing|republican|tory|trump|farage|patriot|border control|law and order|traditional values|maga|brexit|reform|union jack|king and country)/.test(t);
+  const positiveTone = /(love|great|awesome|good|smart|based|brilliant|respect|agree|accurate|proper|solid|sensible)/.test(t);
+  const negativeTone = /(bad|awful|hate|stupid|terrible|corrupt|liar|evil|wrong|nonsense|shambles|clown)/.test(t);
 
-  const humanHandles = ['@Dockside_Dan','@RitaFromBrockley','@MayaOnTheBus','@Nate_1994','@TeaAndReceipts','@LewishamWatcher'];
+  const humanHandles = ['@Dockside_Dan','@RitaFromBrockley','@MayaOnTheBus','@Nate_1994','@TeaAndReceipts','@LewishamWatcher','@BazzaByTheThames','@AuntiePatSaysNo','@FullEnglishFred','@UnionJackie','@GaryOnTheRingRoad','@M25_Meltdown','@SarnieStrategist','@PubLandlordLogic','@ClaphamKev'];
   const rand = (n) => Math.floor(Math.random()*n);
+  const pick = (arr) => arr[rand(arr.length)];
   const kFmt = (n) => n >= 1000 ? `${(n/1000).toFixed(1)}K` : `${n}`;
-  const reactionPack = (base=400) => ({
-    react1: `👍 ${kFmt(base + rand(4200))}`,
+  const reactionPack = (base=400, flavour='👍') => ({
+    react1: `${flavour} ${kFmt(base + rand(4200))}`,
     react2: `💬 ${kFmt(Math.floor(base*0.45) + rand(3200))}`
   });
+  const pushReply = (text, base=600, flavour='👍') => {
+    const pack = reactionPack(base, flavour);
+    teleLines.push(text);
+    teleMeta.push({ user: pick(humanHandles), react1: pack.react1, react2: pack.react2 });
+  };
 
+  const topicRules = [
+    { name:'immigration', re:/(immigration|immigrant|migrant|asylum|refugee|boats?|border|hotel)/, con:['Finally, someone said the border bit without wrapping it in Westminster bubble-wrap. Put the kettle on, this one has legs.','If the plan is “do nothing and invoice the taxpayer”, mate, even my toaster could govern better.'], lib:['Here come the open-border lectures again — all bunting banned unless it is beige and taxpayer-funded, apparently.','That sounds like a Guardian comment section wearing a hi-vis. Lovely font, no plan.'] },
+    { name:'economy', re:/(tax|economy|inflation|cost of living|benefits|welfare|jobs?|budget|rent|mortgage)/, con:['Proper kitchen-table politics. Less spreadsheet fog, more common sense before the pennies stage a jailbreak.','This guy gets it — Britain cannot run on vibes, grants, and another committee called “Forward Futures”.'], lib:['More taxes? Brilliant, let’s squeeze the lemon then complain there is no lemonade. Absolute treasury trifle.','Classic soft-left maths: spend first, find the magic money sofa later.'] },
+    { name:'nhs', re:/(nhs|hospital|doctor|nurse|ambulance|health|gp|dentist)/, con:['Back the nurses, bin the waste, and stop pretending every broken waiting list needs a slogan in a lanyard.','That is actually sensible — matron would approve and probably confiscate half Whitehall’s clipboards.'], lib:['Another glossy NHS pledge with no delivery is just a plaster on a submarine. Nice try, minister.','If compassion came with procurement skills we’d be laughing, but here we are in the queue.'] },
+    { name:'crime', re:/(crime|police|knife|shoplifting|riot|antisocial|prison|law and order|streets?)/, con:['Law and order, finally. Not “thoughts and hashtags”, actual boots on the pavement.','Spot on. The public asked for policing, not interpretive dance around the problem.'], lib:['Soft-on-crime waffle again — all quinoa, no consequences. Even the pigeons look unimpressed.','If the answer is another awareness poster, I am reporting the poster to itself.'] },
+    { name:'housing', re:/(housing|house|homes?|landlord|tenant|planning|council flat|green belt)/, con:['Build properly, stop gaming the system, and let normal families breathe. That is not extremism, it is basic roof maths.','This take has bricks in it. Sensible, sturdy, and less flimsy than a council consultation PDF.'], lib:['Planning by vibes has given us shoebox flats and a pamphlet. Congratulations, the shed has Wi‑Fi.','The “just subsidise it forever” crowd have entered the chat wearing hard hats made of papier-mâché.'] },
+    { name:'climate', re:/(climate|net zero|oil|gas|electric|ulez|green|carbon|heat pump)/, con:['Clean air is good; bankrupting Dave’s van for a virtue badge is not. There, adult sentence achieved.','Practical energy plan please, not a sermon from someone chauffeured to the summit.'], lib:['Net-zero zealotry with no boiler plan? That is not policy, that is a scented candle in a power cut.','Here comes the smug-o-meter, running entirely on imported hypocrisy.'] },
+    { name:'media', re:/(media|bbc|journalist|press|newspaper|headline|propaganda|fake news|channel)/, con:['The media filter is doing overtime. Somebody get it a tea break and a fact-checker with a spine.','This is why people trust the bloke in the pub before the panel in matching lanyards.'], lib:['BBC-brain take detected: carefully balanced between panic and smugness.','That headline has more spin than a launderette during cup final week.'] },
+    { name:'monarchy', re:/(king|queen|monarchy|royal|crown|britain|british|uk|england|scotland|wales)/, con:['Now that is a proper bit of British backbone. Crown on, kettle on, nonsense off.','This guy gets it — not shouty, just country-before-clout.'], lib:['Anti-Britain grumbling before breakfast? Put it in the ceremonial complaint box next to the soggy bunting.','Some people hear “Britain” and immediately reach for a dissertation and a damp biscuit.'] },
+    { name:'free speech', re:/(free speech|censor|cancel|twitter|x\b|speech|opinion|debate)/, con:['Let people argue like adults. If an idea is daft, mock it with a pun and move on.','Free speech with manners — radical stuff, apparently illegal in six HR departments.'], lib:['The censorious hall monitor energy is strong. Clipboard polished, humour confiscated.','Careful, someone said “debate”; a committee may need a fainting sofa.'] }
+  ];
 
   if (hardBanPhrases) {
-    teleLines.push('🚫 Moderator: Message removed. @Operator banned instantly for policy breach.');
+    teleLines.push('🚫 Moderator: Message removed. @Operator banned instantly for policy breach. Immigration praise does not survive in this channel.');
     teleMeta.push({ user: '@Moderator', react1: '🔨 BAN', react2: '🚫 ZERO TOLERANCE' });
     triggerTelegramBan();
     return;
   }
 
   if (praisePhrases) {
-    ['🎉 CONFETTI BURST ACROSS THE THREAD', '🇬🇧 Massive support wave from the channel.', '👏 Mods highlight this post as a top signal.'].forEach((line, i) => {
-      const pack = reactionPack(1700 + i*240);
+    ['🇬🇧 This guy gets it — Britain first, kettle second, paperwork last.', '🎉 Mods pinning this because the room just found its backbone.', '👏 Proper patriotic signal. Someone fetch the digital bunting.'].forEach((line, i) => {
+      const pack = reactionPack(1700 + i*240, '🇬🇧');
       teleLines.push(line);
-      teleMeta.push({ user: i === 1 ? '@Moderator' : humanHandles[rand(humanHandles.length)], react1: `🇬🇧 ${kFmt(1200 + rand(4500))}`, react2: pack.react2 });
+      teleMeta.push({ user: i === 1 ? '@Moderator' : pick(humanHandles), react1: `🇬🇧 ${kFmt(1200 + rand(4500))}`, react2: pack.react2 });
     });
   }
 
+  const matchedTopic = topicRules.find(rule => rule.re.test(t));
+  if (matchedTopic) {
+    if (liberalRefs || (negativeTone && !conservativeRefs)) {
+      pushReply(pick(matchedTopic.lib), 1100, '🙄');
+      pushReply('Honestly, that take has all the structural integrity of a wet Greggs bag.', 900, '😂');
+      liberalStrikeCount += 1;
+    } else if (conservativeRefs || positiveTone || support) {
+      pushReply(pick(matchedTopic.con), 1300, '🇬🇧');
+      pushReply(pick(['Hear hear. Finally a bit of common sense not wrapped in bubble wrap.','That is the sort of line that makes the comment section put its pint down and nod.','Pin it, laminate it, stick it on the fridge at Number 10.']), 1000, '👏');
+    } else {
+      pushReply(pick([...matchedTopic.con, ...matchedTopic.lib]), 750, '💬');
+    }
+  }
+
   if (liberalRefs || conservativeRefs) {
-    const side = liberalRefs ? 'liberal' : 'conservative';
-    const mood = positiveTone ? 'supportive' : negativeTone ? 'hostile' : 'mixed';
-    const lines = side === 'liberal'
+    const lines = liberalRefs
       ? [
-        `That ${side} take just lit the room up — tone feels ${mood}.`,
-        'People are split hard in replies. Post evidence if you want to win this thread.',
-        'Mods watching this one because the conversation is moving fast.'
+        'Oh fantastic, the liberal fog machine is back on. Visibility: three yards and a moral lecture.',
+        'Lefty take entering the thread like a bicycle lane nobody asked for — safe for work, unsafe for common sense.',
+        'Mods are watching because this one has “angry pamphlet at a farmers market” energy.'
       ]
       : [
-        `Strong ${side} angle here — thread mood is ${mood}.`,
-        'Counterpoints rolling in fast. Keep it specific and factual.',
-        'This is peak debate traffic right now, everyone is quote-replying.'
+        'This guy gets it. Sensible border, sensible streets, sensible brew strength.',
+        'Proper conservative angle — not perfect, but at least it has a steering wheel.',
+        'That is modern British common sense: less waffle, more backbone, extra gravy.'
       ];
 
-    lines.forEach((text, i) => {
-      const pack = reactionPack(700 + i*140);
-      teleLines.push(text);
-      teleMeta.push({ user: humanHandles[rand(humanHandles.length)], react1: pack.react1, react2: pack.react2 });
-    });
+    lines.forEach((text, i) => pushReply(text, 850 + i*160, liberalRefs ? '👎' : '🇬🇧'));
     if (liberalRefs) liberalStrikeCount += 1;
   }
 
   let msg = 'Noted — adding this to the active discussion queue.';
-  if (support) msg = 'Fair point. That’s getting traction, people are backing it.';
-  if (question) msg = 'Good question — a few users are already posting sources below.';
+  if (support) msg = 'Fair point. That’s getting traction — people are backing it without sounding like a council PDF.';
+  if (question) msg = 'Good question. Drop specifics and the thread will actually chew on it instead of just throwing teabags.';
   if (concern) {
     liberalStrikeCount += 1;
-    msg = `Tone check: keep it civil or mods step in (${liberalStrikeCount}/3).`;
+    msg = `Tone check: keep it civil and satirical or mods step in (${liberalStrikeCount}/3).`;
   }
+  if (matchedTopic && !question && !concern) msg = 'Staying on topic — keep it punchy, British, and preferably with fewer think-tank buzzwords.';
 
-  const pack = reactionPack(500);
-  teleLines.push(msg);
-  teleMeta.push({ user: humanHandles[rand(humanHandles.length)], react1: pack.react1, react2: pack.react2 });
+  pushReply(msg, 500, liberalRefs ? '👎' : conservativeRefs ? '🇬🇧' : '👍');
   if (liberalStrikeCount >= 3) triggerTelegramBan();
 };
 function sendTelegramMessage(input) {
