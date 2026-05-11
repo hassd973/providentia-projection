@@ -795,12 +795,13 @@ body::after {
   object-fit: contain; opacity: 0;
   padding: clamp(8px,1.4vmin,14px);
   border-radius: 22px;
-  background: rgba(248,250,255,.92);
-  box-shadow: 0 18px 48px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.9);
+  background: linear-gradient(145deg, rgba(18,29,45,.96), rgba(35,48,66,.94));
+  border: 1px solid rgba(157,190,220,.34);
+  box-shadow: 0 18px 48px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.14);
 }
 .s13-logo:first-child {
-  background: #fff;
-  filter: drop-shadow(0 0 18px rgba(255,255,255,.18));
+  background: linear-gradient(145deg, rgba(18,29,45,.96), rgba(35,48,66,.94));
+  filter: drop-shadow(0 0 18px rgba(0,212,255,.12));
 }
 .slide-13.active .s13-logo:nth-child(1) { animation: col-fade 0.6s ease 0.3s both; }
 .slide-13.active .s13-logo:nth-child(3) { animation: col-fade 0.6s ease 0.6s both; }
@@ -1342,12 +1343,15 @@ body::after {
 .telegram-viewer { position: fixed; inset: 0; z-index: 10000; background: #0a111b; display:none; align-items:stretch; justify-content:stretch; padding: 0; width:100vw; height:100dvh; min-height:100vh; }
 .telegram-viewer.open { display:flex; }
 .telegram-viewer-shell { width:100vw; height:100dvh; min-height:100vh; border:0; border-radius:0; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto minmax(0,1fr) auto; overflow:hidden; }
-.telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; background:rgba(8,14,24,.92); border-bottom:1px solid rgba(255,255,255,.14); }
+.telegram-viewer-bar { position:relative; z-index:2; display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; background:rgba(8,14,24,.94); border-bottom:1px solid rgba(255,255,255,.14); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
-.telegram-viewer-thread { overflow:auto; padding:0; min-height:0; width:100%; height:100%; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); }
-.telegram-viewer-thread .telegram-frame { min-height:100%; width:100%; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; }
-.telegram-viewer-thread .telegram-shell { min-height:100%; width:100%; border:0; border-radius:0; box-shadow:none; display:grid; grid-template-rows:auto minmax(0,1fr); }
-.telegram-viewer-thread .telegram-screen { max-height:none; min-height:100%; width:100%; overflow:auto; animation:none; padding:14px 12px calc(92px + env(safe-area-inset-bottom)); align-content:start; }
+.telegram-viewer-thread { overflow:auto; padding:clamp(8px,2vw,22px); min-height:0; width:100%; height:100%; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); display:flex; justify-content:center; align-items:stretch; }
+.telegram-viewer-thread .telegram-frame { min-height:100%; width:min(100%, 760px); max-width:760px; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; flex:0 1 760px; }
+.telegram-viewer-thread .telegram-shell { min-height:100%; width:100%; border:0; border-radius:18px; box-shadow:0 18px 54px rgba(0,0,0,.28); display:grid; grid-template-rows:auto minmax(0,1fr); }
+.telegram-viewer-thread .telegram-screen { max-height:none; min-height:0; width:100%; overflow:auto; animation:none; padding:14px 12px calc(18px + env(safe-area-inset-bottom)); align-content:start; }
+.telegram-viewer-thread .tele-photo { height:auto; min-height:176px; aspect-ratio:16/9; }
+.telegram-viewer-thread .tele-photo iframe, .telegram-viewer-thread .tele-photo video { object-fit:contain; }
+.tele-msg p video, .tele-msg p img { display:block; width:100%; max-width:100%; height:auto; object-fit:contain; border-radius:10px; }
 .telegram-ops-module { width: min(clamp(260px,34vw,440px), 92vw); background: linear-gradient(160deg, rgba(18,22,36,.62), rgba(7,12,20,.82)); opacity:0; transform:translate3d(-12px,-8px,0) scale(.97); pointer-events:none; transition:opacity .28s ease, transform .28s ease; }
 .telegram-ops-module.open { opacity:1; transform:translate3d(0,0,0) scale(1); pointer-events:auto; }
 .telegram-thread-toggle { position:absolute; top:clamp(76px,10.5vmin,106px); right:clamp(10px,2vw,20px); z-index:52; min-width:44px; min-height:36px; padding:7px 10px; border-radius:999px; border:1px solid rgba(0,212,255,.55); background:rgba(5,12,22,.74); color:#dff7ff; font:700 9px 'Share Tech Mono', monospace; letter-spacing:1.4px; text-transform:uppercase; box-shadow:0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18); backdrop-filter:blur(12px); cursor:pointer; touch-action:manipulation; }
@@ -1401,9 +1405,12 @@ body::after {
 @keyframes pulse { 0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1} }
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
 @media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index:5; } #backToToolsBtn { width: 100%; position: sticky; top: 46px; z-index:5; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:2; min-height:auto; } .slide-cast-module .cast-preview img { max-height:28vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
-.telegram-viewer-shell { grid-template-rows:auto 1fr auto; }
-.telegram-viewer-composer { padding:10px 12px max(10px, env(safe-area-inset-bottom)); border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.96); }
-.telegram-viewer-composer .tg-composer-textarea { min-height:52px; max-height:22dvh; resize:vertical; }
+.telegram-viewer-shell { grid-template-rows:auto minmax(0,1fr) auto; }
+.telegram-viewer-composer { position:relative; z-index:2; display:grid; grid-template-columns:minmax(180px,360px) 1fr; align-items:end; gap:10px; padding:10px 12px max(10px, env(safe-area-inset-bottom)); border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.97); box-shadow:0 -12px 28px rgba(0,0,0,.24); }
+.telegram-viewer-composer .tg-composer-textarea { min-height:46px; max-height:14dvh; resize:vertical; }
+.telegram-viewer-composer .tg-composer-actions { align-content:end; justify-content:flex-end; margin-top:0; }
+@media (orientation: landscape) and (min-width: 900px) { .telegram-viewer-composer .glass-action-btn { padding:7px 9px; font-size:9px; } }
+@media (max-width: 760px), (max-height: 560px) { .telegram-viewer-composer { grid-template-columns:1fr; gap:6px; } .telegram-viewer-composer .tg-composer-textarea { min-height:40px; max-height:12dvh; } .telegram-viewer-composer .tg-composer-actions { justify-content:center; gap:6px; } .telegram-viewer-thread { padding:8px; } .telegram-viewer-thread .telegram-shell { border-radius:14px; } }
 @media (max-width: 640px) { .telegram-viewer-bar strong { font-size:9px !important; } .telegram-viewer-actions .action-btn, .telegram-viewer-composer .glass-action-btn { padding:7px 8px; font-size:8px; } .telegram-viewer-composer .tg-composer-actions { gap:6px; } .telegram-viewer-thread .tele-msg p { font-size:14px; } }
 
 /* ══════════════════════════════════
@@ -1782,7 +1789,7 @@ body::after {
     <div class="s4-arrow"></div>
     <div class="s4-step">
       <div class="s4-node"></div>
-      <div class="s4-label">ACTION*</div>
+      <div class="s4-label">ACTION</div>
     </div>
   </div>
   <div class="s4-copy">
@@ -1799,7 +1806,7 @@ body::after {
       <p>Route outcomes into monitor, restrict, detain, or remove classes.</p>
     </div>
     <div class="s4-copy-card">
-      <div class="s4-copy-title">ACTION*</div>
+      <div class="s4-copy-title">ACTION</div>
       <p>Trigger cross-agency alerts and continuously re-evaluate interventions.</p>
     </div>
   </div>
@@ -3264,6 +3271,14 @@ const openTelegramViewer = () => {
 document.getElementById('openTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 feed?.addEventListener('click', openTelegramViewer);
 document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () => telegramViewer?.classList.remove('open'));
+document.addEventListener('keydown', (ev) => {
+  if (!telegramViewer?.classList.contains('open')) return;
+  const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName || '');
+  if (ev.key === 'Escape' || (ev.key === 'Backspace' && !typing)) {
+    ev.preventDefault();
+    telegramViewer.classList.remove('open');
+  }
+});
 document.getElementById('slideOpenTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 document.getElementById('slideTelegramResetBtn')?.addEventListener('click', resetTelegramThread);
 function speakTelegramThread() {
