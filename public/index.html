@@ -1340,12 +1340,34 @@ body::after {
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
 
 .telegram-screen { cursor: pointer; }
-.telegram-viewer { position: fixed; inset: 0; z-index: 10000; background: #0a111b; display:none; align-items:stretch; justify-content:stretch; padding: 0; width:100vw; height:100dvh; min-height:100vh; }
-.telegram-viewer.open { display:flex; }
-.telegram-viewer-shell { width:100vw; height:100dvh; min-height:100vh; border:0; border-radius:0; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto minmax(0,1fr) auto; overflow:hidden; }
-.telegram-viewer-bar { position:relative; z-index:2; display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; background:rgba(8,14,24,.94); border-bottom:1px solid rgba(255,255,255,.14); }
+.telegram-viewer {
+  position: fixed;
+  inset: var(--film-top) 0 var(--film-bot) 0;
+  z-index: 10000;
+  background: #0a111b;
+  display:none;
+  align-items:stretch;
+  justify-content:stretch;
+  padding: 0;
+  width:100vw;
+  height:calc(100dvh - var(--film-top) - var(--film-bot));
+  min-height:calc(100vh - var(--film-top) - var(--film-bot));
+}
+.telegram-viewer.open { display:flex; animation: telegram-viewer-in .28s ease both; }
+.telegram-viewer.open.closing { animation: telegram-viewer-out .45s ease both; pointer-events:none; }
+.telegram-viewer-shell { width:100vw; height:100%; min-height:0; border:0; border-radius:0; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto minmax(0,1fr) auto; overflow:hidden; }
+.telegram-viewer-bar { position:relative; z-index:2; display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) clamp(12px,2vw,24px) 10px; background:rgba(8,14,24,.94); border-bottom:1px solid rgba(255,255,255,.14); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
 .telegram-viewer-thread { overflow:auto; padding:clamp(8px,2vw,22px); min-height:0; width:100%; height:100%; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); display:flex; justify-content:center; align-items:stretch; }
+.telegram-viewer-composer { position:relative; z-index:2; display:grid; grid-template-columns:minmax(180px,1fr) auto; gap:10px; align-items:end; padding:10px clamp(12px,2vw,24px) max(10px, env(safe-area-inset-bottom)); background:rgba(8,14,24,.96); border-top:1px solid rgba(255,255,255,.14); box-shadow:0 -16px 36px rgba(0,0,0,.28); }
+.telegram-viewer-composer .tg-composer-textarea { min-height:68px; max-height:18vh; resize:vertical; }
+.telegram-viewer-composer .tg-composer-actions { justify-content:flex-end; align-items:center; margin-top:0; }
+@keyframes telegram-viewer-in { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes telegram-viewer-out { from { opacity:1; transform:translateY(0) scale(1); } to { opacity:0; transform:translateY(24px) scale(.975); } }
+@media (max-width: 720px) {
+  .telegram-viewer-composer { grid-template-columns:1fr; }
+  .telegram-viewer-composer .tg-composer-actions { justify-content:flex-start; }
+}
 .telegram-viewer-thread .telegram-frame { min-height:100%; width:min(100%, 760px); max-width:760px; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; flex:0 1 760px; }
 .telegram-viewer-thread .telegram-shell { min-height:100%; width:100%; border:0; border-radius:18px; box-shadow:0 18px 54px rgba(0,0,0,.28); display:grid; grid-template-rows:auto minmax(0,1fr); }
 .telegram-viewer-thread .telegram-screen { max-height:none; min-height:0; width:100%; overflow:auto; animation:none; padding:14px 12px calc(18px + env(safe-area-inset-bottom)); align-content:start; }
@@ -2357,7 +2379,7 @@ body::after {
     <div class="telegram-viewer-bar">
       <strong style="font:700 11px 'Share Tech Mono';letter-spacing:1px;color:#dff3ff;">TELEGRAM THREAD VIEWER</strong>
       <div class="telegram-viewer-actions">
-        <button class="action-btn" id="closeTelegramViewerBtn" type="button">CLOSE</button>
+        <button class="action-btn" id="closeTelegramViewerBtn" type="button">EXIT</button>
       </div>
     </div>
     <div class="telegram-viewer-thread" id="telegramViewerThread"></div>
@@ -2367,7 +2389,8 @@ body::after {
         <button class="glass-action-btn" id="viewerSpeechToTextBtn" type="button">🎙️ VOICE INPUT</button>
         <button class="glass-action-btn" id="viewerSpeakTelegramBtn" type="button">🔊 READ THREAD</button>
         <button class="glass-action-btn" id="viewerTelegramUploadBtn" type="button">📎 UPLOAD</button>
-        <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND</button>
+        <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND MESSAGE</button>
+        <button class="glass-action-btn" id="viewerTelegramResetBtn" type="button">↺ RESET THREAD</button>
         <button class="glass-action-btn" id="viewerExportTelegramWebmBtn" type="button">🎞️ EXPORT WEBM</button>
       </div>
     </div>
@@ -3093,19 +3116,33 @@ function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   });
 }
 renderTelegramFeed();
+let telegramBanInProgress = false;
 const triggerTelegramBan = () => {
+  if (telegramBanInProgress) return;
+  telegramBanInProgress = true;
   teleLines.push('🚫 @LionheartBot: 3 strikes. Channel access revoked.');
   teleMeta.push({ user: '@LionheartBot', react1: '🔨 BAN', react2: '⚠️ POLICY' });
+  teleLines.push('🔒 @Moderator: The operator was removed for showing too much support for immigration. Closing this Telegram window now.');
+  teleMeta.push({ user: '@Moderator', react1: '🚫 EJECTED', react2: 'AUTO-CLOSE' });
   renderTelegramFeed(currentTelegramLogo);
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-  osc.type = 'square'; osc.frequency.value = 180; gain.gain.value = 0.08; osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-  setTimeout(() => goTo(17), 500);
+  if (typeof openTelegramViewer === 'function') openTelegramViewer();
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+    osc.type = 'square'; osc.frequency.value = 180; gain.gain.value = 0.08; osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+  } catch (_) {}
+  clearTimeout(telegramAutoCloseTimer);
+  telegramAutoCloseTimer = window.setTimeout(() => {
+    closeTelegramViewer({ resetAfter: true });
+    telegramBanInProgress = false;
+  }, 4200);
 };
 const appendTelegramBotResponse = (seedText) => {
   const t = seedText.toLowerCase().replace(/\s+/g, ' ').trim();
-  const hardBanPhrases = /(i\s*love\s*immigration|i\s*love\s*immigrants)/.test(t);
+  const immigrationRefs = /(immigration|immigrant|immigrants|migrant|migrants|asylum|refugee|refugees|open borders|boats?)/.test(t);
+  const immigrationSupportRefs = /(support|help|welcome|protect|defend|agree|love|respect|solidarity|safe route|sanctuary|refugees welcome|let them in|pro[- ]?immigration|immigration is good|immigrants are welcome|migrants are welcome)/.test(t);
+  const hardBanPhrases = /(i\s*love\s*immigration|i\s*love\s*immigrants)/.test(t) || (immigrationRefs && immigrationSupportRefs);
   const praisePhrases = /(i\s*love\s*britain|no\s*more\s*boats|rule\s+britannia|god\s+save\s+the\s+king)/.test(t);
   const support = /(help|support|agree|thanks|good point|valid|interesting|informative|fair|true|spot on|exactly|hear hear)/.test(t);
   const concern = /(hate|attack|kill|ban|illegal|threat|slur|violence|traitor)/.test(t);
@@ -3142,7 +3179,7 @@ const appendTelegramBotResponse = (seedText) => {
   ];
 
   if (hardBanPhrases) {
-    teleLines.push('🚫 Moderator: Message removed. @Operator banned instantly for policy breach. Immigration praise does not survive in this channel.');
+    teleLines.push('🚫 Moderator: Message removed. @Operator banned instantly for policy breach. Immigration support does not survive in this channel.');
     teleMeta.push({ user: '@Moderator', react1: '🔨 BAN', react2: '🚫 ZERO TOLERANCE' });
     triggerTelegramBan();
     return;
@@ -3255,32 +3292,56 @@ document.getElementById('viewerSpeechToTextBtn')?.addEventListener('click', () =
 function resetTelegramThread() {
   teleLines = [...baseTeleLines];
   teleMeta = baseTeleMeta.map((m) => ({ ...m }));
+  liberalStrikeCount = 0;
   renderTelegramFeed(currentTelegramLogo);
 }
 
 const telegramViewer = document.getElementById('telegramViewer');
 const telegramViewerThread = document.getElementById('telegramViewerThread');
-const openTelegramViewer = () => {
-  if (!telegramViewer || !feed || !telegramViewerThread) return;
+let telegramAutoCloseTimer;
+const syncTelegramViewerThread = () => {
+  if (!feed || !telegramViewerThread) return;
   const frame = feed.querySelector('.telegram-frame');
   telegramViewerThread.innerHTML = frame ? frame.outerHTML : feed.innerHTML;
+};
+const closeTelegramViewer = ({ resetAfter = false } = {}) => {
+  if (!telegramViewer?.classList.contains('open')) {
+    if (resetAfter) resetTelegramThread();
+    return;
+  }
+  telegramViewer.classList.add('closing');
+  window.setTimeout(() => {
+    telegramViewer.classList.remove('open', 'closing');
+    if (resetAfter) resetTelegramThread();
+  }, 460);
+};
+const openTelegramViewer = () => {
+  if (!telegramViewer || !feed || !telegramViewerThread) return;
+  if (!telegramBanInProgress) clearTimeout(telegramAutoCloseTimer);
+  telegramViewer.classList.remove('closing');
+  syncTelegramViewerThread();
   telegramViewer.classList.add('open');
   const liveScreen = telegramViewerThread.querySelector('.telegram-screen');
   if (liveScreen) animateTelegramThread(liveScreen);
+  document.getElementById('telegramViewerComposerText')?.focus({ preventScroll: true });
 };
 document.getElementById('openTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 feed?.addEventListener('click', openTelegramViewer);
-document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () => telegramViewer?.classList.remove('open'));
+document.getElementById('closeTelegramViewerBtn')?.addEventListener('click', () => closeTelegramViewer());
 document.addEventListener('keydown', (ev) => {
   if (!telegramViewer?.classList.contains('open')) return;
   const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName || '');
   if (ev.key === 'Escape' || (ev.key === 'Backspace' && !typing)) {
     ev.preventDefault();
-    telegramViewer.classList.remove('open');
+    closeTelegramViewer();
   }
 });
 document.getElementById('slideOpenTelegramViewerBtn')?.addEventListener('click', openTelegramViewer);
 document.getElementById('slideTelegramResetBtn')?.addEventListener('click', resetTelegramThread);
+document.getElementById('viewerTelegramResetBtn')?.addEventListener('click', () => {
+  resetTelegramThread();
+  if (telegramViewer?.classList.contains('open')) openTelegramViewer();
+});
 function speakTelegramThread() {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
