@@ -190,21 +190,21 @@ body::after {
   pointer-events: none;
 }
 .s1-logo {
-  width: clamp(80px,16vmin,180px);
-  height: clamp(80px,16vmin,180px);
+  width: clamp(140px,26vmin,320px);
+  height: clamp(140px,26vmin,320px);
   object-fit: contain;
   animation: logo-in 1.2s cubic-bezier(0.16,1,0.3,1) both;
   filter: brightness(1.1);
 }
 .s1-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(42px,8vw,96px);
+  font-size: clamp(30px,5.2vw,64px);
   font-weight: 700;
   letter-spacing: 0.18em;
   color: var(--corp-text);
   text-align: center;
   animation: text-rise 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
-  margin-top: clamp(12px,2vmin,28px);
+  margin-top: clamp(8px,1.2vmin,16px);
   line-height: 1;
 }
 .s1-subtitle {
@@ -1595,11 +1595,11 @@ body::after {
 .slide-14 .media-wall {
   position: absolute; inset: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "cam1 cam2 cam5"
-    "cam3 cam4 cam6";
+    "cam1 cam2"
+    "cam3 cam4";
   gap: 0;
   padding: 0;
 }
@@ -1615,8 +1615,7 @@ body::after {
 .cctv-cell:nth-child(2) { grid-area: cam2; }
 .cctv-cell:nth-child(3) { grid-area: cam3; }
 .cctv-cell:nth-child(4) { grid-area: cam4; }
-.cctv-cell:nth-child(5) { grid-area: cam5; }
-.cctv-cell:nth-child(6) { grid-area: cam6; }
+.cctv-cell:nth-child(5), .cctv-cell:nth-child(6) { display: none; }
 .cctv-header {
   position: absolute; top: 0; left: 0; right: 0; z-index: 10;
   display: flex; justify-content: space-between; align-items: center;
@@ -1668,6 +1667,7 @@ body::after {
 .cctv-cell.cctv-on { opacity: 1; transform: scale(1); }
 /* Center signal cell */
 .cctv-center-module {
+  display: none;
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
@@ -1744,7 +1744,8 @@ body::after {
       "cam5 cam6";
     gap: 0; padding: 0;
   }
-  .cctv-center-module { width: clamp(106px, 30vw, 138px); min-height: 48px; }
+  .cctv-center-module {
+  display: none; width: clamp(106px, 30vw, 138px); min-height: 48px; }
   .cctv-overlay { padding: 5px 6px; }
   .cctv-text { font-size: clamp(8px, 2.2vw, 11px); }
   .cctv-source, .cctv-cam, .cctv-rec { font-size: 6px; letter-spacing: 1px; }
@@ -3114,7 +3115,7 @@ const baseTeleLines = [
 const teleVideos = {
   0: { src: 'assets/broadcast/SCENE%202-%20JAMES%20HARRIS%20-%20NBS%20NEWS%20-%20V2.mp4', title: 'James Harris NBS News update clip' },
   2: { src: 'assets/broadcast/ANNA%20THOMPSON%20-%204TH%20ESTATE%20-%20V3%203.mp4', title: 'Anna Thompson 4th Estate update clip' },
-  4: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First community response clip' }
+  4: { map: true, title: 'Deptford Creek location map' }
 };
 const baseTeleMeta = [
   { user: '@Lionheart_Admin', react1: '🔥 402', react2: '😡 118' },
@@ -3138,7 +3139,7 @@ function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   if (!feed) return;
   const renderTeleMedia = (media, i) => {
     if (!media) return '';
-    if (i === 4) return renderMockMapCard();
+    if (i === 4 || media.map) return renderMockMapCard();
     if (media.src) return `<div class="tele-photo"><video controls autoplay muted playsinline loop preload="auto" title="${media.title}" aria-label="${media.title}"><source src="${media.src}" type="video/mp4"></video></div>`;
     return '';
   };
@@ -3874,7 +3875,8 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
   const logo = await preloadImage('assets/branding/REPATRIATED_NATIONAL_FIRST_NEWS_D_TRANSPARENT.png');
   const duration = 12000;
   const start = performance.now();
-  const labels = cells.map((cell, index) => ({
+  const activeCells = cells.slice(0, 4);
+  const labels = activeCells.map((cell, index) => ({
     cam: cell.querySelector('.cctv-cam')?.textContent || `CAM ${String(index + 1).padStart(2,'0')}`,
     text: cell.querySelector('.cctv-text')?.textContent || 'LIVE FEED',
     source: cell.querySelector('.cctv-source')?.textContent || 'BROADCAST'
@@ -3886,15 +3888,15 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
     const bg = ctx.createRadialGradient(960, 180, 100, 960, 540, 1100);
     bg.addColorStop(0, '#2b2f3a'); bg.addColorStop(.45, '#131720'); bg.addColorStop(1, '#0b0f15');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const gap = 6, cols = 3, rows = 2;
+    const gap = 8, cols = 2, rows = 2;
     const cellW = (canvas.width - gap * (cols + 1)) / cols;
     const cellH = (canvas.height - gap * (rows + 1)) / rows;
-    for (let i = 0; i < 6; i += 1) {
+    for (let i = 0; i < activeCells.length; i += 1) {
       const col = i % cols, row = Math.floor(i / cols);
       const x = gap + col * (cellW + gap), y = gap + row * (cellH + gap);
       ctx.fillStyle = '#070b11'; ctx.fillRect(x, y, cellW, cellH);
       ctx.strokeStyle = 'rgba(255,45,85,.18)'; ctx.strokeRect(x, y, cellW, cellH);
-      const cell = cells[i];
+      const cell = activeCells[i];
       const video = cell?.querySelector('.cctv-video');
       if (video && video.readyState >= 2) {
         drawImageContained(ctx, video, x, y, cellW, cellH);
@@ -3915,7 +3917,7 @@ async function exportSlide15MediaWallVideo(preferredType = 'video/mp4') {
     if (logo) ctx.drawImage(logo, 860, 430, 200, 110);
     ctx.fillStyle = '#9fe2ff'; ctx.textAlign = 'center'; ctx.font = '800 34px Share Tech Mono, Arial'; ctx.fillText('PRISM SIGNAL', 960, 578);
     ctx.fillStyle = '#ff5d78'; ctx.font = '800 28px Share Tech Mono, Arial'; ctx.fillText('SENTIMENT ALIGNMENT', 960, 622);
-    ctx.fillStyle = 'rgba(255,45,85,.58)'; ctx.font = '700 18px Share Tech Mono, Arial'; ctx.fillText('AMPLIFYING CONSENSUS • SIX-FEED SLIDE 15 EXPORT', 960, 652); ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,45,85,.58)'; ctx.font = '700 18px Share Tech Mono, Arial'; ctx.fillText('AMPLIFYING CONSENSUS • FOUR-FEED SLIDE 15 EXPORT', 960, 652); ctx.textAlign = 'left';
     if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
   };
   requestAnimationFrame(draw);
@@ -3951,13 +3953,10 @@ function drawSlideBackupFrame(ctx, slide, index, progress) {
   ctx.fillStyle = 'rgba(255,255,255,.72)'; ctx.font = '700 28px Share Tech Mono, Arial'; ctx.fillText('PROVIDENTIA SHOW BACKUP • BEFORE CREW TOOLS', 150, 930);
 }
 async function exportSlidesThrough18Video(preferredType = 'video/mp4') {
-  if (!('MediaRecorder' in window)) { alert('This browser cannot record canvas video. Use Chrome, Edge, or Firefox.'); return; }
+  if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getDisplayMedia) { alert('Screen recording is unavailable in this browser. Use Chrome, Edge, or Firefox.'); return; }
   const status = document.getElementById('slide15ExportStatus');
-  if (status) status.textContent = 'Recording all show slides through page 18 before Crew Tools…';
-  const canvas = document.createElement('canvas'); canvas.width = 1920; canvas.height = 1080;
-  const ctx = canvas.getContext('2d');
-  const fps = 30;
-  const stream = canvas.captureStream(fps);
+  if (status) status.textContent = 'Choose THIS browser tab when prompted so the export captures the real slide visuals and UI chrome.';
+  const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false });
   const mp4Ok = preferredType === 'video/mp4' && MediaRecorder.isTypeSupported('video/mp4');
   const webmType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
   const mimeType = mp4Ok ? 'video/mp4' : webmType;
@@ -3965,22 +3964,22 @@ async function exportSlidesThrough18Video(preferredType = 'video/mp4') {
   const chunks = [];
   recorder.ondataavailable = (event) => { if (event.data?.size) chunks.push(event.data); };
   const exportSlides = Array.from(document.querySelectorAll('.slide')).filter(slide => Number(slide.dataset.slide || 0) <= 18);
-  const perSlide = 1400;
-  const duration = Math.max(perSlide, exportSlides.length * perSlide);
-  const start = performance.now();
+  const originalSlideIndex = currentSlide;
+  const perSlide = 2200;
+  if (status) status.textContent = `Recording slides 1–18 using live UI capture (${mimeType.includes('mp4') ? 'MP4' : 'WebM'})…`;
   recorder.start();
-  const draw = (now) => {
-    const elapsed = now - start;
-    const slideIndex = Math.min(exportSlides.length - 1, Math.floor(elapsed / perSlide));
-    const localProgress = ((elapsed % perSlide) / perSlide);
-    drawSlideBackupFrame(ctx, exportSlides[slideIndex], slideIndex, localProgress);
-    if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
-  };
-  requestAnimationFrame(draw);
+  for (let i = 0; i < exportSlides.length; i += 1) {
+    goToSlide(i, false);
+    if (i === 13) animateMediaWall();
+    await new Promise(resolve => setTimeout(resolve, perSlide));
+  }
+  recorder.stop();
   await new Promise(resolve => recorder.onstop = resolve);
+  stream.getTracks().forEach(track => track.stop());
+  goToSlide(originalSlideIndex, false);
   const blob = new Blob(chunks, { type: mimeType });
-  downloadBlob(blob, `providentia-slides-01-18-backup.${mimeType.includes('mp4') ? 'mp4' : 'webm'}`);
-  if (status) status.textContent = `Saved show backup through page 18 as ${mimeType.includes('mp4') ? 'MP4' : 'WebM'}. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
+  downloadBlob(blob, `providentia-slides-01-18-live-ui.${mimeType.includes('mp4') ? 'mp4' : 'webm'}`);
+  if (status) status.textContent = `Saved live UI export for slides 1–18 as ${mimeType.includes('mp4') ? 'MP4' : 'WebM'}. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
 }
 document.getElementById('exportSlidesTo18Mp4Btn')?.addEventListener('click', () => exportSlidesThrough18Video('video/mp4'));
 
