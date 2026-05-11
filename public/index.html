@@ -1331,13 +1331,15 @@ body::after {
 .deptford-map iframe { width:100%; height:100%; min-height:320px; border:0; }
 
 .telegram-screen { cursor: pointer; }
-.telegram-viewer { position: fixed; inset: 0; z-index: 1200; background: rgba(5,8,14,.92); display:none; align-items:center; justify-content:center; padding: 14px; }
+.telegram-viewer { position: fixed; inset: 0; z-index: 1200; background: #0a111b; display:none; align-items:stretch; justify-content:stretch; padding: 0; }
 .telegram-viewer.open { display:flex; }
-.telegram-viewer-shell { width:min(980px,96vw); height:min(92vh,980px); border:1px solid rgba(255,255,255,.24); border-radius:16px; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto 1fr; overflow:hidden; }
-.telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px; background:rgba(8,14,24,.75); }
+.telegram-viewer-shell { width:100vw; height:100dvh; min-height:100vh; border:0; border-radius:0; background:linear-gradient(180deg,#1b2a3a,#111a27); display:grid; grid-template-rows:auto minmax(0,1fr) auto; overflow:hidden; }
+.telegram-viewer-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; background:rgba(8,14,24,.92); border-bottom:1px solid rgba(255,255,255,.14); }
 .telegram-viewer-actions { display:flex; gap:8px; flex-wrap:wrap; }
-.telegram-viewer-thread { overflow:auto; padding:12px; }
-.telegram-viewer-thread .telegram-screen { max-height:none; overflow:visible; animation:none; padding-bottom:42px; }
+.telegram-viewer-thread { overflow:auto; padding:0; min-height:0; background:linear-gradient(150deg, #95c8a7 0%, #77b2dc 52%, #d8e6f3 100%); }
+.telegram-viewer-thread .telegram-frame { min-height:100%; border:0; border-radius:0; padding:0; background:transparent; backdrop-filter:none; }
+.telegram-viewer-thread .telegram-shell { min-height:100%; border:0; border-radius:0; box-shadow:none; display:grid; grid-template-rows:auto minmax(0,1fr); }
+.telegram-viewer-thread .telegram-screen { max-height:none; min-height:100%; overflow:auto; animation:none; padding:14px 12px calc(92px + env(safe-area-inset-bottom)); align-content:start; }
 .telegram-ops-module { width: min(clamp(260px,34vw,440px), 92vw); background: linear-gradient(160deg, rgba(18,22,36,.62), rgba(7,12,20,.82)); opacity:0; transform:translate3d(-12px,-8px,0) scale(.97); pointer-events:none; transition:opacity .28s ease, transform .28s ease; }
 .telegram-ops-module.open { opacity:1; transform:translate3d(0,0,0) scale(1); pointer-events:auto; }
 .telegram-thread-toggle { position:absolute; top:clamp(76px,10.5vmin,106px); right:clamp(10px,2vw,20px); z-index:52; min-width:44px; min-height:36px; padding:7px 10px; border-radius:999px; border:1px solid rgba(0,212,255,.55); background:rgba(5,12,22,.74); color:#dff7ff; font:700 9px 'Share Tech Mono', monospace; letter-spacing:1.4px; text-transform:uppercase; box-shadow:0 10px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18); backdrop-filter:blur(12px); cursor:pointer; touch-action:manipulation; }
@@ -1392,7 +1394,9 @@ body::after {
 @media (max-width: 900px) { .cast-grid { grid-template-columns: 1fr; } .cast-preview img { max-height: 210px; } }
 @media (max-width: 640px) { .crew-shell { padding: 12px; gap: 10px; padding-bottom: calc(120px + env(safe-area-inset-bottom)); } .crew-topbar { align-items: flex-start; } .crew-title { font-size: 13px; letter-spacing: 2px; } .crew-tabs { width: 100%; } .crew-tab { flex: 1 1 calc(50% - 8px); text-align: center; padding: 10px 8px; } .cast-list { max-height: 28vh; } .glass-block { padding: 10px; border-radius: 12px; background: linear-gradient(145deg, rgba(26,38,55,.72), rgba(12,20,32,.6)); } .form-row input, .form-row textarea { font-size: 14px; } .cast-stage-controls .action-btn { width: 100%; text-align: center; } .slide-cast-module .crew-topbar { position: sticky; top: 0; z-index:5; } #backToToolsBtn { width: 100%; position: sticky; top: 46px; z-index:5; } .slide-cast-module .cast-grid { display:flex; flex-direction:column; min-height: auto; gap:14px; } .slide-cast-module .cast-preview { order:2; min-height:auto; } .slide-cast-module .cast-preview img { max-height:28vh; object-position:center top; } .crew-glass-deck { padding-bottom: calc(116px + env(safe-area-inset-bottom)); } .crew-glass-panels { padding-bottom: calc(96px + env(safe-area-inset-bottom)); } .tg-thread-block { max-height: 30vh; } .quick-crew-toggle { bottom: max(22px, calc(env(safe-area-inset-bottom) + 18px)); } }
 .telegram-viewer-shell { grid-template-rows:auto 1fr auto; }
-.telegram-viewer-composer { padding:10px; border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.88); }
+.telegram-viewer-composer { padding:10px 12px max(10px, env(safe-area-inset-bottom)); border-top:1px solid rgba(255,255,255,.2); background:rgba(8,14,24,.96); }
+.telegram-viewer-composer .tg-composer-textarea { min-height:52px; max-height:22dvh; resize:vertical; }
+@media (max-width: 640px) { .telegram-viewer-bar strong { font-size:9px !important; } .telegram-viewer-actions .action-btn, .telegram-viewer-composer .glass-action-btn { padding:7px 8px; font-size:8px; } .telegram-viewer-composer .tg-composer-actions { gap:6px; } .telegram-viewer-thread .tele-msg p { font-size:14px; } }
 
 /* ══════════════════════════════════
    RESPONSIVE OVERRIDES
@@ -2301,8 +2305,10 @@ body::after {
           <div class="tg-composer-block">
             <div class="tg-composer-actions">
               <button class="glass-action-btn" id="downloadTelegramHtmlBtn" type="button">⬇ THREAD (.HTML)</button>
+              <button class="glass-action-btn" id="exportTelegramWebmBtn" type="button">🎞️ THREAD VIDEO (.WEBM)</button>
+              <button class="glass-action-btn" id="exportTelegramMp4Btn" type="button">🎬 THREAD VIDEO (.MP4*)</button>
             </div>
-            <div class="tg-record-status">HTML export keeps the Telegram thread available without occupying show screen space.</div>
+            <div class="tg-record-status">Exports use the current live thread, including newly uploaded or typed messages. MP4 downloads when the browser supports it; otherwise WebM is saved.</div>
           </div>
         </div>
         <div class="crew-glass-panel" id="gpanel-cast">
@@ -2312,6 +2318,8 @@ body::after {
         <div class="crew-glass-panel" id="gpanel-files">
           <div class="files-toolbar">
             <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
+            <button class="action-btn" id="exportQlabCueSheetBtn" type="button">EXPORT QLAB CUE SHEET (.JSON)</button>
+            <button class="action-btn" id="exportQlabLauncherBtn" type="button">EXPORT QLAB WEB LAUNCHER (.HTML)</button>
           </div>
         </div>
         <div class="crew-glass-panel" id="gpanel-map">
@@ -2345,6 +2353,7 @@ body::after {
         <button class="glass-action-btn" id="viewerSpeakTelegramBtn" type="button">🔊 READ THREAD</button>
         <button class="glass-action-btn" id="viewerTelegramUploadBtn" type="button">📎 UPLOAD</button>
         <button class="glass-action-btn" id="viewerSendTelegramMsgBtn" type="button">⬆ SEND</button>
+        <button class="glass-action-btn" id="viewerExportTelegramWebmBtn" type="button">🎞️ EXPORT WEBM</button>
       </div>
     </div>
   </div>
@@ -2450,6 +2459,25 @@ document.addEventListener('touchend', e => {
   const diff = touchStart - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
 });
+
+
+// URL / QLab show-control hooks: QLab Web Cues can load ?slide=7 or postMessage({ type:'PROVIDENTIA_GO_TO', slide: 7 }).
+function goToSlideNumber(slideNumber) {
+  const n = Number(slideNumber);
+  if (!Number.isFinite(n)) return;
+  const target = Math.max(1, Math.min(totalSlides, Math.round(n))) - 1;
+  if (target === current) return;
+  goTo(target);
+}
+const initialSlideParam = new URLSearchParams(window.location.search).get('slide');
+if (initialSlideParam) setTimeout(() => goToSlideNumber(initialSlideParam), 60);
+window.addEventListener('message', (event) => {
+  const data = event.data || {};
+  if (data === 'PROVIDENTIA_NEXT') return nextSlide();
+  if (data === 'PROVIDENTIA_PREV') return prevSlide();
+  if (data.type === 'PROVIDENTIA_GO_TO') goToSlideNumber(data.slide);
+});
+window.ProvidentiaShowControl = { goToSlide: goToSlideNumber, next: nextSlide, prev: prevSlide };
 
 // ══════════════════════════════════
 // PRISM DASHBOARD
@@ -2933,6 +2961,41 @@ document.getElementById('exportCastBtn')?.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(castProfiles, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'providentia-cast-export.json'; a.click();
 });
+function getShowBaseUrl() {
+  return window.location.href.split('#')[0].split('?')[0];
+}
+function buildQlabCueSheet() {
+  const baseUrl = getShowBaseUrl();
+  return {
+    title: 'PROVIDENTIA Projection — QLab Web Cue Sheet',
+    format: 'qlab-web-cue-sheet-v1',
+    animationPreservation: 'Use QLab Web cues / browser cues pointed at the slide URLs. This keeps CSS, JavaScript, video embeds, Telegram animation, and live operator updates intact instead of flattening slides to still images.',
+    baseUrl,
+    controls: {
+      nextPostMessage: 'PROVIDENTIA_NEXT',
+      previousPostMessage: 'PROVIDENTIA_PREV',
+      goToPostMessage: { type: 'PROVIDENTIA_GO_TO', slide: 1 },
+      javascriptApi: 'window.ProvidentiaShowControl.goToSlide(slideNumber)'
+    },
+    cues: slides.map((slide, index) => ({
+      cueNumber: String(index + 1).padStart(2, '0'),
+      name: `${String(index + 1).padStart(2, '0')} — ${slide.dataset.phase || 'PROVIDENTIA'}`,
+      type: 'Web Cue',
+      target: `${baseUrl}?slide=${index + 1}`,
+      notes: 'Load this URL in a QLab Web cue for the slide, or keep one browser cue open and trigger the postMessage/JavaScript API above.'
+    }))
+  };
+}
+function buildQlabLauncherHtml() {
+  const cueSheet = buildQlabCueSheet();
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PROVIDENTIA QLab Launcher</title><style>body{margin:0;background:#05080e;color:#dff3ff;font-family:Arial,sans-serif}.bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;background:rgba(5,8,14,.9);border-bottom:1px solid rgba(255,255,255,.16)}button{border:1px solid rgba(0,212,255,.45);background:rgba(0,212,255,.12);color:#dff6ff;padding:8px 10px;font-weight:700;cursor:pointer}iframe{position:fixed;inset:52px 0 0;width:100%;height:calc(100vh - 52px);border:0;background:#000}.note{font-size:12px;color:#9fd6ff}</style></head><body><div class="bar"><strong>PROVIDENTIA · QLab Launcher</strong><button onclick="prev()">PREV</button><button onclick="next()">NEXT</button><span class="note">Use QLab to open this launcher, then trigger buttons via hotkeys/OSC/MIDI or load individual ?slide= URLs from the JSON cue sheet.</span></div><iframe id="show" src="${cueSheet.baseUrl}?slide=1" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe><script>const total=${cueSheet.cues.length};let current=1;const frame=document.getElementById('show');function go(n){current=Math.max(1,Math.min(total,Number(n)||1));frame.contentWindow.postMessage({type:'PROVIDENTIA_GO_TO',slide:current},'*');frame.src='${cueSheet.baseUrl}?slide='+current;}function next(){go(current+1)}function prev(){go(current-1)}window.addEventListener('message',e=>{if(e.data==='PROVIDENTIA_NEXT')next();if(e.data==='PROVIDENTIA_PREV')prev();if(e.data&&e.data.type==='PROVIDENTIA_GO_TO')go(e.data.slide);});<\/script></body></html>`;
+}
+document.getElementById('exportQlabCueSheetBtn')?.addEventListener('click', () => {
+  downloadBlob(new Blob([JSON.stringify(buildQlabCueSheet(), null, 2)], { type: 'application/json' }), 'providentia-qlab-cue-sheet.json');
+});
+document.getElementById('exportQlabLauncherBtn')?.addEventListener('click', () => {
+  downloadBlob(new Blob([buildQlabLauncherHtml()], { type: 'text/html' }), 'providentia-qlab-launcher.html');
+});
 const baseTeleLines = [
   'How long will we let them sit in our streets while we pay the bill?',
   "The borders are wide open. They aren't coming to integrate.",
@@ -3131,7 +3194,8 @@ const telegramViewer = document.getElementById('telegramViewer');
 const telegramViewerThread = document.getElementById('telegramViewerThread');
 const openTelegramViewer = () => {
   if (!telegramViewer || !feed || !telegramViewerThread) return;
-  telegramViewerThread.innerHTML = feed.innerHTML;
+  const frame = feed.querySelector('.telegram-frame');
+  telegramViewerThread.innerHTML = frame ? frame.outerHTML : feed.innerHTML;
   telegramViewer.classList.add('open');
   const liveScreen = telegramViewerThread.querySelector('.telegram-screen');
   if (liveScreen) animateTelegramThread(liveScreen);
@@ -3189,89 +3253,119 @@ function animateTelegramThread(screen) {
 }
 
 
+function stripHtml(value) {
+  const div = document.createElement('div');
+  div.innerHTML = String(value || '');
+  return (div.textContent || div.innerText || '').trim();
+}
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+}
+function buildTelegramStandaloneHtml() {
+  const messages = teleLines.map((line, i) => ({
+    text: String(line || ''),
+    plain: stripHtml(line),
+    user: teleMeta[i]?.user || '@Channel',
+    react1: teleMeta[i]?.react1 || '👍',
+    react2: teleMeta[i]?.react2 || '',
+    hasMap: i === 4,
+    isMarkup: /<img|<video|<iframe/i.test(String(line || ''))
+  }));
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lionheart Crusaders - Animated Thread</title><style>
+:root{--tg-blue:#0088cc;--headline-red:#cc0000}*{box-sizing:border-box}body{background:#000;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;height:100vh;overflow:hidden}.phone-mockup{width:100vw;height:100dvh;min-height:100vh;background:linear-gradient(135deg,#a8e063 0%,#56ab2f 100%);overflow:hidden;position:relative}.tg-header{background:rgba(255,255,255,.95);padding:max(18px,env(safe-area-inset-top)) 15px 15px;display:flex;align-items:center;justify-content:space-between;position:absolute;top:0;width:100%;z-index:10}.avatar{width:35px;height:35px;background:#8B0000;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:10px}@keyframes autoScroll{0%{transform:translateY(0)}100%{transform:translateY(min(-12vh,calc(100vh - 100%)))}}@keyframes messagePop{0%{opacity:0;transform:translateY(20px) scale(.98)}100%{opacity:1;transform:translateY(0) scale(1)}}.chat-container{padding:88px 12px 92px;display:flex;flex-direction:column;gap:12px;animation:autoScroll 18s linear infinite alternate;animation-delay:2s}.message{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.15);animation:messagePop .4s ease-out forwards;opacity:0}.message:nth-child(1){animation-delay:.5s}.message:nth-child(2){animation-delay:.8s}.message:nth-child(3){animation-delay:1.1s}.message:nth-child(4){animation-delay:1.4s}.message:nth-child(5){animation-delay:1.8s}.message:nth-child(n+6){animation-delay:2.1s}.message-content{padding:12px}.headline{font-weight:800;font-size:13px;color:var(--headline-red);text-transform:uppercase;margin-bottom:4px;display:block;letter-spacing:.5px}.sub-text{font-size:16px;color:#222;line-height:1.3;text-transform:uppercase}.uploaded-media img,.uploaded-media video{width:100%;max-height:42vh;object-fit:cover;display:block}.reactions{display:flex;gap:5px;margin-top:10px}.pill{background:#f1f1f1;padding:4px 8px;border-radius:12px;font-size:12px;font-weight:600}.footer{position:absolute;bottom:0;width:100%;background:#fff;padding:18px;text-align:center;color:var(--tg-blue);font-weight:bold;z-index:10}.map-card{height:180px;position:relative;background:linear-gradient(180deg,#8bbfd8,#7ca9c0)}.map-card:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.2) 1px,transparent 1px);background-size:24px 24px}.map-circle{position:absolute;top:40%;left:55%;width:60px;height:60px;border:4px solid red;border-radius:50%;box-shadow:0 0 10px rgba(255,0,0,.5);animation:pulse 1.5s infinite}@keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}100%{transform:scale(1);opacity:1}}</style></head><body><div class="phone-mockup"><div class="tg-header"><div style="color:var(--tg-blue)">‹ 2041</div><div style="text-align:center"><div style="font-weight:bold">Lionheart Crusaders</div><div style="font-size:11px;color:#888">114,822 subscribers</div></div><div class="avatar">LC</div></div><div class="chat-container">${messages.map((m) => `<div class="message">${m.hasMap ? '<div class="map-card"><div class="map-circle"></div></div>' : ''}${m.isMarkup ? `<div class="uploaded-media">${m.text}</div>` : ''}<div class="message-content"><span class="headline">${escapeHtml(m.user)}</span><span class="sub-text">${escapeHtml(m.plain || (m.isMarkup ? 'Uploaded media' : ''))}</span><div class="reactions"><div class="pill">${escapeHtml(m.react1)}</div>${m.react2 ? `<div class="pill">${escapeHtml(m.react2)}</div>` : ''}</div></div></div>`).join('')}</div><div class="footer">MUTE</div></div></body></html>`;
+}
+function downloadBlob(blob, filename) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1200);
+}
 document.getElementById('downloadTelegramHtmlBtn')?.addEventListener('click', () => {
-  const threadHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lionheart Crusaders - Animated Thread</title>
-    <style>
-        :root {
-            --tg-blue: #0088cc;
-            --tg-bg: #56ab2f;
-            --headline-red: #cc0000;
-        }
-        body {
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        .phone-mockup {
-            width: 375px;
-            height: 812px;
-            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            border: 8px solid #222;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
-        .tg-header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 45px 15px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: absolute;
-            top: 0; width: 100%; z-index: 10;
-            box-sizing: border-box;
-        }
-        .avatar { width: 35px; height: 35px; background: #8B0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px; border: 1px solid rgba(0,0,0,0.1);}
-        @keyframes autoScroll { 0% { transform: translateY(0); } 100% { transform: translateY(-400px); } }
-        @keyframes messagePop { 0% { opacity: 0; transform: translateY(20px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        .chat-container { padding: 80px 12px 100px; display: flex; flex-direction: column; gap: 12px; animation: autoScroll 15s linear infinite alternate; animation-delay: 2s; }
-        .message { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.15); animation: messagePop 0.4s ease-out forwards; opacity: 0; }
-        .msg-1 { animation-delay: 0.5s; } .msg-2 { animation-delay: 0.8s; } .msg-3 { animation-delay: 1.1s; } .msg-4 { animation-delay: 1.4s; } .msg-5 { animation-delay: 1.8s; }
-        .message-image { width: 100%; height: 180px; background-color: #333; background-size: cover; background-position: center; }
-        .message-content { padding: 12px; }
-        .headline { font-weight: 800; font-size: 19px; color: var(--headline-red); text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .sub-text { font-size: 15px; color: #222; line-height: 1.3; }
-        .reactions { display: flex; gap: 5px; margin-top: 10px; }
-        .pill { background: #f1f1f1; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .footer { position: absolute; bottom: 0; width: 100%; background: white; padding: 20px; text-align: center; color: var(--tg-blue); font-weight: bold; z-index: 10; }
-        .map-circle { position: absolute; top: 40%; left: 55%; width: 60px; height: 60px; border: 4px solid red; border-radius: 50%; box-shadow: 0 0 10px rgba(255,0,0,0.5); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-    </style>
-</head>
-<body>
-<div class="phone-mockup">
-    <div class="tg-header">
-        <div style="color: var(--tg-blue)">‹ 2041</div>
-        <div style="text-align: center">
-            <div style="font-weight: bold">Lionheart Crusaders</div>
-            <div style="font-size: 11px; color: #888">114,822 subscribers</div>
-        </div>
-        <div class="avatar">LC</div>
-    </div>
-    <div class="chat-container">
-        <div class="message msg-1"><div class="message-content"><span class="headline">ILLEGAL OCCUPATION</span><span class="sub-text">How long will we let them sit in our streets while we pay the bill?</span><div class="reactions"><div class="pill">🔥 402</div><div class="pill">😡 118</div></div></div></div>
-        <div class="message msg-2"><div class="message-content"><span class="headline">FOREIGN INVADERS</span><span class="sub-text">The borders are wide open. They aren't coming to integrate.</span><div class="reactions"><div class="pill">👊 245</div><div class="pill">🚫 92</div></div></div></div>
-        <div class="message msg-3"><div class="message-image"><iframe title="News discourse clip" src="https://www.youtube-nocookie.com/embed/fD4Rk6hOjFk?autoplay=0&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width:100%;height:100%;border:0;"></iframe></div><div class="message-content"><span class="headline">MIGRANT RAPE GANGS</span><span class="sub-text">Mainstream media is silent while our daughters are targeted.</span><div class="reactions"><div class="pill">🤮 531</div><div class="pill">🤬 204</div></div></div></div>
-        <div class="message msg-4"><div class="message-content"><span class="headline">TAKE BACK CONTROL</span><span class="sub-text">If the government won't protect the people, we will protect ourselves.</span><div class="reactions"><div class="pill">🇬🇧 1.2K</div><div class="pill">⚔️ 340</div></div></div></div>
-        <div class="message msg-5"><div class="message-image" style="position: relative; background:linear-gradient(180deg,#8bbfd8,#7ca9c0);"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);background-size:24px 24px;"></div><div style="position:absolute;left:10%;top:56%;width:78%;height:22%;background:rgba(35,120,170,.38);border-radius:55% 40% 50% 45%/60% 55% 45% 50%;transform:rotate(-8deg);"></div><div style="position:absolute;left:22%;top:24%;width:56%;height:7px;background:rgba(245,239,220,.78);transform:rotate(18deg);"></div><div style="position:absolute;left:54%;top:46%;width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#ff2d55;"></div><div class="map-circle"></div></div><div class="message-content"><span class="headline">DEPTFORD CREEK</span><span class="sub-text">HARBOUR HOUSE. THIS IS THE LOCATION. BE THERE 11PM TONIGHT. NO EXCUSES!</span><div class="reactions"><div class="pill">📍 890</div></div></div></div>
-    </div>
-    <div class="footer">MUTE</div>
-</div>
-</body>
-</html>`;
-  const blob = new Blob([threadHtml], { type: 'text/html' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lionheart-telegram-thread.html'; a.click();
+  downloadBlob(new Blob([buildTelegramStandaloneHtml()], { type: 'text/html' }), 'lionheart-telegram-thread.html');
 });
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 7) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  let line = '', lines = [];
+  words.forEach(word => {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = word; }
+    else line = test;
+  });
+  if (line) lines.push(line);
+  lines.slice(0, maxLines).forEach((l, i) => ctx.fillText(i === maxLines - 1 && lines.length > maxLines ? `${l}…` : l, x, y + i * lineHeight));
+  return Math.min(lines.length, maxLines) * lineHeight;
+}
+async function exportTelegramVideo(preferredType = 'video/webm') {
+  if (!('MediaRecorder' in window)) { alert('This browser cannot record canvas video. Use Chrome, Edge, or Firefox and export WebM.'); return; }
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1920;
+  const ctx = canvas.getContext('2d');
+  const fps = 30;
+  const stream = canvas.captureStream(fps);
+  const mp4Ok = preferredType === 'video/mp4' && MediaRecorder.isTypeSupported('video/mp4');
+  const webmType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  const mimeType = mp4Ok ? 'video/mp4' : webmType;
+  const chunks = [];
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 6500000 });
+  recorder.ondataavailable = (event) => { if (event.data?.size) chunks.push(event.data); };
+  const status = document.querySelector('.tg-record-status');
+  if (status) status.textContent = `Recording ${mimeType.includes('mp4') ? 'MP4' : 'WebM'} from current live Telegram thread…`;
+  recorder.start();
+  const duration = Math.max(8500, teleLines.length * 1150 + 2600);
+  const start = performance.now();
+  const draw = (now) => {
+    const elapsed = now - start;
+    const visibleCount = Math.min(teleLines.length, Math.max(1, Math.floor((elapsed - 500) / 950) + 1));
+    const scroll = Math.max(0, visibleCount * 245 - 1250) * Math.min(1, elapsed / duration);
+    const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    bg.addColorStop(0, '#a8e063'); bg.addColorStop(1, '#56ab2f');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255,255,255,.96)'; ctx.fillRect(0, 0, canvas.width, 150);
+    ctx.fillStyle = '#0088cc'; ctx.font = '700 42px Arial'; ctx.fillText('‹ 2041', 34, 94);
+    ctx.fillStyle = '#111'; ctx.textAlign = 'center'; ctx.font = '800 38px Arial'; ctx.fillText('Lionheart Crusaders', 540, 72);
+    ctx.fillStyle = '#777'; ctx.font = '24px Arial'; ctx.fillText('114,822 subscribers', 540, 112); ctx.textAlign = 'left';
+    ctx.fillStyle = '#8B0000'; ctx.beginPath(); ctx.arc(1005, 75, 38, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = '700 22px Arial'; ctx.fillText('LC', 990, 83);
+    let y = 185 - scroll;
+    for (let i = 0; i < visibleCount; i += 1) {
+      const plain = stripHtml(teleLines[i]) || (/video/i.test(String(teleLines[i])) ? 'Uploaded video' : /img/i.test(String(teleLines[i])) ? 'Uploaded image' : 'Media card');
+      const hasMedia = i === 4 || /<img|<video|<iframe/i.test(String(teleLines[i]));
+      const h = hasMedia ? 330 : 190;
+      if (y > -h && y < canvas.height - 85) {
+        ctx.fillStyle = '#fff'; ctx.strokeStyle = 'rgba(0,0,0,.12)';
+        roundRect(ctx, 34, y, 1012, h, 30); ctx.fill(); ctx.stroke();
+        if (hasMedia) {
+          const mediaY = y + 20;
+          const mg = ctx.createLinearGradient(54, mediaY, 1026, mediaY + 150);
+          mg.addColorStop(0, '#8bbfd8'); mg.addColorStop(1, '#0b1724');
+          ctx.fillStyle = mg; roundRect(ctx, 54, mediaY, 972, 150, 18); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,.88)'; ctx.font = '800 32px Arial'; ctx.fillText(i === 4 ? 'DEPTFORD CREEK · HARBOUR HOUSE' : 'UPLOADED / EMBEDDED MEDIA', 82, mediaY + 88);
+        }
+        const textY = y + (hasMedia ? 205 : 34);
+        ctx.fillStyle = '#cc0000'; ctx.font = '800 28px Arial'; ctx.fillText(`${teleMeta[i]?.user || '@Channel'} · Update ${i+1}`, 62, textY);
+        ctx.fillStyle = '#222'; ctx.font = '700 34px Arial';
+        wrapCanvasText(ctx, plain.toUpperCase(), 62, textY + 48, 930, 40, hasMedia ? 2 : 3);
+        ctx.fillStyle = '#f1f1f1'; roundRect(ctx, 62, y + h - 55, 155, 34, 17); ctx.fill();
+        ctx.fillStyle = '#333'; ctx.font = '700 22px Arial'; ctx.fillText(teleMeta[i]?.react1 || '👍', 82, y + h - 31);
+      }
+      y += h + 24;
+    }
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, canvas.height - 76, canvas.width, 76);
+    ctx.fillStyle = '#0088cc'; ctx.textAlign = 'center'; ctx.font = '800 30px Arial'; ctx.fillText('MUTE', 540, canvas.height - 28); ctx.textAlign = 'left';
+    if (elapsed < duration) requestAnimationFrame(draw); else recorder.stop();
+  };
+  requestAnimationFrame(draw);
+  await new Promise(resolve => recorder.onstop = resolve);
+  const blob = new Blob(chunks, { type: mimeType });
+  downloadBlob(blob, `lionheart-telegram-thread.${mimeType.includes('mp4') ? 'mp4' : 'webm'}`);
+  if (status) status.textContent = `Saved ${mimeType.includes('mp4') ? 'MP4' : 'WebM'} from the current thread. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
+}
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+document.getElementById('exportTelegramWebmBtn')?.addEventListener('click', () => exportTelegramVideo('video/webm'));
+document.getElementById('exportTelegramMp4Btn')?.addEventListener('click', () => exportTelegramVideo('video/mp4'));
+document.getElementById('viewerExportTelegramWebmBtn')?.addEventListener('click', () => exportTelegramVideo('video/webm'));
 
 function downloadCanvas(canvas, filename, type = "image/png", quality = 0.92) {
   canvas.toBlob(blob => {
