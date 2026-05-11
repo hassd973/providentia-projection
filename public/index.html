@@ -791,8 +791,16 @@ body::after {
   flex-wrap: wrap; justify-content: center;
 }
 .s13-logo {
-  width: clamp(48px,8vmin,80px); height: clamp(48px,8vmin,80px);
+  width: clamp(76px,12vmin,132px); height: clamp(76px,12vmin,132px);
   object-fit: contain; opacity: 0;
+  padding: clamp(8px,1.4vmin,14px);
+  border-radius: 22px;
+  background: rgba(248,250,255,.92);
+  box-shadow: 0 18px 48px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.s13-logo:first-child {
+  background: #fff;
+  filter: drop-shadow(0 0 18px rgba(255,255,255,.18));
 }
 .slide-13.active .s13-logo:nth-child(1) { animation: col-fade 0.6s ease 0.3s both; }
 .slide-13.active .s13-logo:nth-child(3) { animation: col-fade 0.6s ease 0.6s both; }
@@ -2319,7 +2327,7 @@ body::after {
           <div class="files-toolbar">
             <button class="action-btn" id="exportCastBtn">EXPORT CAST BIOS (.JSON)</button>
             <button class="action-btn" id="exportQlabCueSheetBtn" type="button">EXPORT QLAB CUE SHEET (.JSON)</button>
-            <button class="action-btn" id="exportQlabLauncherBtn" type="button">EXPORT QLAB WEB LAUNCHER (.HTML)</button>
+            <button class="action-btn" id="exportQlabLauncherBtn" type="button">EXPORT QLAB 5 LAUNCHER (.HTML)</button>
           </div>
         </div>
         <div class="crew-glass-panel" id="gpanel-map">
@@ -2461,7 +2469,7 @@ document.addEventListener('touchend', e => {
 });
 
 
-// URL / QLab show-control hooks: QLab Web Cues can load ?slide=7 or postMessage({ type:'PROVIDENTIA_GO_TO', slide: 7 }).
+// URL / QLab show-control hooks: QLab 5.5.10 Script cues can open ?slide=7 URLs in a browser; launcher/iframe controllers can also postMessage({ type:'PROVIDENTIA_GO_TO', slide: 7 }).
 function goToSlideNumber(slideNumber) {
   const n = Number(slideNumber);
   if (!Number.isFinite(n)) return;
@@ -2966,29 +2974,52 @@ function getShowBaseUrl() {
 }
 function buildQlabCueSheet() {
   const baseUrl = getShowBaseUrl();
+  const qlabVersionTarget = 'QLab 5.5.10';
+  const makeOpenUrlAppleScript = (url) => `tell application "Google Chrome"\n\tif not (exists window 1) then make new window\n\tset URL of active tab of front window to "${url}"\n\tactivate\nend tell`;
+  const makeLauncherAppleScript = (command) => `tell application "Google Chrome"\n\texecute active tab of front window javascript "window.postMessage('${command}', '*')"\nend tell`;
   return {
-    title: 'PROVIDENTIA Projection — QLab Web Cue Sheet',
-    format: 'qlab-web-cue-sheet-v1',
-    animationPreservation: 'Use QLab Web cues / browser cues pointed at the slide URLs. This keeps CSS, JavaScript, video embeds, Telegram animation, and live operator updates intact instead of flattening slides to still images.',
+    title: 'PROVIDENTIA Projection — QLab 5 Browser/Script Cue Sheet',
+    format: 'qlab-5-browser-script-cue-sheet-v2',
+    compatibility: {
+      target: qlabVersionTarget,
+      verifiedAgainstDocs: 'Figure 53 QLab 5 Manual updated March 11, 2026 for QLab 5.5.10',
+      cueStrategy: 'QLab 5 does not list a native Web cue type; use Script cues to drive a browser, or open the exported launcher HTML and trigger its next/previous controls from QLab hotkeys, MIDI, OSC, or Script cues.',
+      mediaPolicy: 'Run from a local web server or trusted file URL so browser autoplay works; all embedded videos are muted/playsinline/looping where they are intended to autoplay.'
+    },
     baseUrl,
+    launcher: {
+      fileName: 'providentia-qlab-launcher.html',
+      firstSlideUrl: `${baseUrl}?slide=1`,
+      nextScriptCue: makeLauncherAppleScript('PROVIDENTIA_NEXT'),
+      previousScriptCue: makeLauncherAppleScript('PROVIDENTIA_PREV')
+    },
     controls: {
       nextPostMessage: 'PROVIDENTIA_NEXT',
       previousPostMessage: 'PROVIDENTIA_PREV',
       goToPostMessage: { type: 'PROVIDENTIA_GO_TO', slide: 1 },
-      javascriptApi: 'window.ProvidentiaShowControl.goToSlide(slideNumber)'
+      javascriptApi: 'window.ProvidentiaShowControl.goToSlide(slideNumber)',
+      queryString: '?slide={slideNumber}'
     },
-    cues: slides.map((slide, index) => ({
-      cueNumber: String(index + 1).padStart(2, '0'),
-      name: `${String(index + 1).padStart(2, '0')} — ${slide.dataset.phase || 'PROVIDENTIA'}`,
-      type: 'Web Cue',
-      target: `${baseUrl}?slide=${index + 1}`,
-      notes: 'Load this URL in a QLab Web cue for the slide, or keep one browser cue open and trigger the postMessage/JavaScript API above.'
-    }))
+    cues: slides.map((slide, index) => {
+      const slideNumber = index + 1;
+      const slideLabel = String(slideNumber).padStart(2, '0');
+      const target = `${baseUrl}?slide=${slideNumber}`;
+      return {
+        cueNumber: slideLabel,
+        name: `${slideLabel} — ${slide.dataset.phase || 'PROVIDENTIA'}`,
+        qlabCueType: 'Script Cue',
+        browserFallback: 'Open URL / Browser cue equivalent',
+        target,
+        appleScript: makeOpenUrlAppleScript(target),
+        notes: 'Paste appleScript into a QLab 5 Script cue, or load target in your browser/launcher cue. This preserves CSS, JavaScript, Telegram animation, and live operator updates.'
+      };
+    })
   };
 }
 function buildQlabLauncherHtml() {
   const cueSheet = buildQlabCueSheet();
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PROVIDENTIA QLab Launcher</title><style>body{margin:0;background:#05080e;color:#dff3ff;font-family:Arial,sans-serif}.bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;background:rgba(5,8,14,.9);border-bottom:1px solid rgba(255,255,255,.16)}button{border:1px solid rgba(0,212,255,.45);background:rgba(0,212,255,.12);color:#dff6ff;padding:8px 10px;font-weight:700;cursor:pointer}iframe{position:fixed;inset:52px 0 0;width:100%;height:calc(100vh - 52px);border:0;background:#000}.note{font-size:12px;color:#9fd6ff}</style></head><body><div class="bar"><strong>PROVIDENTIA · QLab Launcher</strong><button onclick="prev()">PREV</button><button onclick="next()">NEXT</button><span class="note">Use QLab to open this launcher, then trigger buttons via hotkeys/OSC/MIDI or load individual ?slide= URLs from the JSON cue sheet.</span></div><iframe id="show" src="${cueSheet.baseUrl}?slide=1" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe><script>const total=${cueSheet.cues.length};let current=1;const frame=document.getElementById('show');function go(n){current=Math.max(1,Math.min(total,Number(n)||1));frame.contentWindow.postMessage({type:'PROVIDENTIA_GO_TO',slide:current},'*');frame.src='${cueSheet.baseUrl}?slide='+current;}function next(){go(current+1)}function prev(){go(current-1)}window.addEventListener('message',e=>{if(e.data==='PROVIDENTIA_NEXT')next();if(e.data==='PROVIDENTIA_PREV')prev();if(e.data&&e.data.type==='PROVIDENTIA_GO_TO')go(e.data.slide);});<\/script></body></html>`;
+  const firstSlide = `${cueSheet.baseUrl}?slide=1`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PROVIDENTIA QLab 5 Launcher</title><style>body{margin:0;background:#05080e;color:#dff3ff;font-family:Arial,sans-serif}.bar{position:fixed;top:0;left:0;right:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;background:rgba(5,8,14,.92);border-bottom:1px solid rgba(255,255,255,.16)}button{border:1px solid rgba(0,212,255,.45);background:rgba(0,212,255,.12);color:#dff6ff;padding:8px 10px;font-weight:700;cursor:pointer}iframe{position:fixed;inset:58px 0 0;width:100%;height:calc(100vh - 58px);border:0;background:#000}.note{font-size:12px;color:#9fd6ff}</style></head><body><div class="bar"><strong>PROVIDENTIA · QLab 5.5.10 Launcher</strong><button onclick="prev()">PREV</button><button onclick="next()">NEXT</button><span class="note">Open this launcher from QLab, then trigger buttons with hotkeys/OSC/MIDI/Script cues, or use the JSON Script cue snippets for direct ?slide= URLs.</span></div><iframe id="show" src="${firstSlide}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture"></iframe><script>const total=${cueSheet.cues.length};let current=1;const base='${cueSheet.baseUrl}';const frame=document.getElementById('show');function go(n){current=Math.max(1,Math.min(total,Number(n)||1));const url=base+'?slide='+current;if(frame.src!==url)frame.src=url;frame.onload=()=>frame.contentWindow&&frame.contentWindow.postMessage({type:'PROVIDENTIA_GO_TO',slide:current},'*');}function next(){go(current+1)}function prev(){go(current-1)}window.addEventListener('message',e=>{if(e.data==='PROVIDENTIA_NEXT')next();if(e.data==='PROVIDENTIA_PREV')prev();if(e.data&&e.data.type==='PROVIDENTIA_GO_TO')go(e.data.slide);});window.ProvidentiaQlabLauncher={go,next,prev};<\/script></body></html>`;
 }
 document.getElementById('exportQlabCueSheetBtn')?.addEventListener('click', () => {
   downloadBlob(new Blob([JSON.stringify(buildQlabCueSheet(), null, 2)], { type: 'application/json' }), 'providentia-qlab-cue-sheet.json');
@@ -3004,8 +3035,8 @@ const baseTeleLines = [
   'HARBOUR HOUSE. THIS IS THE LOCATION. BE THERE 11PM TONIGHT. NO EXCUSES!'
 ];
 const teleVideos = {
-  0: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First news clip' },
-  2: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First extended update clip' },
+  0: { src: 'assets/broadcast/SCENE%202-%20JAMES%20HARRIS%20-%20NBS%20NEWS%20-%20V2.mp4', title: 'James Harris NBS News update clip' },
+  2: { src: 'assets/broadcast/ANNA%20THOMPSON%20-%204TH%20ESTATE%20-%20V3%203.mp4', title: 'Anna Thompson 4th Estate update clip' },
   4: { src: 'assets/broadcast/SCENE%201%20-%20MARK%20VANCE%20-%20NATION%20FIRST%20-%20V1.mp4', title: 'Nation First community response clip' }
 };
 const baseTeleMeta = [
@@ -3031,7 +3062,7 @@ function renderTelegramFeed(logoSrc = currentTelegramLogo) {
   const renderTeleMedia = (media, i) => {
     if (!media) return '';
     if (i === 4) return renderMockMapCard();
-    if (media.src) return `<div class="tele-photo"><video controls playsinline preload="metadata" title="${media.title}"><source src="${media.src}" type="video/mp4"></video></div>`;
+    if (media.src) return `<div class="tele-photo"><video controls autoplay muted playsinline loop preload="auto" title="${media.title}" aria-label="${media.title}"><source src="${media.src}" type="video/mp4"></video></div>`;
     return '';
   };
   const threadMarkup = `<div class="telegram-frame"><div class="telegram-shell"><div class="telegram-header"><div class="telegram-title"><img class="telegram-logo" src="${logoSrc}" alt="Lionheart Crusaders logo"><span>LIONHEART CRUSADERS • TELEGRAM</span></div><small style="color:#284a61;font:700 9px 'Share Tech Mono';">LIVE</small></div><div class="telegram-screen">${teleLines.map((t, i) => `<div class="tele-msg">${renderTeleMedia(teleVideos[i], i)}<h4>${teleMeta[i].user} · Update ${i+1}</h4><p>${t}</p><div class="reactions"><div class="pill">${teleMeta[i].react1}</div>${teleMeta[i].react2 ? `<div class="pill">${teleMeta[i].react2}</div>` : ''}</div></div>`).join('')}</div></div></div>`;
