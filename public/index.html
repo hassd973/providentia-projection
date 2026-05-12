@@ -4208,12 +4208,6 @@ function easeInOutCubic(t) {
   const clamped = Math.max(0, Math.min(1, t));
   return clamped < .5 ? 4 * clamped * clamped * clamped : 1 - Math.pow(-2 * clamped + 2, 3) / 2;
 }
-function fadeWindow(progress, fadeIn = .22, fadeOut = .22) {
-  const clamped = Math.max(0, Math.min(1, progress));
-  const inAlpha = easeInOutCubic(Math.min(clamped / fadeIn, 1));
-  const outAlpha = 1 - easeInOutCubic(Math.max((clamped - (1 - fadeOut)) / fadeOut, 0));
-  return Math.max(0, Math.min(1, inAlpha * outAlpha));
-}
 function getCastSpreadLayout(width, height, count) {
   const portrait = height > width;
   const margin = portrait ? 48 : 70;
@@ -4299,11 +4293,10 @@ function drawCastIntroFeatureFrame(ctx, entry, index, localProgress, frame, opts
   const width = opts.width || ctx.canvas?.width || 1920;
   const height = opts.height || ctx.canvas?.height || 1080;
   const portrait = height > width;
-  const inEase = easeInOutCubic(Math.min(localProgress / .24, 1));
-  const outEase = easeInOutCubic(Math.max((localProgress - .74) / .26, 0));
-  const featureAlpha = fadeWindow(localProgress, .24, .26);
-  const scale = .965 + inEase * .035 - outEase * .018;
-  const alpha = featureAlpha;
+  const inEase = easeInOutCubic(Math.min(localProgress / .30, 1));
+  const outEase = easeInOutCubic(Math.max((localProgress - .82) / .18, 0));
+  const scale = .965 + inEase * .035 - outEase * .015;
+  const alpha = Math.min(1, inEase * 1.15) * (1 - outEase * .35);
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.translate(width / 2, height / 2 + (portrait ? 28 : 32));
@@ -4358,7 +4351,7 @@ async function exportCastSocialIntroMp4() {
     const ctx = canvas.getContext('2d', { alpha: false });
     const fps = 30;
     const introSeconds = 1.35;
-    const perCharacterSeconds = 3.35;
+    const perCharacterSeconds = 3.1;
     const outroSeconds = 2.4;
     const durationSeconds = introSeconds + cards.length * perCharacterSeconds + outroSeconds;
     const totalFrames = Math.ceil(durationSeconds * fps);
@@ -4372,22 +4365,17 @@ async function exportCastSocialIntroMp4() {
     const draw = () => {
       const elapsed = frame / fps;
       let revealCount = 0;
-      let featureIndex = -1;
-      let spreadFocusIndex = -1;
+      let focusIndex = -1;
       if (elapsed > introSeconds) {
         const sequenceTime = elapsed - introSeconds;
-        featureIndex = Math.min(cards.length - 1, Math.floor(sequenceTime / perCharacterSeconds));
-        const characterProgress = (sequenceTime % perCharacterSeconds) / perCharacterSeconds;
-        const focusFade = fadeWindow(characterProgress, .18, .22);
-        revealCount = Math.min(cards.length, Math.max(0, featureIndex) + Math.min(1, characterProgress / .26));
-        spreadFocusIndex = focusFade >= .08 ? featureIndex : -1;
+        focusIndex = Math.min(cards.length - 1, Math.floor(sequenceTime / perCharacterSeconds));
+        revealCount = Math.min(cards.length, Math.max(0, focusIndex) + Math.min(1, (sequenceTime % perCharacterSeconds) / .82));
         if (sequenceTime >= cards.length * perCharacterSeconds) {
           revealCount = cards.length;
-          featureIndex = -1;
-          spreadFocusIndex = -1;
+          focusIndex = -1;
         }
       }
-      drawCastSpreadFrame(ctx, cards, frame, { ...dims, revealCount, dimmed: spreadFocusIndex >= 0, focusIndex: spreadFocusIndex, title: 'FULL CAST SPREAD / TAP CHARACTER TO PLAY' });
+      drawCastSpreadFrame(ctx, cards, frame, { ...dims, revealCount, dimmed: focusIndex >= 0, focusIndex, title: 'FULL CAST SPREAD / TAP CHARACTER TO PLAY' });
       if (elapsed < introSeconds) {
         const introEase = easeInOutCubic(elapsed / introSeconds);
         ctx.save();
@@ -4399,9 +4387,9 @@ async function exportCastSocialIntroMp4() {
         fitCanvasTextBlock(ctx, 'MEET THE CAST', { x: introX, y: dims.height * .42, maxWidth: introW, maxHeight: 110, maxLines: 1, maxSize: dims.orientation === 'portrait' ? 86 : 78, minSize: 48, weight: 800, fillStyle: '#f6fbff', textAlign: 'center' });
         fitCanvasTextBlock(ctx, 'CHARACTER INTRO', { x: introX, y: dims.height * .50, maxWidth: introW, maxHeight: 74, maxLines: 1, maxSize: dims.orientation === 'portrait' ? 48 : 56, minSize: 30, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: '#7be4ff', textAlign: 'center' });
         ctx.restore();
-      } else if (featureIndex >= 0 && featureIndex < cards.length) {
-        const localProgress = ((elapsed - introSeconds) - featureIndex * perCharacterSeconds) / perCharacterSeconds;
-        drawCastIntroFeatureFrame(ctx, cards[featureIndex], featureIndex, localProgress, frame, dims);
+      } else if (focusIndex >= 0 && focusIndex < cards.length) {
+        const localProgress = ((elapsed - introSeconds) - focusIndex * perCharacterSeconds) / perCharacterSeconds;
+        drawCastIntroFeatureFrame(ctx, cards[focusIndex], focusIndex, localProgress, frame, dims);
       }
       frame += 1;
       if (frame <= totalFrames) requestAnimationFrame(draw);
