@@ -1420,8 +1420,247 @@ body::after {
 @keyframes cast-card-rise { from { opacity:0; transform:translateY(18px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes cast-solo-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @media (max-width:820px){ .slide-cast-module{padding:8px}.slide-cast-module .crew-shell{padding:10px;padding-bottom:calc(120px + env(safe-area-inset-bottom));}.cast-stage-controls .action-btn{flex:1 1 145px}.cast-spread{grid-template-columns:repeat(2,minmax(0,1fr));}.cast-solo{grid-template-columns:1fr}.cast-solo-media img.cast-portrait{max-height:42vh}.cast-card{min-height:178px}.cast-module-heading{font-size:clamp(30px,12vw,48px)}}
-@media (max-width:430px){.cast-spread{grid-template-columns:1fr 1fr;gap:8px}.cast-card{min-height:160px;border-radius:14px}.cast-card-overlay{padding:8px}.cast-card-logo{max-width:42px;max-height:28px}}
 
+/* Slide 20 — Apple-glass social cast sequence refinements */
+.slide-cast-module {
+  background:
+    radial-gradient(circle at 22% 16%, rgba(0,212,255,.28), transparent 28%),
+    radial-gradient(circle at 78% 8%, rgba(255,45,85,.18), transparent 26%),
+    radial-gradient(circle at 54% 92%, rgba(240,180,41,.10), transparent 28%),
+    linear-gradient(135deg, #05080f 0%, #07111d 46%, #020408 100%);
+}
+.slide-cast-module .crew-shell {
+  width:min(100%, 1640px);
+  margin:0 auto;
+  overflow:hidden;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+  padding:clamp(10px,1.5vw,18px);
+  padding-bottom:clamp(14px,2vw,24px);
+}
+.slide-cast-module .crew-topbar {
+  border-radius:18px;
+  margin-bottom:clamp(8px,1.2vw,14px);
+}
+.slide-cast-module .cast-stage {
+  min-height:0;
+  overflow:hidden;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.10), rgba(0,212,255,.035) 42%, rgba(255,45,85,.045)),
+    rgba(3,8,15,.66);
+  border:1px solid rgba(126,220,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 24px 72px rgba(0,0,0,.38);
+}
+.slide-cast-module .glass-block {
+  position:relative;
+  overflow:hidden;
+  min-height:0;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(5,10,18,.76), rgba(11,24,38,.58));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  padding:clamp(10px,1.6vw,18px);
+}
+.slide-cast-module .glass-block::before {
+  content:'';
+  position:absolute;
+  inset:-35% -10% auto;
+  height:62%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+  transform:rotate(-8deg);
+  pointer-events:none;
+}
+.cast-stage-controls {
+  position:relative;
+  z-index:8;
+  justify-content:center;
+  padding:7px;
+  border:1px solid rgba(0,212,255,.16);
+  border-radius:999px;
+  background:rgba(4,10,18,.54);
+  backdrop-filter:blur(18px) saturate(1.35);
+}
+.cast-stage-controls .action-btn {
+  border-radius:999px;
+  border-color:rgba(126,220,255,.32);
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,212,255,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+}
+.cast-module-intro {
+  position:relative;
+  z-index:2;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:clamp(10px,2vw,28px);
+  align-items:end;
+  margin:clamp(8px,1.2vw,14px) auto clamp(10px,1.4vw,16px);
+  width:min(100%, 1380px);
+  border-color:rgba(0,212,255,.32);
+  background:
+    linear-gradient(110deg, rgba(0,212,255,.16), rgba(7,14,24,.68) 48%, rgba(255,45,85,.10)),
+    rgba(255,255,255,.045);
+}
+.cast-module-intro::after {
+  content:'SOCIAL 16:9 SAFE • CENTER CROP READY';
+  align-self:start;
+  color:rgba(255,157,177,.82);
+  font:700 clamp(8px,1vw,11px) 'Share Tech Mono',monospace;
+  letter-spacing:1.6px;
+  text-align:right;
+}
+.cast-module-heading {
+  text-shadow:0 0 32px rgba(0,212,255,.30), 0 0 70px rgba(255,45,85,.12);
+}
+.cast-spread {
+  position:relative;
+  z-index:2;
+  width:min(100%, 1380px);
+  margin:0 auto;
+  grid-template-columns:repeat(auto-fit,minmax(clamp(122px,13vw,188px),1fr));
+  grid-auto-rows:minmax(clamp(184px,23vw,302px), 1fr);
+  max-height:min(58vh, 620px);
+  overflow:visible;
+  perspective:1200px;
+}
+.cast-card {
+  min-height:0;
+  height:100%;
+  aspect-ratio:3/4;
+  isolation:isolate;
+  transform-origin:center;
+  will-change:transform, opacity;
+  animation:cast-card-rise .72s cubic-bezier(.16,1,.3,1) both, cast-glass-breathe 4.8s ease-in-out infinite;
+  animation-delay:calc(var(--cast-order,0) * 75ms), calc(var(--cast-order,0) * -180ms);
+}
+.cast-card.pending {
+  opacity:0;
+  transform:translateY(18px) rotateX(5deg) scale(.94);
+  pointer-events:none;
+}
+.cast-card.revealed { opacity:1; }
+.cast-card.focus-pulse {
+  border-color:rgba(255,255,255,.78);
+  box-shadow:0 0 0 1px rgba(0,212,255,.6), 0 28px 72px rgba(0,212,255,.22), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.cast-card img:not(.cast-card-logo) {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  transform:scale(1.012);
+  transition:transform .55s cubic-bezier(.16,1,.3,1), filter .55s ease;
+}
+.cast-card:hover img:not(.cast-card-logo), .cast-card.active img:not(.cast-card-logo) { transform:scale(1.045); }
+.cast-card::before { box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+.cast-card::after { z-index:1; background:linear-gradient(180deg,rgba(1,5,10,.02) 12%,rgba(2,8,16,.16) 46%,rgba(2,8,16,.98)); }
+.cast-card-overlay {
+  background:linear-gradient(180deg, transparent, rgba(2,8,16,.88) 14%, rgba(2,8,16,.98));
+  text-shadow:0 2px 12px rgba(0,0,0,.76);
+}
+.cast-feature-stage {
+  position:absolute;
+  inset:clamp(8px,1.2vw,14px);
+  z-index:6;
+  display:grid;
+  place-items:center;
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(0,212,255,.22), transparent 32%),
+    linear-gradient(135deg, rgba(3,7,13,.96), rgba(8,18,30,.94) 54%, rgba(2,4,8,.98));
+  border:1px solid rgba(126,220,255,.28);
+  box-shadow:0 30px 90px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.18);
+  backdrop-filter:blur(24px) saturate(1.3);
+  overflow:hidden;
+}
+.cast-feature-stage[hidden] { display:none; }
+.cast-feature-stage::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(rgba(0,212,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+  background-size:54px 54px;
+  mask-image:radial-gradient(circle at center, #000 0 62%, transparent 86%);
+}
+.cast-feature-card {
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:minmax(260px,.82fr) minmax(280px,1fr);
+  gap:clamp(16px,3vw,42px);
+  width:min(94%, 1180px);
+  min-height:min(68vh, 720px);
+  padding:clamp(14px,2.2vw,28px);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(135deg, rgba(255,255,255,.12), rgba(0,212,255,.055) 48%, rgba(255,45,85,.07));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20), 0 26px 70px rgba(0,0,0,.42);
+  animation:cast-feature-in .5s cubic-bezier(.16,1,.3,1) both;
+}
+.cast-feature-photo {
+  position:relative;
+  overflow:hidden;
+  border-radius:24px;
+  min-height:360px;
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 22px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.cast-feature-photo img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  transform:scale(1.02);
+  animation:cast-feature-photo 2.4s ease both;
+}
+.cast-feature-info { display:grid; align-content:center; gap:clamp(10px,1.4vw,18px); }
+.cast-feature-kicker { color:#7be4ff; font:700 clamp(9px,1.1vw,13px) 'Share Tech Mono',monospace; letter-spacing:2.4px; text-transform:uppercase; }
+.cast-feature-name { color:#f6fbff; font:800 clamp(44px,7.5vw,112px)/.82 'Barlow Condensed',sans-serif; letter-spacing:.045em; text-transform:uppercase; text-shadow:0 0 34px rgba(0,212,255,.26); }
+.cast-feature-actor { color:#ffb6c4; font:700 clamp(14px,2.1vw,30px) 'Share Tech Mono',monospace; letter-spacing:1.6px; text-transform:uppercase; }
+.cast-feature-bio { color:#d8edf8; font:500 clamp(18px,2.4vw,30px)/1.25 'Cormorant Garamond',serif; max-width:720px; }
+.cast-feature-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:4px; }
+.cast-feature-stat { min-height:74px; padding:12px; border-radius:18px; border:1px solid rgba(0,212,255,.22); background:rgba(0,212,255,.07); box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+.cast-feature-stat span { display:block; color:rgba(126,220,255,.68); font:700 9px 'Share Tech Mono',monospace; letter-spacing:1.4px; text-transform:uppercase; margin-bottom:7px; }
+.cast-feature-stat strong { color:#fff; font:800 clamp(14px,2vw,28px)/.92 'Barlow Condensed',sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.cast-feature-logo { max-width:min(210px,54%); max-height:82px; object-fit:contain; filter:drop-shadow(0 12px 24px rgba(0,0,0,.55)); }
+.slide-cast-module.cast-auto-playing .cast-module-intro { opacity:.28; transform:scale(.985); transition:opacity .35s ease, transform .35s ease; }
+.slide-cast-module.cast-auto-playing .cast-spread { filter:blur(1px) brightness(.72); transition:filter .35s ease; }
+.cast-solo {
+  max-height:min(72vh,760px);
+  overflow:auto;
+}
+.cast-solo-media { min-width:0; }
+.cast-solo-media img.cast-portrait {
+  width:100%;
+  aspect-ratio:4/5;
+  height:auto;
+  max-height:min(58vh,650px);
+  object-fit:cover;
+  object-position:center top;
+}
+@keyframes cast-glass-breathe { 0%,100%{filter:saturate(1.02) brightness(1)} 50%{filter:saturate(1.12) brightness(1.06)} }
+@keyframes cast-feature-in { from{opacity:0; transform:translateY(18px) scale(.97)} to{opacity:1; transform:translateY(0) scale(1)} }
+@keyframes cast-feature-photo { from{transform:scale(1.09); filter:saturate(.78) brightness(.72)} to{transform:scale(1.02); filter:saturate(1.08) brightness(1)} }
+@media (max-width: 900px) {
+  .slide-cast-module .crew-shell { padding:8px; }
+  .cast-module-intro { grid-template-columns:1fr; }
+  .cast-module-intro::after { text-align:left; }
+  .cast-spread { grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:minmax(168px, 1fr); max-height:none; }
+  .cast-feature-card { grid-template-columns:1fr; min-height:0; max-height:calc(100dvh - var(--film-top) - var(--film-bot) - 60px); overflow:auto; }
+  .cast-feature-photo { min-height:42vh; }
+}
+@media (max-width: 520px) {
+  .cast-stage-controls { border-radius:18px; }
+  .cast-stage-controls .action-btn { flex:1 1 130px; }
+  .cast-spread { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .cast-card { aspect-ratio:3/4.35; }
+  .cast-feature-stats { grid-template-columns:1fr; }
+  .cast-feature-name { font-size:clamp(38px,14vw,62px); }
+}
 
 /* Apple glass crew deck */
 .crew-glass-deck{border:1px solid rgba(255,255,255,.24);border-radius:24px;background:rgba(13,18,30,.58);backdrop-filter:blur(18px);padding:12px 12px calc(18px + env(safe-area-inset-bottom));min-height:78vh}.crew-glass-topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.crew-glass-title{font:700 14px 'Share Tech Mono';color:#dff3ff}.crew-glass-subtitle{font:600 9px 'Share Tech Mono';color:#98b3ca;letter-spacing:1.5px}.crew-return-btn,.crew-nav-btn,.glass-action-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#e9f4ff;border-radius:12px;padding:8px 10px;font:700 10px 'Share Tech Mono';cursor:pointer}.glass-action-btn.compact{padding:6px 8px;min-width:34px;font-size:12px}.crew-glass-body{display:grid;grid-template-columns:190px 1fr;gap:10px;margin-top:10px;min-height:65vh}.crew-glass-nav{display:grid;gap:8px;align-content:start}.crew-nav-btn.active{border-color:#8cd3ff;background:rgba(89,167,255,.18)}.crew-glass-panel{display:none}.crew-glass-panel.active{display:block}.crew-glass-panels{border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px;overflow:auto}.tg-thread-block{max-height:40vh;overflow:auto}.tg-composer-textarea{width:100%;min-height:86px;background:rgba(8,14,24,.65);color:#eaf4ff;border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px}.tg-composer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.crew-hint-banner{font:700 10px 'Share Tech Mono';color:#9fe2ff;margin-bottom:8px}.quick-crew-toggle{display:flex;align-items:center;gap:6px;padding-bottom:max(0px, env(safe-area-inset-bottom));transform:translateY(-2px)}@media (max-width:860px){.crew-glass-body{grid-template-columns:1fr}.crew-glass-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.crew-glass-deck{min-height:auto;padding-bottom:calc(98px + env(safe-area-inset-bottom));}.crew-glass-panels{padding-bottom:calc(92px + env(safe-area-inset-bottom));}}
@@ -2543,6 +2782,7 @@ body::after {
       <div class="glass-block">
         <div class="cast-stage-controls">
           <button class="action-btn" id="castBackToSpreadBtn" type="button">VIEW FULL SPREAD</button>
+          <button class="action-btn" id="castReplayIntroBtn" type="button">REPLAY SOCIAL INTRO</button>
           <button class="action-btn" id="exportCastSpreadPngBtn" type="button">DOWNLOAD FULL SPREAD PNG</button>
           <button class="action-btn" id="exportCastSpreadMp4Btn" type="button">DOWNLOAD FULL SPREAD MP4</button>
           <button class="action-btn" id="exportCastMemberPngBtn" type="button">DOWNLOAD SOLO PNG</button>
@@ -2551,8 +2791,9 @@ body::after {
         <div class="cast-module-intro" id="castModuleIntro">
           <div class="cast-module-kicker">FULL CAST SPREAD / TAP A CHARACTER</div>
           <div class="cast-module-heading">MEET THE CAST</div>
-          <div class="cast-module-copy">Start on the full ensemble view, then select any character card for an animated solo profile with assigned portrait, outlet logo, and typed play text. Exports are PNG and MP4-ready for the projection deck.</div>
+          <div class="cast-module-copy">A social-safe Apple-glass dossier sequence introduces every character full-screen, returns to the ensemble, and keeps every portrait edge-to-edge in its frame for clean projection and vertical crop sharing.</div>
         </div>
+        <div class="cast-feature-stage" id="castFeatureStage" hidden></div>
         <div class="cast-spread" id="castSpread"></div>
         <div class="cast-solo" id="castSoloView" hidden></div>
       </div>
@@ -2605,6 +2846,8 @@ function goTo(index) {
   }
   // Media wall animation
   if (next.dataset.slide === '15') animateMediaWall();
+  if (next.classList.contains('slide-cast-module')) startCastIntroSequence();
+  if (!next.classList.contains('slide-cast-module')) stopCastIntroSequence();
 
   setTimeout(() => { next.classList.remove('entering'); isAnimating = false; }, 700);
 }
@@ -3071,19 +3314,73 @@ const castProfiles = [
 const castPlaceholderPhoto = 'assets/branding/REPATRIATED_PROVIDENTIA_A.png';
 let castIndex = 0;
 let castSolo = false;
+let castRevealCount = castProfiles.length;
+let castAutoTimer = 0;
+let castAutoToken = 0;
 function hasAssignedPortrait(profile) {
   return profile.photo && profile.photo !== castPlaceholderPhoto;
 }
 function escapeAttr(value) {
   return String(value || '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 }
+function castStatValue(profile, key) {
+  if (key === 'signal') return String(profile.outlet || 'PROFILE').toUpperCase();
+  if (key === 'actor') return String(profile.actor || 'TBA').toUpperCase();
+  const words = String(profile.bio || '').trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.round(words / 8))} BEATS`;
+}
+function renderCastFeature(profile, index) {
+  const feature = document.getElementById('castFeatureStage');
+  if (!feature || !profile) return;
+  feature.hidden = false;
+  feature.innerHTML = `<section class="cast-feature-card" aria-live="polite">
+    <div class="cast-feature-photo"><img src="${profile.photo || castPlaceholderPhoto}" alt="${escapeAttr(profile.character)} portrait"></div>
+    <div class="cast-feature-info">
+      <div class="cast-feature-kicker">CAST DOSSIER ${String(index + 1).padStart(2,'0')} / ${String(castProfiles.length).padStart(2,'0')}</div>
+      <div class="cast-feature-name">${profile.character}</div>
+      <div class="cast-feature-actor">${profile.actor}</div>
+      ${profile.logo ? `<img class="cast-feature-logo" src="${profile.logo}" alt="${escapeAttr(profile.outlet)} logo">` : ''}
+      <div class="cast-feature-stats">
+        <div class="cast-feature-stat"><span>Signal</span><strong>${castStatValue(profile, 'signal')}</strong></div>
+        <div class="cast-feature-stat"><span>Played by</span><strong>${castStatValue(profile, 'actor')}</strong></div>
+        <div class="cast-feature-stat"><span>Story load</span><strong>${castStatValue(profile, 'beats')}</strong></div>
+      </div>
+      <div class="cast-feature-bio">${profile.bio || ''}</div>
+    </div>
+  </section>`;
+}
+function hideCastFeature() {
+  const feature = document.getElementById('castFeatureStage');
+  if (!feature) return;
+  feature.hidden = true;
+  feature.innerHTML = '';
+}
+function stopCastIntroSequence() {
+  castAutoToken += 1;
+  clearTimeout(castAutoTimer);
+  castAutoTimer = 0;
+  document.querySelector('.slide-cast-module')?.classList.remove('cast-auto-playing');
+  hideCastFeature();
+}
 function renderCastSpread() {
   const spread = document.getElementById('castSpread');
   const solo = document.getElementById('castSoloView');
   const intro = document.getElementById('castModuleIntro');
   if (!spread || !solo) return;
-  spread.innerHTML = castProfiles.map((c, i) => `<article class="cast-card ${castIndex===i&&castSolo?'active':''}" style="--cast-order:${i}" data-cast-card="${i}" aria-label="Open ${escapeAttr(c.character)} solo profile"><img src="${c.photo || castPlaceholderPhoto}" alt="${escapeAttr(c.character)}">${c.logo ? `<img class="cast-card-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}<div class="cast-card-overlay"><div class="cast-card-title">${c.character}</div><div class="cast-card-sub">${c.actor}</div><div class="cast-card-outlet">${c.outlet || 'PROFILE'}</div></div></article>`).join('');
-  spread.querySelectorAll('[data-cast-card]').forEach(el => el.addEventListener('click', () => { castIndex = Number(el.dataset.castCard); castSolo = true; renderCastSpread(); solo.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }));
+  const revealLimit = castSolo ? castProfiles.length : castRevealCount;
+  spread.innerHTML = castProfiles.map((c, i) => {
+    const stateClass = i < revealLimit ? 'revealed' : 'pending';
+    const focusClass = i === revealLimit - 1 && !castSolo ? 'focus-pulse' : '';
+    return `<article class="cast-card ${stateClass} ${focusClass} ${castIndex===i&&castSolo?'active':''}" style="--cast-order:${i}" data-cast-card="${i}" aria-label="Open ${escapeAttr(c.character)} solo profile"><img src="${c.photo || castPlaceholderPhoto}" alt="${escapeAttr(c.character)}">${c.logo ? `<img class="cast-card-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}<div class="cast-card-overlay"><div class="cast-card-title">${c.character}</div><div class="cast-card-sub">${c.actor}</div><div class="cast-card-outlet">${c.outlet || 'PROFILE'}</div></div></article>`;
+  }).join('');
+  spread.querySelectorAll('[data-cast-card]').forEach(el => el.addEventListener('click', () => {
+    stopCastIntroSequence();
+    castRevealCount = castProfiles.length;
+    castIndex = Number(el.dataset.castCard);
+    castSolo = true;
+    renderCastSpread();
+    solo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }));
   if (!castSolo) { solo.hidden = true; if (intro) intro.hidden = false; return; }
   if (intro) intro.hidden = true;
   const c = castProfiles[castIndex];
@@ -3104,6 +3401,39 @@ function renderCastSpread() {
     window.__pendingCastPhoto = '';
     renderCastSpread();
   });
+}
+function startCastIntroSequence({ force = false } = {}) {
+  const slide = document.querySelector('.slide-cast-module');
+  if (!slide || (!force && !slide.classList.contains('active'))) return;
+  stopCastIntroSequence();
+  const token = castAutoToken;
+  castSolo = false;
+  castRevealCount = 0;
+  renderCastSpread();
+  slide.classList.add('cast-auto-playing');
+  const step = (index = 0) => {
+    if (token !== castAutoToken || !slide.classList.contains('active')) return;
+    if (index >= castProfiles.length) {
+      castRevealCount = castProfiles.length;
+      renderCastSpread();
+      castAutoTimer = window.setTimeout(() => {
+        if (token !== castAutoToken) return;
+        slide.classList.remove('cast-auto-playing');
+        hideCastFeature();
+      }, 900);
+      return;
+    }
+    castIndex = index;
+    renderCastFeature(castProfiles[index], index);
+    castAutoTimer = window.setTimeout(() => {
+      if (token !== castAutoToken || !slide.classList.contains('active')) return;
+      hideCastFeature();
+      castRevealCount = index + 1;
+      renderCastSpread();
+      castAutoTimer = window.setTimeout(() => step(index + 1), 650);
+    }, 2150);
+  };
+  castAutoTimer = window.setTimeout(() => step(0), 180);
 }
 document.getElementById('exportCastBtn')?.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(castProfiles, null, 2)], { type: 'application/json' });
@@ -3813,7 +4143,8 @@ document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('clic
   document.getElementById(`panel-${btn.dataset.crewTab}`)?.classList.add('active');
 }));
 renderCastSpread();
-document.getElementById('castBackToSpreadBtn')?.addEventListener('click', () => { castSolo = false; renderCastSpread(); });
+document.getElementById('castBackToSpreadBtn')?.addEventListener('click', () => { stopCastIntroSequence(); castSolo = false; castRevealCount = castProfiles.length; renderCastSpread(); });
+document.getElementById('castReplayIntroBtn')?.addEventListener('click', () => startCastIntroSequence({ force: true }));
 document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', async () => {
   const c = castProfiles[castIndex];
   if (!('MediaRecorder' in window)) return;
