@@ -1343,10 +1343,13 @@ body::after {
 .cast-card-overlay { position:absolute; inset:auto 0 0; background:linear-gradient(180deg, transparent, rgba(2,8,16,.95)); padding:10px; }
 .cast-card-title { font:700 12px 'Share Tech Mono'; color:#f5fbff; }
 .cast-card-sub { font:600 11px 'Barlow Condensed'; color:#8fd7ff; }
-.cast-solo { display:grid; grid-template-columns:minmax(220px, 360px) 1fr; gap:14px; align-items:start; margin-top:10px; }
+.cast-solo { display:grid; grid-template-columns:minmax(220px, 360px) 1fr; gap:14px; align-items:start; margin-top:10px; background:linear-gradient(140deg, rgba(0,212,255,.08), rgba(156,84,255,.12)); border:1px solid rgba(157,220,255,.25); border-radius:14px; padding:12px; }
 .cast-solo-media img { width:100%; max-height:56vh; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,.2); }
 .cast-logo { max-width:180px; max-height:70px; object-fit:contain; margin-top:8px; }
 .cast-quote { white-space:pre-wrap; font:500 18px/1.35 'Cormorant Garamond', serif; color:#ecf6ff; min-height:120px; }
+.cast-upload-bar { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; align-items:center; }
+.cast-upload-note { font:600 10px 'Share Tech Mono'; color:#9fd6ff; letter-spacing:1px; }
+.cast-placeholder { display:grid; place-items:center; min-height:260px; border:1px dashed rgba(255,255,255,.4); background:linear-gradient(140deg, rgba(30,51,79,.92), rgba(16,20,38,.86)); color:#b8d8ef; font:700 12px 'Share Tech Mono'; text-align:center; padding:16px; border-radius:12px; }
 @media (max-width: 820px){ .cast-solo { grid-template-columns:1fr; } .cast-card { min-height:180px; } }
 
 
@@ -2470,6 +2473,8 @@ body::after {
       <div class="glass-block">
         <div class="cast-stage-controls">
           <button class="action-btn" id="castBackToSpreadBtn" type="button">VIEW FULL SPREAD</button>
+          <button class="action-btn" id="exportCastSpreadPngBtn" type="button">DOWNLOAD FULL SPREAD PNG</button>
+          <button class="action-btn" id="exportCastSpreadMp4Btn" type="button">DOWNLOAD FULL SPREAD MP4</button>
           <button class="action-btn" id="exportCastMemberPngBtn" type="button">DOWNLOAD PNG</button>
           <button class="action-btn" id="exportCastMemberMp4Btn" type="button">DOWNLOAD MP4 CARD</button>
         </div>
@@ -2993,20 +2998,37 @@ const castProfiles = [
   { character: 'MICHEAL WORKMAN', actor: 'Various NISA agent', outlet: 'Meridian Group', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_MERIDIAN_GROUP_A_transparent.png', bio: 'NISA network / Meridian linked operator.' },
   { character: 'ATRIX PROVEDENTIA', actor: 'Central Operating System', outlet: 'Providentia', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_PROVIDENTIA_B_transparent.png', bio: 'Core system intelligence persona.' }
 ];
+const castPlaceholderPhoto = 'assets/branding/REPATRIATED_PROVIDENTIA_A.png';
 let castIndex = 0;
 let castSolo = false;
+function hasAssignedPortrait(profile) {
+  return profile.photo && profile.photo !== castPlaceholderPhoto;
+}
 function renderCastSpread() {
   const spread = document.getElementById('castSpread');
   const solo = document.getElementById('castSoloView');
   if (!spread || !solo) return;
-  spread.innerHTML = castProfiles.map((c, i) => `<article class="cast-card ${castIndex===i&&castSolo?'active':''}" data-cast-card="${i}"><img src="${c.photo}" alt="${c.character}"><div class="cast-card-overlay"><div class="cast-card-title">${c.character}</div><div class="cast-card-sub">${c.actor}</div></div></article>`).join('');
+  spread.innerHTML = castProfiles.map((c, i) => `<article class="cast-card ${castIndex===i&&castSolo?'active':''}" data-cast-card="${i}"><img src="${c.photo || castPlaceholderPhoto}" alt="${c.character}"><div class="cast-card-overlay"><div class="cast-card-title">${c.character}</div><div class="cast-card-sub">${c.actor}</div></div></article>`).join('');
   spread.querySelectorAll('[data-cast-card]').forEach(el => el.addEventListener('click', () => { castIndex = Number(el.dataset.castCard); castSolo = true; renderCastSpread(); }));
   if (!castSolo) { solo.hidden = true; return; }
   const c = castProfiles[castIndex];
   solo.hidden = false;
-  solo.innerHTML = `<div class="cast-solo-media"><img src="${c.photo}" alt="${c.character}">${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${c.outlet} logo">` : ''}</div><div><div class="prism-review-title">${c.character} <span style="color:var(--sys-cyan);">/ ${c.actor}</span></div><div class="prism-meta">${c.outlet}</div><div class="cast-quote" id="castTypedText"></div></div>`;
+  solo.innerHTML = `<div class="cast-solo-media">${hasAssignedPortrait(c) ? `<img src="${c.photo}" alt="${c.character}">` : `<div class="cast-placeholder">TAP TO ADD AND SAVE CAST PHOTO</div>`}${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${c.outlet} logo">` : ''}<div class="cast-upload-bar"><input id="castPhotoUploadInput" type="file" accept="image/*"><button class="action-btn" id="castPhotoSaveBtn" type="button">SAVE CAST PHOTO</button><span class="cast-upload-note">${hasAssignedPortrait(c) ? 'Photo assigned' : 'No main photo assigned'}</span></div></div><div><div class="prism-review-title">${c.character} <span style="color:var(--sys-cyan);">/ ${c.actor}</span></div><div class="prism-meta">${c.outlet}</div><div class="cast-quote" id="castTypedText"></div></div>`;
   const el = document.getElementById('castTypedText'); const text = c.bio || '';
   let k = 0; el.textContent = ''; const timer = setInterval(() => { el.textContent = text.slice(0, k++); if (k > text.length) clearInterval(timer); }, 24);
+  document.getElementById('castPhotoUploadInput')?.addEventListener('change', (ev) => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => { window.__pendingCastPhoto = e.target?.result; };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('castPhotoSaveBtn')?.addEventListener('click', () => {
+    if (!window.__pendingCastPhoto) return;
+    castProfiles[castIndex].photo = window.__pendingCastPhoto;
+    window.__pendingCastPhoto = '';
+    renderCastSpread();
+  });
 }
 document.getElementById('exportCastBtn')?.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(castProfiles, null, 2)], { type: 'application/json' });
@@ -3611,6 +3633,37 @@ function exportCastCardAsImage(profile, filename, type = "image/png") {
   downloadCanvas(canvas, filename, type, 0.9);
 }
 document.getElementById('exportCastMemberPngBtn')?.addEventListener('click',()=>{const c=castProfiles[castIndex]; exportCastCardAsImage(c,`${c.character.replace(/\s+/g,'-').toLowerCase()}.png`);});
+document.getElementById('exportCastSpreadPngBtn')?.addEventListener('click',()=>{ castSolo = false; renderCastSpread(); document.getElementById('exportCastSheetPngBtn')?.click(); });
+document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', async () => {
+  if (!('MediaRecorder' in window)) return;
+  const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
+  if (!mp4Mime) { alert('This browser cannot encode MP4 directly.'); return; }
+  const canvas = document.createElement('canvas');
+  canvas.width = 1920; canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+  const cards = await Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto) })));
+  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime });
+  const chunks = [];
+  rec.ondataavailable = e => e.data?.size && chunks.push(e.data);
+  rec.onstop = () => downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-full-cast-spread.mp4');
+  rec.start();
+  let f = 0;
+  const draw = () => {
+    const g = ctx.createLinearGradient(0,0,1920,1080); g.addColorStop(0,'#0c1f36'); g.addColorStop(1,'#2a1645'); ctx.fillStyle = g; ctx.fillRect(0,0,1920,1080);
+    ctx.fillStyle = '#dcf4ff'; ctx.font = '700 60px Barlow Condensed'; ctx.fillText('MEET THE CAST', 70, 82);
+    cards.forEach((entry, i) => {
+      const col = i % 4, row = Math.floor(i / 4);
+      const x = 70 + col * 450, y = 130 + row * 300 + Math.sin((f/12)+(i*0.7))*8;
+      ctx.fillStyle = 'rgba(8,16,30,.8)'; roundRect(ctx,x,y,400,260,24); ctx.fill();
+      if (entry.img) ctx.drawImage(entry.img, x+14, y+14, 150, 190);
+      ctx.fillStyle = '#f2f8ff'; ctx.font='700 32px Barlow Condensed'; ctx.fillText(entry.p.character, x+176, y+72, 212);
+      ctx.fillStyle = '#91dbff'; ctx.font='600 24px Barlow Condensed'; ctx.fillText(entry.p.actor, x+176, y+112, 212);
+    });
+    f += 1;
+    if (f < 180) requestAnimationFrame(draw); else rec.stop();
+  };
+  draw();
+});
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
 document.getElementById('exportCastSheetPngBtn')?.addEventListener('click',()=>{
@@ -3642,12 +3695,14 @@ document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', asy
   canvas.width = 1080; canvas.height = 1350;
   const ctx = canvas.getContext('2d');
   const stream = canvas.captureStream(30);
-  const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+  const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
+  if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
+  const rec = new MediaRecorder(stream, { mimeType: mp4Mime });
   const chunks = [];
   rec.ondataavailable = ev => ev.data.size && chunks.push(ev.data);
   rec.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${c.character.toLowerCase().replace(/\s+/g,'-')}-animated.webm`; a.click();
+    const blob = new Blob(chunks, { type: 'video/mp4' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${c.character.toLowerCase().replace(/\s+/g,'-')}-animated.mp4`; a.click();
   };
   rec.start();
   const img = new Image(); img.src = c.photo; await img.decode().catch(() => {});
