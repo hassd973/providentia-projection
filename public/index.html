@@ -1632,8 +1632,15 @@ body::after {
 .cast-solo {
   max-height:min(72vh,760px);
   overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
 }
 .cast-solo-media { min-width:0; }
+.cast-solo-details { display:grid; gap:clamp(10px,1.5vw,14px); min-width:0; }
+.cast-detail-editor { display:grid; gap:8px; margin-top:4px; padding:10px; border:1px solid rgba(126,220,255,.18); border-radius:16px; background:rgba(4,10,18,.42); }
+.cast-detail-editor label { display:grid; gap:5px; color:#8fd7ff; font:700 9px 'Share Tech Mono',monospace; letter-spacing:1.2px; text-transform:uppercase; }
+.cast-detail-editor input,.cast-detail-editor textarea { width:100%; border:1px solid rgba(255,255,255,.18); border-radius:10px; background:rgba(4,8,14,.86); color:#eaf7ff; padding:8px; font:600 13px/1.25 'Barlow Condensed',sans-serif; }
+.cast-detail-editor textarea { min-height:118px; resize:vertical; font-family:'Cormorant Garamond',serif; font-size:17px; line-height:1.35; }
 .cast-solo-media img.cast-portrait {
   width:100%;
   aspect-ratio:4/5;
@@ -1646,10 +1653,22 @@ body::after {
 @keyframes cast-feature-in { from{opacity:0; transform:translateY(18px) scale(.97)} to{opacity:1; transform:translateY(0) scale(1)} }
 @keyframes cast-feature-photo { from{transform:scale(1.09); filter:saturate(.78) brightness(.72)} to{transform:scale(1.02); filter:saturate(1.08) brightness(1)} }
 @media (max-width: 900px) {
-  .slide-cast-module .crew-shell { padding:8px; }
+  .slide-cast-module.active {
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+  }
+  .slide-cast-module { align-items:flex-start; padding-bottom:calc(126px + env(safe-area-inset-bottom)); }
+  .slide-cast-module .crew-shell { padding:8px; overflow:visible; min-height:max-content; grid-template-rows:auto auto; }
+  .slide-cast-module .cast-stage,.slide-cast-module .glass-block { overflow:visible; }
+  .slide-cast-module .crew-topbar,.cast-stage-controls { position:sticky; top:0; z-index:30; }
   .cast-module-intro { grid-template-columns:1fr; }
   .cast-module-intro::after { text-align:left; }
-  .cast-spread { grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:minmax(168px, 1fr); max-height:none; }
+  .cast-spread { grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:minmax(168px, 1fr); max-height:none; overflow:visible; }
+  .cast-solo { max-height:none; overflow:visible; scroll-margin-top:92px; }
+  .cast-solo-media img.cast-portrait { max-height:none; min-height:58dvh; }
   .cast-feature-card { grid-template-columns:1fr; min-height:0; max-height:calc(100dvh - var(--film-top) - var(--film-bot) - 60px); overflow:auto; }
   .cast-feature-photo { min-height:42vh; }
 }
@@ -3303,14 +3322,14 @@ loadPersonalStoryFiles();
 // CREW MENU (CAST + FILES + MAP)
 // ══════════════════════════════════
 const castProfiles = [
-  { character: 'SIMON DAY', actor: 'Sebastian Senior', outlet: 'Lionheart Crusaders', photo: 'assets/profiles/IMG_5025.jpeg', logo: 'assets/branding/REPATRIATED_THE_LIONHEART_CRUSADERS_A_transparent.png', bio: 'A documentary maker drawn into the moral blast radius of the repatriation policy. Simon frames himself as a witness for unheard people, but the story tests whether looking, filming, and broadcasting are enough when lives are being sorted by algorithm, border, and fear.' },
-  { character: 'JAMES HARRIS', actor: 'Sam Gibbons', outlet: 'NBS NEWS PRESENTER', photo: 'assets/profiles/IMG_5115.jpeg', logo: 'assets/branding/REPATRIATED_NBS_NEWS_A_transpaerent_white.png', bio: 'The composed NBS presenter voice: polished, authoritative, and careful with language. James packages unfolding crisis as a broadcast event, revealing how neutrality can become a style, a shield, and sometimes a choice.' },
-  { character: 'ANNA THOMPSON', actor: 'Martha Cranston', outlet: '4TH ESTATE NEWS PRESENTER', photo: 'assets/profiles/7125f91d-c158-476b-8a8c-98ccb171abdb.jpeg', logo: 'assets/branding/REPATRIATED_4TH_ESTATE_A_Transparent.png', bio: 'A 4th Estate presenter who pushes past official phrasing to interrogate power, motive, and consequence. Anna’s card should feel investigative: sharp light, unanswered questions, and the pressure of a deadline.' },
-  { character: 'MARK VANCE', actor: 'Dan Thorn', outlet: 'NATION FIRST NEWS PRESENTER', photo: 'assets/profiles/IMG_5108.jpeg', logo: 'assets/branding/REPATRIATED_NATIONAL_FIRST_NEWS_D_TRANSPARENT.png', bio: 'A Nation First presenter who turns uncertainty into certainty and grievance into spectacle. Mark’s broadcast persona weaponizes confidence, compressing complex lives into slogans built to travel fast.' },
-  { character: 'JUSTICE GRAHAM WHITAKER', actor: 'Paul White', outlet: 'Judiciary', photo: 'assets/profiles/IMG_5107.png', logo: '', bio: 'A judge standing at the boundary between law as principle and law as instrument. Whitaker’s presence asks whether institutions can still protect people once emergency logic starts rewriting the meaning of due process.' },
-  { character: 'ELLIOT BRYNE', actor: 'Paul Low-hang', outlet: 'Barrister', photo: 'assets/profiles/IMG_5109.jpeg', logo: '', bio: 'A barrister navigating the thin space between procedural argument and moral emergency. Elliot works in language, precedent, and pressure, trying to make the system hear what it is designed to process away.' },
-  { character: 'MICHAEL WORKMAN', actor: 'Various', outlet: 'Meridian Group / NISA', photo: 'assets/profiles/IMG_5110.jpeg', logo: 'assets/branding/REPATRIATED_MERIDIAN_GROUP_A_transparent.png', bio: 'An operational figure linked to NISA and Meridian interests: procedural, mobile, and difficult to pin down. Workman embodies the faceless machinery of enforcement, where responsibility is always one clearance level away.' },
-  { character: 'PROVIDENTIA', actor: 'Atrix', outlet: 'Providentia', photo: 'assets/profiles/IMG_5114.jpeg', logo: 'assets/branding/REPATRIATED_PROVIDENTIA_B_transparent.png', bio: 'The central operating intelligence: calm interface, immense reach, and no human instinct for mercy. Atrix gives Providentia a presence on stage, turning data into decisions and decisions into destiny.' }
+  { character: 'SIMON DAY', actor: 'Sebastian Senior', outlet: 'Lionheart Crusaders', photo: 'assets/profiles/IMG_5025.jpeg', logo: 'assets/branding/REPATRIATED_THE_LIONHEART_CRUSADERS_A_transparent.png', bio: 'Simon is the documentary maker inside the moral blast radius of the repatriation policy: observant, principled, and increasingly unsure whether a camera can remain neutral. He frames himself as a witness for unheard people, but every interview and recorded fragment pushes him from chronicler toward participant. His story tracks the cost of looking closely when lives are being sorted by algorithm, border panic, and public fear.' },
+  { character: 'JAMES HARRIS', actor: 'Sam Gibbons', outlet: 'NBS NEWS PRESENTER', photo: 'assets/profiles/IMG_5115.jpeg', logo: 'assets/branding/REPATRIATED_NBS_NEWS_A_transpaerent_white.png', bio: 'James is the composed NBS presenter voice: polished, authoritative, and careful with language even as the ground shifts under the broadcast desk. He packages crisis as digestible information, balancing public service, newsroom pressure, and the seductive safety of neutrality. His card should read as glass, studio light, and restraint: a man whose calm delivery can clarify events or quietly launder the official line.' },
+  { character: 'ANNA THOMPSON', actor: 'Martha Cranston', outlet: '4TH ESTATE NEWS PRESENTER', photo: 'assets/profiles/7125f91d-c158-476b-8a8c-98ccb171abdb.jpeg', logo: 'assets/branding/REPATRIATED_4TH_ESTATE_A_Transparent.png', bio: 'Anna is the 4th Estate presenter who pushes past official phrasing to interrogate power, motive, and consequence. Where others repeat statements, she listens for what is missing: the omitted names, the delayed figures, the policy euphemisms that hide human damage. Her reference is investigative heat under cool studio discipline, with sharp light, unanswered questions, and the pressure of a deadline closing in.' },
+  { character: 'MARK VANCE', actor: 'Dan Thorn', outlet: 'NATION FIRST NEWS PRESENTER', photo: 'assets/profiles/IMG_5108.jpeg', logo: 'assets/branding/REPATRIATED_NATIONAL_FIRST_NEWS_D_TRANSPARENT.png', bio: 'Mark is the Nation First presenter who turns uncertainty into certainty and grievance into spectacle. He understands the rhythm of outrage: compress the complex, name an enemy, repeat the line until it feels like common sense. His profile should feel charismatic but dangerous, a high-contrast broadcast persona weaponizing confidence and national anxiety into slogans built to travel fast.' },
+  { character: 'JUSTICE GRAHAM WHITAKER', actor: 'Paul White', outlet: 'Judiciary', photo: 'assets/profiles/IMG_5107.png', logo: '', bio: 'Justice Whitaker stands at the boundary between law as principle and law as instrument. He carries the weight of tradition, procedure, and public consequence while facing a state apparatus that wants emergency logic to move faster than due process. His scenes ask whether institutions can still protect vulnerable people once legal language is repurposed to justify removal, surveillance, and administrative violence.' },
+  { character: 'ELLIOT BRYNE', actor: 'Paul Low-hang', outlet: 'Barrister', photo: 'assets/profiles/IMG_5109.jpeg', logo: '', bio: 'Elliot is a barrister navigating the thin space between procedural argument and moral emergency. He works in precedent, phrasing, and pressure, trying to force a system built for processing cases to hear the human life inside each file. His profile reference is late-night preparation: marked papers, clipped patience, and a mind racing to find one legal opening before the machinery closes.' },
+  { character: 'MICHAEL WORKMAN', actor: 'Various', outlet: 'Meridian Group / NISA', photo: 'assets/profiles/IMG_5110.jpeg', logo: 'assets/branding/REPATRIATED_MERIDIAN_GROUP_A_transparent.png', bio: 'Workman is an operational figure linked to NISA and Meridian interests: procedural, mobile, and difficult to pin down. He embodies the faceless machinery of enforcement, where responsibility is always one clearance level away and each decision appears to be only logistics. The character should feel clean, efficient, and unsettling—less villain than system pressure made flesh.' },
+  { character: 'PROVIDENTIA', actor: 'Atrix', outlet: 'Providentia', photo: 'assets/profiles/IMG_5114.jpeg', logo: 'assets/branding/REPATRIATED_PROVIDENTIA_B_transparent.png', bio: 'Providentia is the central operating intelligence: a calm interface with immense reach and no human instinct for mercy. Atrix gives the system a theatrical body, turning data into decisions and decisions into destiny while exposing the violence hidden inside optimization. The profile should feel beautiful, cold, and ceremonial—the voice of a machine that believes every moral question is a solvable dataset.' }
 ];
 const castPlaceholderPhoto = 'assets/branding/REPATRIATED_PROVIDENTIA_A.png';
 let castIndex = 0;
@@ -3394,9 +3413,16 @@ function renderCastSpread() {
   if (intro) intro.hidden = true;
   const c = castProfiles[castIndex];
   solo.hidden = false;
-  solo.innerHTML = `<div class="cast-solo-media">${hasAssignedPortrait(c) ? `<img class="cast-portrait" src="${c.photo}" alt="${escapeAttr(c.character)}">` : `<div class="cast-placeholder">TAP TO ADD AND SAVE CAST PHOTO</div>`}${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}<div class="cast-upload-bar"><input id="castPhotoUploadInput" type="file" accept="image/*"><button class="action-btn" id="castPhotoSaveBtn" type="button">SAVE CAST PHOTO</button><span class="cast-upload-note">${hasAssignedPortrait(c) ? 'Photo assigned' : 'No main photo assigned'}</span></div></div><div><div class="prism-review-title">${c.character} <span style="color:var(--sys-cyan);">/ ${c.actor}</span></div><div class="prism-meta">${c.outlet}</div><div class="cast-quote" id="castTypedText"></div></div>`;
+  solo.innerHTML = `<div class="cast-solo-media">${hasAssignedPortrait(c) ? `<img class="cast-portrait" src="${c.photo}" alt="${escapeAttr(c.character)}">` : `<div class="cast-placeholder">TAP TO ADD AND SAVE CAST PHOTO</div>`}${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}<div class="cast-upload-bar"><input id="castPhotoUploadInput" type="file" accept="image/*"><button class="action-btn" id="castPhotoSaveBtn" type="button">SAVE CAST PHOTO</button><span class="cast-upload-note">${hasAssignedPortrait(c) ? 'Photo assigned' : 'No main photo assigned'}</span></div></div><div class="cast-solo-details"><div><div class="prism-review-title">${escapeHtml(c.character)} <span style="color:var(--sys-cyan);">/ ${escapeHtml(c.actor)}</span></div><div class="prism-meta">${escapeHtml(c.outlet)}</div></div><div class="cast-quote" id="castTypedText"></div><div class="cast-detail-editor"><label>Character<input id="castCharacterInput" value="${escapeAttr(c.character)}"></label><label>Actor<input id="castActorInput" value="${escapeAttr(c.actor)}"></label><label>Outlet / reference<input id="castOutletInput" value="${escapeAttr(c.outlet)}"></label><label>Detailed description<textarea id="castBioInput">${escapeHtml(c.bio || '')}</textarea></label><button class="action-btn" id="castDetailsSaveBtn" type="button">SAVE CAST DETAILS</button></div></div>`;
   const el = document.getElementById('castTypedText'); const text = c.bio || '';
   let k = 0; el.textContent = ''; const timer = setInterval(() => { el.textContent = text.slice(0, k++); if (k > text.length) clearInterval(timer); }, 18);
+  document.getElementById('castDetailsSaveBtn')?.addEventListener('click', () => {
+    c.character = document.getElementById('castCharacterInput')?.value.trim() || c.character;
+    c.actor = document.getElementById('castActorInput')?.value.trim() || c.actor;
+    c.outlet = document.getElementById('castOutletInput')?.value.trim() || c.outlet;
+    c.bio = document.getElementById('castBioInput')?.value.trim() || c.bio;
+    renderCastSpread();
+  });
   document.getElementById('castPhotoUploadInput')?.addEventListener('change', (ev) => {
     const file = ev.target.files?.[0];
     if (!file) return;
@@ -4135,24 +4161,39 @@ function drawCoverImage(ctx, img, x, y, w, h) {
   const sw = w / scale, sh = h / scale;
   ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh, x, y, w, h);
 }
+function drawSoloCastPortraitFrame(ctx, profile, img, logo, frame = 0, revealChars = Infinity) {
+  const { width, height } = ctx.canvas;
+  drawCastBackground(ctx, width, height);
+  if (img) {
+    ctx.save();
+    const drift = Math.sin(frame / 36) * 14;
+    drawCoverImage(ctx, img, -34, drift - 58, width + 68, height + 116);
+    ctx.restore();
+  }
+  const vignette = ctx.createRadialGradient(width * .50, height * .28, height * .12, width * .50, height * .52, height * .78);
+  vignette.addColorStop(0, 'rgba(0,0,0,0)'); vignette.addColorStop(.58, 'rgba(0,0,0,.16)'); vignette.addColorStop(1, 'rgba(0,0,0,.78)');
+  ctx.fillStyle = vignette; ctx.fillRect(0, 0, width, height);
+  const topWash = ctx.createLinearGradient(0, 0, 0, 320); topWash.addColorStop(0, 'rgba(3,7,13,.76)'); topWash.addColorStop(1, 'rgba(3,7,13,0)'); ctx.fillStyle = topWash; ctx.fillRect(0, 0, width, 360);
+  const bottom = ctx.createLinearGradient(0, height * .48, 0, height); bottom.addColorStop(0, 'rgba(3,7,13,0)'); bottom.addColorStop(.36, 'rgba(3,7,13,.72)'); bottom.addColorStop(1, 'rgba(3,7,13,.98)'); ctx.fillStyle = bottom; ctx.fillRect(0, height * .46, width, height * .54);
+  ctx.strokeStyle = 'rgba(126,220,255,.30)'; ctx.lineWidth = 3; roundRect(ctx, 34, 34, width - 68, height - 68, 36); ctx.stroke();
+  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('PROVIDENTIA / SOLO PORTRAIT', 58, 96);
+  if (logo) { const pulse = 1 + Math.sin(frame / 22) * .02; const scale = Math.min((270 * pulse) / logo.width, (118 * pulse) / logo.height, 1); ctx.drawImage(logo, width - 58 - logo.width * scale, 58, logo.width * scale, logo.height * scale); }
+  fitCanvasTextBlock(ctx, String(profile.character || '').toUpperCase(), { x: 58, y: height - 560, maxWidth: width - 116, maxHeight: 168, maxLines: 2, maxSize: 96, minSize: 52, weight: 800, fillStyle: '#f6fbff', lineHeightRatio: .86 });
+  fitCanvasTextBlock(ctx, `${profile.actor || 'TBA'} · ${profile.outlet || 'PROFILE'}`.toUpperCase(), { x: 62, y: height - 356, maxWidth: width - 124, maxHeight: 56, maxLines: 1, maxSize: 34, minSize: 19, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: '#9edcff', lineHeightRatio: 1 });
+  ctx.fillStyle = 'rgba(255,255,255,.12)'; roundRect(ctx, 58, height - 284, width - 116, 214, 26); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineWidth = 1.5; roundRect(ctx, 58, height - 284, width - 116, 214, 26); ctx.stroke();
+  const bio = String(profile.bio || '').slice(0, revealChars);
+  ctx.fillStyle = '#d9edf8'; ctx.font = '400 34px Cormorant Garamond, Georgia';
+  wrapCanvasText(ctx, bio, 92, height - 224, width - 184, 42, 4);
+  ctx.fillStyle = '#ff9db1'; ctx.font = '700 22px Share Tech Mono, Arial'; ctx.fillText('CHARACTER PLAY INFO', 62, height - 36);
+}
 async function renderCastCardToCanvas(profile) {
   const canvas = document.createElement('canvas');
-  canvas.width = 1080; canvas.height = 1350;
-  const ctx = canvas.getContext('2d');
-  drawCastBackground(ctx, canvas.width, canvas.height);
+  canvas.width = 1080; canvas.height = 1920;
+  const ctx = canvas.getContext('2d', { alpha: false });
   const img = await preloadImage(profile.photo || castPlaceholderPhoto);
   const logo = profile.logo ? await preloadImage(profile.logo) : null;
-  ctx.save(); roundRect(ctx, 60, 150, 960, 650, 34); ctx.clip(); drawCoverImage(ctx, img, 60, 150, 960, 650); ctx.restore();
-  ctx.strokeStyle = 'rgba(255,255,255,.24)'; ctx.lineWidth = 3; roundRect(ctx, 60, 150, 960, 650, 34); ctx.stroke();
-  const fade = ctx.createLinearGradient(0, 600, 0, 840); fade.addColorStop(0, 'rgba(7,11,17,0)'); fade.addColorStop(1, 'rgba(7,11,17,.9)'); ctx.fillStyle = fade; ctx.fillRect(60, 545, 960, 255);
-  if (logo) { const scale = Math.min(270 / logo.width, 120 / logo.height, 1); ctx.drawImage(logo, 1000 - logo.width * scale, 185, logo.width * scale, logo.height * scale); }
-  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('PROVIDENTIA / CHARACTER FILE', 70, 92);
-  ctx.fillStyle = '#f6fbff'; ctx.font = '800 76px Barlow Condensed, Arial'; ctx.fillText(profile.character, 70, 900, 940);
-  ctx.fillStyle = '#9edcff'; ctx.font = '600 42px Barlow Condensed, Arial'; ctx.fillText(`${profile.actor} · ${profile.outlet}`, 70, 960, 940);
-  ctx.fillStyle = 'rgba(255,255,255,.12)'; roundRect(ctx, 60, 1000, 960, 270, 24); ctx.fill();
-  ctx.fillStyle = '#d9edf8'; ctx.font = '400 34px Cormorant Garamond, Georgia';
-  wrapCanvasText(ctx, profile.bio || '', 92, 1060, 900, 44, 5);
-  ctx.fillStyle = '#ff9db1'; ctx.font = '700 22px Share Tech Mono, Arial'; ctx.fillText('CHARACTER PLAY INFO', 70, 1310);
+  drawSoloCastPortraitFrame(ctx, profile, img, logo, 0);
   return canvas;
 }
 async function loadCastCanvasAssets() {
@@ -4399,9 +4440,9 @@ document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', asy
   const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
   if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
   const canvas = document.createElement('canvas');
-  canvas.width = 1080; canvas.height = 1350;
-  const ctx = canvas.getContext('2d');
-  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime });
+  canvas.width = 1080; canvas.height = 1920;
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime, videoBitsPerSecond: 14000000 });
   const chunks = [];
   rec.ondataavailable = ev => ev.data.size && chunks.push(ev.data);
   rec.onstop = () => downloadBlob(new Blob(chunks, { type: 'video/mp4' }), `${c.character.toLowerCase().replace(/\s+/g,'-')}-animated.mp4`);
@@ -4411,21 +4452,14 @@ document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', asy
   let frame = 0;
   rec.start();
   const draw = () => {
-    drawCastBackground(ctx, canvas.width, canvas.height);
-    ctx.save(); roundRect(ctx, 60, 140, 960, 650, 34); ctx.clip(); drawCoverImage(ctx, img, 60, 145 + Math.sin(frame / 24) * 8, 960, 650); ctx.restore();
-    ctx.strokeStyle = 'rgba(126,220,255,.32)'; ctx.lineWidth = 3; roundRect(ctx, 60, 140, 960, 650, 34); ctx.stroke();
-    const fade = ctx.createLinearGradient(0, 560, 0, 815); fade.addColorStop(0, 'rgba(7,11,17,0)'); fade.addColorStop(1, 'rgba(7,11,17,.92)'); ctx.fillStyle = fade; ctx.fillRect(60, 540, 960, 260);
-    if (logo) { const pulse = 1 + Math.sin(frame / 18) * .025; const scale = Math.min((285 * pulse) / logo.width, (126 * pulse) / logo.height, 1); ctx.drawImage(logo, 1000 - logo.width * scale, 180, logo.width * scale, logo.height * scale); }
-    ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('CHARACTER INTRO', 70, 90);
-    ctx.fillStyle = '#f6fbff'; ctx.font = '800 76px Barlow Condensed, Arial'; ctx.fillText(c.character, 70, 895, 940);
-    ctx.fillStyle = '#9edcff'; ctx.font = '600 42px Barlow Condensed, Arial'; ctx.fillText(`${c.actor} · ${c.outlet}`, 70, 955, 940);
-    ctx.fillStyle = 'rgba(255,255,255,.12)'; roundRect(ctx, 60, 995, 960, 278, 24); ctx.fill();
-    ctx.fillStyle = '#d9edf8'; ctx.font = '400 34px Cormorant Garamond, Georgia';
-    const show = text.slice(0, Math.min(text.length, Math.floor(frame * 1.35)));
-    wrapCanvasText(ctx, show, 92, 1055, 900, 44, 5);
-    ctx.fillStyle = frame % 32 < 16 ? '#ff9db1' : 'rgba(255,157,177,.35)'; ctx.fillRect(92, 1236, 18, 38);
+    const showCount = Math.min(text.length, Math.floor(frame * 1.45));
+    drawSoloCastPortraitFrame(ctx, c, img, logo, frame, showCount);
+    if (showCount < text.length && frame % 32 < 16) {
+      ctx.fillStyle = '#ff9db1';
+      ctx.fillRect(92, canvas.height - 96, 18, 38);
+    }
     frame++;
-    if (frame < 240) requestAnimationFrame(draw); else rec.stop();
+    if (frame < 300) requestAnimationFrame(draw); else rec.stop();
   };
   draw();
 });
