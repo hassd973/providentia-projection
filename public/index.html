@@ -1335,6 +1335,19 @@ body::after {
 .slide-cast-module .cast-grid { min-height: 72vh; align-items: stretch; }
 .slide-cast-module .cast-preview { display: grid; align-content: start; }
 .slide-cast-module .cast-preview img { width: 100%; max-height: min(62vh, 560px); object-fit: cover; }
+.cast-grid-spread { grid-template-columns: 1fr; }
+.cast-spread { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+.cast-card { position:relative; overflow:hidden; border-radius:14px; border:1px solid rgba(255,255,255,.18); min-height: 210px; cursor:pointer; background:linear-gradient(140deg, rgba(79,122,212,.25), rgba(154,91,212,.2)); transition: transform .35s ease, border-color .35s ease; }
+.cast-card:hover, .cast-card.active { transform: translateY(-4px) scale(1.01); border-color: rgba(0,212,255,.65); }
+.cast-card img { width:100%; height:100%; object-fit:cover; filter:saturate(1.04); }
+.cast-card-overlay { position:absolute; inset:auto 0 0; background:linear-gradient(180deg, transparent, rgba(2,8,16,.95)); padding:10px; }
+.cast-card-title { font:700 12px 'Share Tech Mono'; color:#f5fbff; }
+.cast-card-sub { font:600 11px 'Barlow Condensed'; color:#8fd7ff; }
+.cast-solo { display:grid; grid-template-columns:minmax(220px, 360px) 1fr; gap:14px; align-items:start; margin-top:10px; }
+.cast-solo-media img { width:100%; max-height:56vh; object-fit:cover; border-radius:12px; border:1px solid rgba(255,255,255,.2); }
+.cast-logo { max-width:180px; max-height:70px; object-fit:contain; margin-top:8px; }
+.cast-quote { white-space:pre-wrap; font:500 18px/1.35 'Cormorant Garamond', serif; color:#ecf6ff; min-height:120px; }
+@media (max-width: 820px){ .cast-solo { grid-template-columns:1fr; } .cast-card { min-height:180px; } }
 
 
 /* Apple glass crew deck */
@@ -2450,24 +2463,19 @@ body::after {
 <div class="slide slide-cast-module" data-slide="20" data-phase="CAST MODULE — EDITOR">
   <div class="crew-shell">
     <div class="crew-topbar">
-      <div class="crew-title">MEET THE TEAM — FULL SPREAD PROFILE EDITOR</div>
+      <div class="crew-title">MEET THE CAST — MOBILE CHARACTER SPREAD</div>
       <button class="action-btn" id="backToToolsBtn" type="button">BACK TO TOOLS SLIDE</button>
     </div>
-    <div class="cast-grid cast-stage" id="castStage">
+    <div class="cast-grid cast-grid-spread cast-stage" id="castStage">
       <div class="glass-block">
         <div class="cast-stage-controls">
-          <button class="action-btn" id="uploadCastBgBtn" type="button">UPLOAD CAST BACKGROUND</button>
-          <button class="action-btn" id="resetCastBgBtn" type="button">RESET BACKGROUND</button>
-          <button class="action-btn" id="exportCastMemberPngBtn" type="button">EXPORT CURRENT CAST PNG</button>
-          <button class="action-btn" id="exportAllCastPngBtn" type="button">EXPORT ALL CAST PNG</button>
-          <button class="action-btn" id="exportCastSheetPngBtn" type="button">EXPORT FULL CAST SHEET PNG</button>
-          <button class="action-btn" id="exportAllCastJpgBtn" type="button">EXPORT ALL CAST JPG</button>
-          <input type="file" id="castBgUpload" accept="image/*" hidden>
+          <button class="action-btn" id="castBackToSpreadBtn" type="button">VIEW FULL SPREAD</button>
+          <button class="action-btn" id="exportCastMemberPngBtn" type="button">DOWNLOAD PNG</button>
+          <button class="action-btn" id="exportCastMemberMp4Btn" type="button">DOWNLOAD MP4 CARD</button>
         </div>
-        <div class="cast-list" id="castList"></div>
-        <button class="action-btn" id="addCharacterBtn">+ ADD NEW CHARACTER</button>
+        <div class="cast-spread" id="castSpread"></div>
+        <div class="cast-solo" id="castSoloView" hidden></div>
       </div>
-      <div class="glass-block cast-preview" id="castEditor"></div>
     </div>
   </div>
 </div>
@@ -2970,78 +2978,36 @@ loadPersonalStoryFiles();
 // ══════════════════════════════════
 // CREW MENU (CAST + FILES + MAP)
 // ══════════════════════════════════
-const CREW_STORAGE_KEY = 'providentia_cast_profiles_v1';
-const CAST_BG_STORAGE_KEY = 'providentia_cast_bg_v1';
-const defaultCast = prismProfiles.map((p) => ({
-  character: p.name,
-  actor: p.name,
-  outlet: 'Providentia',
-  logo: '',
-  photo: profilePhotoDefaults[p.key] || p.photo,
-  bio: p.personalStory || p.humanDesc,
-  metrics: [`Risk ${p.score}`, `Tier ${p.level.toUpperCase()}`, p.dossier?.primaryAction || 'Monitored']
-}));
-function hydrateCastProfiles(profiles) {
-  const byName = Object.fromEntries(prismProfiles.map((p) => [p.name, p]));
-  const legacyDefaultNames = ['Sebastian Senior', 'Sam Gibbons', 'Martha Cranston'];
-  const sourceProfiles = !profiles || profiles.every((profile) => legacyDefaultNames.includes(profile.character)) ? defaultCast : profiles;
-  return sourceProfiles.map((profile) => {
-    const source = byName[profile.character] || byName[profile.actor];
-    if (!source) return profile;
-    const defaultPhoto = profilePhotoDefaults[source.key] || source.photo;
-    const hasCrewUpload = profile.photo && profile.photo.startsWith('data:image');
-    return {
-      ...profile,
-      photo: hasCrewUpload ? profile.photo : defaultPhoto,
-      bio: profile.bio && profile.bio !== 'Short bio.' ? profile.bio : (source.personalStory || source.humanDesc)
-    };
-  });
-}
-let castProfiles = hydrateCastProfiles(JSON.parse(localStorage.getItem(CREW_STORAGE_KEY) || 'null'));
+const castProfiles = [
+  { character: 'SIMON DAY', actor: 'Sebastian Senior', outlet: 'Lionheart Crusaders', photo: 'assets/profiles/IMG_5025.jpeg', logo: 'assets/branding/REPATRIATED_THE_LIONHEART_CRUSADERS_A_transparent.png', bio: 'I make films about people who don’t get heard.' },
+  { character: 'SELAM', actor: 'Civilian', outlet: 'Civilian', photo: 'assets/profiles/IMG_5019.jpeg', logo: '', bio: 'No news affiliation; civilian profile.' },
+  { character: 'IBRAHIM', actor: 'Ibrahim Musa', outlet: 'Independent', photo: 'assets/profiles/IMG_5017.jpeg', logo: '', bio: 'I’ve never been to Nigeria. I don’t know who I am there.' },
+  { character: 'MAREK', actor: 'Marek Kowalski', outlet: 'Independent', photo: 'assets/profiles/IMG_5016.jpeg', logo: '', bio: 'I came to work. I thought that was enough.' },
+  { character: 'JO', actor: 'Jo Rivers', outlet: 'Independent', photo: 'assets/profiles/IMG_5024.jpeg', logo: '', bio: 'I stayed because people needed help.' },
+  { character: 'KHALID', actor: 'Khalid Rahman', outlet: 'Independent', photo: 'assets/profiles/IMG_5018.jpeg', logo: '', bio: 'I help people stay out of trouble.' },
+  { character: 'JAMES HARRIS', actor: 'Sam Gibbons', outlet: 'NBS NEWS', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_NBS_NEWS_A_transpaerent_white.png', bio: 'NBS news presenter card pending dedicated portrait upload.' },
+  { character: 'ANNA THOMPSON', actor: 'Martha Cranston', outlet: '4TH ESTATE', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_4TH_ESTATE_A_Transparent.png', bio: '4th Estate presenter card pending dedicated portrait upload.' },
+  { character: 'MARK VANCE', actor: 'Dan Thorn', outlet: 'NATION FIRST', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_NATIONAL_FIRST_NEWS_D_TRANSPARENT.png', bio: 'Nation First presenter card pending dedicated portrait upload.' },
+  { character: 'JUSTICE GRAHAM WHITAKER', actor: 'Paul White', outlet: 'Judiciary', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: '', bio: 'Main photo pending upload.' },
+  { character: 'ELLIOT BRYNE', actor: 'Paul Low-hang', outlet: 'Barrister', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: '', bio: 'Main photo pending upload.' },
+  { character: 'MICHEAL WORKMAN', actor: 'Various NISA agent', outlet: 'Meridian Group', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_MERIDIAN_GROUP_A_transparent.png', bio: 'NISA network / Meridian linked operator.' },
+  { character: 'ATRIX PROVEDENTIA', actor: 'Central Operating System', outlet: 'Providentia', photo: 'assets/branding/REPATRIATED_PROVIDENTIA_A.png', logo: 'assets/branding/REPATRIATED_PROVIDENTIA_B_transparent.png', bio: 'Core system intelligence persona.' }
+];
 let castIndex = 0;
-const castStage = document.getElementById('castStage');
-function applyCastBackground(bgSrc = localStorage.getItem(CAST_BG_STORAGE_KEY) || '') {
-  if (!castStage) return;
-  if (bgSrc) {
-    castStage.style.backgroundImage = `url(${bgSrc})`;
-    castStage.classList.add('has-photo');
-  } else {
-    castStage.style.backgroundImage = '';
-    castStage.classList.remove('has-photo');
-  }
-}
-function saveCast() { localStorage.setItem(CREW_STORAGE_KEY, JSON.stringify(castProfiles)); }
-function renderCastList() {
-  const wrap = document.getElementById('castList'); if (!wrap) return;
-  wrap.innerHTML = castProfiles.map((c, i) => `<div class="cast-item ${i===castIndex?'active':''}" data-cast-index="${i}"><span>${c.character}</span><small>${c.actor}</small></div>`).join('');
-  wrap.querySelectorAll('[data-cast-index]').forEach(el => el.addEventListener('click', () => { castIndex = Number(el.dataset.castIndex); renderCastList(); renderCastEditor(); }));
-}
-function renderCastEditor() {
-  const e = document.getElementById('castEditor'); if (!e) return;
+let castSolo = false;
+function renderCastSpread() {
+  const spread = document.getElementById('castSpread');
+  const solo = document.getElementById('castSoloView');
+  if (!spread || !solo) return;
+  spread.innerHTML = castProfiles.map((c, i) => `<article class="cast-card ${castIndex===i&&castSolo?'active':''}" data-cast-card="${i}"><img src="${c.photo}" alt="${c.character}"><div class="cast-card-overlay"><div class="cast-card-title">${c.character}</div><div class="cast-card-sub">${c.actor}</div></div></article>`).join('');
+  spread.querySelectorAll('[data-cast-card]').forEach(el => el.addEventListener('click', () => { castIndex = Number(el.dataset.castCard); castSolo = true; renderCastSpread(); }));
+  if (!castSolo) { solo.hidden = true; return; }
   const c = castProfiles[castIndex];
-  e.innerHTML = `<img src="${c.photo || prismProfiles[0].photo}" alt="${c.character}">
-    <div class="metric-chips">${(c.metrics||[]).map(m => `<span>${m}</span>`).join('')}</div>
-    <div class="form-row"><input id="castCharacter" value="${c.character}"><input id="castActor" value="${c.actor}"><input id="castOutlet" value="${c.outlet}" placeholder="News channel / company"></div>
-    <div class="form-row"><textarea id="castBio" rows="4">${c.bio||''}</textarea></div>
-    <div class="form-row"><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">PHOTO</label><input type="file" id="castPhotoUpload" accept="image/*"><label style="font:10px 'Share Tech Mono';color:#9fd6ff;">LOGO</label><input type="file" id="castLogoUpload" accept="image/*"></div>
-    <button class="action-btn" id="saveCastBtn">SAVE CHARACTER</button>`;
-  document.getElementById('saveCastBtn')?.addEventListener('click', () => {
-    c.character = document.getElementById('castCharacter').value.trim() || c.character;
-    c.actor = document.getElementById('castActor').value.trim() || c.actor;
-    c.outlet = document.getElementById('castOutlet').value.trim() || c.outlet;
-    c.bio = document.getElementById('castBio').value.trim();
-    saveCast(); renderCastList();
-  });
-  const wireUpload = (id, key) => document.getElementById(id)?.addEventListener('change', ev => {
-    const f = ev.target.files?.[0]; if (!f) return;
-    const r = new FileReader(); r.onload = x => { c[key] = x.target.result; saveCast(); renderCastEditor(); }; r.readAsDataURL(f);
-  });
-  wireUpload('castPhotoUpload', 'photo'); wireUpload('castLogoUpload', 'logo');
+  solo.hidden = false;
+  solo.innerHTML = `<div class="cast-solo-media"><img src="${c.photo}" alt="${c.character}">${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${c.outlet} logo">` : ''}</div><div><div class="prism-review-title">${c.character} <span style="color:var(--sys-cyan);">/ ${c.actor}</span></div><div class="prism-meta">${c.outlet}</div><div class="cast-quote" id="castTypedText"></div></div>`;
+  const el = document.getElementById('castTypedText'); const text = c.bio || '';
+  let k = 0; el.textContent = ''; const timer = setInterval(() => { el.textContent = text.slice(0, k++); if (k > text.length) clearInterval(timer); }, 24);
 }
-document.getElementById('addCharacterBtn')?.addEventListener('click', () => {
-  castProfiles.push({ character: 'New Character', actor: 'Actor Name', outlet: 'Company', logo: '', photo: prismProfiles[0].photo, bio: 'Short bio.', metrics: ['Influence 70','Reach 70','Escalation 70'] });
-  castIndex = castProfiles.length - 1; saveCast(); renderCastList(); renderCastEditor();
-});
 document.getElementById('exportCastBtn')?.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(castProfiles, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'providentia-cast-export.json'; a.click();
@@ -3668,24 +3634,37 @@ document.querySelectorAll('.crew-tab').forEach(btn => btn.addEventListener('clic
   document.querySelectorAll('.crew-panel').forEach(p => p.classList.remove('active'));
   document.getElementById(`panel-${btn.dataset.crewTab}`)?.classList.add('active');
 }));
-renderCastList();
-renderCastEditor();
-applyCastBackground();
-document.getElementById('uploadCastBgBtn')?.addEventListener('click', () => document.getElementById('castBgUpload')?.click());
-document.getElementById('castBgUpload')?.addEventListener('change', ev => {
-  const f = ev.target.files?.[0];
-  if (!f) return;
-  const r = new FileReader();
-  r.onload = x => {
-    const bg = x.target.result;
-    localStorage.setItem(CAST_BG_STORAGE_KEY, bg);
-    applyCastBackground(bg);
+renderCastSpread();
+document.getElementById('castBackToSpreadBtn')?.addEventListener('click', () => { castSolo = false; renderCastSpread(); });
+document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', async () => {
+  const c = castProfiles[castIndex];
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext('2d');
+  const stream = canvas.captureStream(30);
+  const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+  const chunks = [];
+  rec.ondataavailable = ev => ev.data.size && chunks.push(ev.data);
+  rec.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${c.character.toLowerCase().replace(/\s+/g,'-')}-animated.webm`; a.click();
   };
-  r.readAsDataURL(f);
-});
-document.getElementById('resetCastBgBtn')?.addEventListener('click', () => {
-  localStorage.removeItem(CAST_BG_STORAGE_KEY);
-  applyCastBackground('');
+  rec.start();
+  const img = new Image(); img.src = c.photo; await img.decode().catch(() => {});
+  const text = c.bio || '';
+  let frame = 0;
+  const draw = () => {
+    ctx.fillStyle = '#071224'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    if (img.complete) ctx.drawImage(img, 0, 0, canvas.width, 860);
+    ctx.fillStyle = 'rgba(8,14,24,.75)'; ctx.fillRect(0, 860, canvas.width, 490);
+    ctx.fillStyle = '#8ee9ff'; ctx.font = '700 64px Barlow Condensed'; ctx.fillText(c.character, 60, 960);
+    ctx.fillStyle = '#ffffff'; ctx.font = '500 42px Cormorant Garamond';
+    const show = text.slice(0, Math.min(text.length, Math.floor(frame/2)));
+    ctx.fillText(show, 60, 1045, 960);
+    frame++;
+    if (frame < 220) requestAnimationFrame(draw); else rec.stop();
+  };
+  draw();
 });
 document.getElementById('openCastSlideBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-cast-module'))));
 document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-crew-menu'))));
