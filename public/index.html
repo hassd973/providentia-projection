@@ -3886,6 +3886,97 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 7) {
   lines.slice(0, maxLines).forEach((l, i) => ctx.fillText(i === maxLines - 1 && lines.length > maxLines ? `${l}…` : l, x, y + i * lineHeight));
   return Math.min(lines.length, maxLines) * lineHeight;
 }
+function canvasFont(weight, size, family = 'Barlow Condensed, Arial') {
+  return `${weight} ${size}px ${family}`;
+}
+function getWrappedCanvasLines(ctx, text, maxWidth, maxLines = 3) {
+  const source = String(text || '').trim();
+  if (!source) return [];
+  const words = source.split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  const pushWord = (word) => {
+    if (ctx.measureText(word).width <= maxWidth) {
+      line = word;
+      return;
+    }
+    let chunk = '';
+    [...word].forEach(ch => {
+      const test = chunk + ch;
+      if (ctx.measureText(test).width > maxWidth && chunk) {
+        lines.push(chunk);
+        chunk = ch;
+      } else {
+        chunk = test;
+      }
+    });
+    line = chunk;
+  };
+  words.forEach(word => {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      pushWord(word);
+    } else {
+      line = test;
+    }
+  });
+  if (line) lines.push(line);
+  if (lines.length <= maxLines) return lines;
+  const clipped = lines.slice(0, maxLines);
+  let last = clipped[maxLines - 1];
+  while (last.length > 1 && ctx.measureText(`${last}…`).width > maxWidth) last = last.slice(0, -1);
+  clipped[maxLines - 1] = `${last.trim()}…`;
+  return clipped;
+}
+function fitCanvasTextBlock(ctx, text, opts = {}) {
+  const {
+    x = 0, y = 0, maxWidth = 300, maxHeight = 120,
+    maxLines = 3, maxSize = 32, minSize = 12,
+    weight = 700, family = 'Barlow Condensed, Arial',
+    lineHeightRatio = 1.05, fillStyle = '#fff', textAlign = 'left',
+    baseline = 'top', letterSpacing = 0
+  } = opts;
+  let size = maxSize, lines = [];
+  for (; size >= minSize; size -= 1) {
+    ctx.font = canvasFont(weight, size, family);
+    lines = getWrappedCanvasLines(ctx, text, maxWidth, maxLines);
+    if (lines.length * size * lineHeightRatio <= maxHeight) break;
+  }
+  ctx.save();
+  ctx.fillStyle = fillStyle;
+  ctx.font = canvasFont(weight, Math.max(size, minSize), family);
+  ctx.textAlign = textAlign;
+  ctx.textBaseline = baseline;
+  const lineHeight = Math.max(1, Math.max(size, minSize) * lineHeightRatio);
+  const drawX = textAlign === 'center' ? x + maxWidth / 2 : textAlign === 'right' ? x + maxWidth : x;
+  lines.slice(0, maxLines).forEach((line, i) => {
+    if (!letterSpacing) {
+      ctx.fillText(line, drawX, y + i * lineHeight);
+      return;
+    }
+    let lx = drawX;
+    [...line].forEach(ch => {
+      ctx.fillText(ch, lx, y + i * lineHeight);
+      lx += ctx.measureText(ch).width + letterSpacing;
+    });
+  });
+  ctx.restore();
+  return { size: Math.max(size, minSize), lines, height: lines.length * lineHeight };
+}
+function fitCanvasSingleLine(ctx, text, x, y, maxWidth, maxSize, minSize, weight, family, fillStyle) {
+  let size = maxSize;
+  for (; size >= minSize; size -= 1) {
+    ctx.font = canvasFont(weight, size, family);
+    if (ctx.measureText(String(text || '')).width <= maxWidth) break;
+  }
+  ctx.save();
+  ctx.fillStyle = fillStyle;
+  ctx.font = canvasFont(weight, Math.max(size, minSize), family);
+  ctx.fillText(String(text || ''), x, y);
+  ctx.restore();
+  return Math.max(size, minSize);
+}
 async function preloadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -4055,27 +4146,59 @@ async function renderCastCardToCanvas(profile) {
   ctx.fillStyle = '#ff9db1'; ctx.font = '700 22px Share Tech Mono, Arial'; ctx.fillText('PNG + MP4 EXPORT CARD', 70, 1310);
   return canvas;
 }
-async function renderCastSpreadToCanvas(frame = 0) {
+async function loadCastCanvasAssets() {
+  await document.fonts?.ready?.catch?.(() => {});
+  return Promise.all(castProfiles.map(async (p) => ({
+    p,
+    img: await preloadImage(p.photo || castPlaceholderPhoto),
+    logo: p.logo ? await preloadImage(p.logo) : null
+  })));
+}
+function easeInOutCubic(t) {
+  const clamped = Math.max(0, Math.min(1, t));
+  return clamped < .5 ? 4 * clamped * clamped * clamped : 1 - Math.pow(-2 * clamped + 2, 3) / 2;
+}
+function drawCastSpreadCard(ctx, entry, i, frame, opts = {}) {
+  const { alpha = 1, focus = false, reveal = 1 } = opts;
+  const cols = 4, cardW = 405, cardH = 258, gap = 24, startX = 70, startY = 274;
+  const col = i % cols, row = Math.floor(i / cols);
+  const revealEase = easeInOutCubic(reveal);
+  const x = startX + col * (cardW + gap);
+  const y = startY + row * (cardH + gap) + Math.sin((frame / 18) + i * .55) * 6 - (1 - revealEase) * 24;
+  ctx.save();
+  ctx.globalAlpha = alpha * revealEase;
+  ctx.fillStyle = 'rgba(5,12,24,.76)'; roundRect(ctx, x, y, cardW, cardH, 26); ctx.fill();
+  ctx.strokeStyle = focus ? 'rgba(255,255,255,.72)' : 'rgba(126,220,255,.28)';
+  ctx.lineWidth = focus ? 4 : 2; roundRect(ctx, x, y, cardW, cardH, 26); ctx.stroke();
+  ctx.save(); roundRect(ctx, x + 14, y + 14, 130, cardH - 28, 18); ctx.clip(); drawCoverImage(ctx, entry.img, x + 14, y + 14, 130, cardH - 28); ctx.restore();
+  if (entry.logo) {
+    const scale = Math.min(88 / entry.logo.width, 42 / entry.logo.height, 1);
+    ctx.drawImage(entry.logo, x + cardW - 104, y + 16, entry.logo.width * scale, entry.logo.height * scale);
+  }
+  const textX = x + 160;
+  const textW = cardW - 178;
+  fitCanvasTextBlock(ctx, entry.p.character.toUpperCase(), { x: textX, y: y + 54, maxWidth: textW, maxHeight: 66, maxLines: 2, maxSize: 34, minSize: 20, weight: 800, fillStyle: '#f4fbff', lineHeightRatio: .92 });
+  fitCanvasTextBlock(ctx, entry.p.actor, { x: textX, y: y + 132, maxWidth: textW, maxHeight: 34, maxLines: 1, maxSize: 25, minSize: 16, weight: 600, fillStyle: '#8fd7ff', lineHeightRatio: 1 });
+  fitCanvasTextBlock(ctx, entry.p.outlet || 'PROFILE', { x: textX, y: y + 176, maxWidth: textW, maxHeight: 42, maxLines: 2, maxSize: 15, minSize: 10, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: '#ffb6c4', lineHeightRatio: 1.12 });
+  ctx.restore();
+}
+function drawCastSpreadFrame(ctx, cards, frame = 0, opts = {}) {
+  const { revealCount = cards.length, dimmed = false, focusIndex = -1, title = 'FULL CAST SPREAD / TAP CHARACTER FOR SOLO VIEW' } = opts;
+  drawCastBackground(ctx, 1920, 1080);
+  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText(title, 70, 72);
+  ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
+  ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
+  cards.forEach((entry, i) => {
+    const reveal = Math.max(0, Math.min(1, revealCount - i));
+    if (reveal <= 0) return;
+    drawCastSpreadCard(ctx, entry, i, frame, { alpha: dimmed ? .34 : 1, focus: i === focusIndex, reveal });
+  });
+}
+async function renderCastSpreadToCanvas(frame = 0, cards = null) {
   const canvas = document.createElement('canvas');
   canvas.width = 1920; canvas.height = 1080;
   const ctx = canvas.getContext('2d');
-  drawCastBackground(ctx, canvas.width, canvas.height);
-  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('FULL CAST SPREAD / TAP CHARACTER FOR SOLO VIEW', 70, 72);
-  ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
-  ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
-  const cards = await Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto), logo: p.logo ? await preloadImage(p.logo) : null })));
-  const cols = 5, cardW = 330, cardH = 236, gap = 24, startX = 70, startY = 245;
-  cards.forEach((entry, i) => {
-    const col = i % cols, row = Math.floor(i / cols);
-    const x = startX + col * (cardW + gap), y = startY + row * (cardH + gap) + Math.sin((frame / 12) + i * .6) * 7;
-    ctx.fillStyle = 'rgba(5,12,24,.72)'; roundRect(ctx, x, y, cardW, cardH, 24); ctx.fill();
-    ctx.strokeStyle = 'rgba(126,220,255,.24)'; ctx.lineWidth = 2; roundRect(ctx, x, y, cardW, cardH, 24); ctx.stroke();
-    ctx.save(); roundRect(ctx, x + 12, y + 12, 112, cardH - 24, 18); ctx.clip(); drawCoverImage(ctx, entry.img, x + 12, y + 12, 112, cardH - 24); ctx.restore();
-    if (entry.logo) { const scale = Math.min(76 / entry.logo.width, 38 / entry.logo.height, 1); ctx.drawImage(entry.logo, x + cardW - 88, y + 14, entry.logo.width * scale, entry.logo.height * scale); }
-    ctx.fillStyle = '#f4fbff'; ctx.font = '800 30px Barlow Condensed, Arial'; ctx.fillText(entry.p.character, x + 140, y + 82, 172);
-    ctx.fillStyle = '#8fd7ff'; ctx.font = '600 22px Barlow Condensed, Arial'; ctx.fillText(entry.p.actor, x + 140, y + 117, 172);
-    ctx.fillStyle = '#ffb6c4'; ctx.font = '700 14px Share Tech Mono, Arial'; ctx.fillText(entry.p.outlet, x + 140, y + 150, 172);
-  });
+  drawCastSpreadFrame(ctx, cards || await loadCastCanvasAssets(), frame);
   return canvas;
 }
 async function exportCastCardAsImage(profile, filename, type = "image/png") {
@@ -4084,41 +4207,105 @@ async function exportCastCardAsImage(profile, filename, type = "image/png") {
 }
 document.getElementById('exportCastMemberPngBtn')?.addEventListener('click', async ()=>{const c=castProfiles[castIndex]; await exportCastCardAsImage(c,`${c.character.replace(/\s+/g,'-').toLowerCase()}.png`);});
 document.getElementById('exportCastSpreadPngBtn')?.addEventListener('click', async ()=>{ castSolo = false; renderCastSpread(); const canvas = await renderCastSpreadToCanvas(0); downloadCanvas(canvas, 'providentia-full-cast-spread.png'); });
-document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', async () => {
+function getCastMp4MimeType() {
+  const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4;codecs=h264', 'video/mp4'];
+  return types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+}
+function drawCastIntroFeatureFrame(ctx, entry, index, localProgress, frame) {
+  const inEase = easeInOutCubic(Math.min(localProgress / .24, 1));
+  const outEase = easeInOutCubic(Math.max((localProgress - .78) / .22, 0));
+  const scale = .965 + inEase * .035 - outEase * .018;
+  const alpha = Math.min(1, inEase * 1.15) * (1 - outEase * .35);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(960, 572);
+  ctx.scale(scale, scale);
+  ctx.translate(-960, -572);
+  ctx.fillStyle = 'rgba(3,7,13,.94)'; roundRect(ctx, 250, 216, 1420, 710, 42); ctx.fill();
+  ctx.strokeStyle = 'rgba(126,220,255,.34)'; ctx.lineWidth = 3; roundRect(ctx, 250, 216, 1420, 710, 42); ctx.stroke();
+  ctx.save(); roundRect(ctx, 286, 252, 500, 638, 30); ctx.clip(); drawCoverImage(ctx, entry.img, 286, 252 + Math.sin(frame / 34) * 8, 500, 638); ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,.20)'; ctx.lineWidth = 2; roundRect(ctx, 286, 252, 500, 638, 30); ctx.stroke();
+  if (entry.logo) {
+    const scaleLogo = Math.min(240 / entry.logo.width, 88 / entry.logo.height, 1);
+    ctx.drawImage(entry.logo, 820, 270, entry.logo.width * scaleLogo, entry.logo.height * scaleLogo);
+  }
+  ctx.fillStyle = '#7be4ff'; ctx.font = '700 20px Share Tech Mono, Arial';
+  ctx.fillText(`CAST DOSSIER ${String(index + 1).padStart(2, '0')} / ${String(castProfiles.length).padStart(2, '0')}`, 820, 412);
+  fitCanvasTextBlock(ctx, entry.p.character.toUpperCase(), { x: 820, y: 448, maxWidth: 780, maxHeight: 166, maxLines: 2, maxSize: 88, minSize: 44, weight: 800, fillStyle: '#f6fbff', lineHeightRatio: .88 });
+  fitCanvasTextBlock(ctx, entry.p.actor.toUpperCase(), { x: 820, y: 628, maxWidth: 780, maxHeight: 42, maxLines: 1, maxSize: 30, minSize: 18, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: '#ffb6c4', lineHeightRatio: 1 });
+  const statY = 704, statW = 238;
+  [entry.p.outlet || 'PROFILE', castStatValue(entry.p, 'actor'), castStatValue(entry.p, 'beats')].forEach((stat, statIndex) => {
+    const sx = 820 + statIndex * (statW + 18);
+    ctx.fillStyle = 'rgba(0,212,255,.075)'; roundRect(ctx, sx, statY, statW, 86, 18); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,212,255,.20)'; ctx.lineWidth = 1; roundRect(ctx, sx, statY, statW, 86, 18); ctx.stroke();
+    fitCanvasTextBlock(ctx, stat, { x: sx + 14, y: statY + 23, maxWidth: statW - 28, maxHeight: 40, maxLines: 2, maxSize: 22, minSize: 13, weight: 800, fillStyle: '#fff', lineHeightRatio: .9 });
+  });
+  fitCanvasTextBlock(ctx, entry.p.bio || '', { x: 820, y: 824, maxWidth: 780, maxHeight: 76, maxLines: 3, maxSize: 24, minSize: 16, weight: 500, family: 'Cormorant Garamond, Georgia', fillStyle: '#d8edf8', lineHeightRatio: 1.08 });
+  ctx.restore();
+}
+async function exportCastSocialIntroMp4() {
   if (!('MediaRecorder' in window)) return;
-  const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
-  if (!mp4Mime) { alert('This browser cannot encode MP4 directly.'); return; }
-  const canvas = await renderCastSpreadToCanvas(0);
-  const ctx = canvas.getContext('2d');
-  const cards = await Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto), logo: p.logo ? await preloadImage(p.logo) : null })));
-  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime });
-  const chunks = [];
-  rec.ondataavailable = e => e.data?.size && chunks.push(e.data);
-  rec.onstop = () => downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-full-cast-spread.mp4');
-  rec.start();
-  let f = 0;
-  const draw = () => {
-    drawCastBackground(ctx, 1920, 1080);
-    ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('FULL CAST SPREAD / ANIMATED EXPORT', 70, 72);
-    ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
-    ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
-    const cols = 5, cardW = 330, cardH = 236, gap = 24, startX = 70, startY = 245;
-    cards.forEach((entry, i) => {
-      const col = i % cols, row = Math.floor(i / cols);
-      const x = startX + col * (cardW + gap), y = startY + row * (cardH + gap) + Math.sin((f / 12) + i * .6) * 9;
-      ctx.fillStyle = 'rgba(5,12,24,.74)'; roundRect(ctx, x, y, cardW, cardH, 24); ctx.fill();
-      ctx.strokeStyle = `rgba(126,220,255,${.22 + Math.sin(f/18+i)*.08})`; ctx.lineWidth = 2; roundRect(ctx, x, y, cardW, cardH, 24); ctx.stroke();
-      ctx.save(); roundRect(ctx, x + 12, y + 12, 112, cardH - 24, 18); ctx.clip(); drawCoverImage(ctx, entry.img, x + 12, y + 12, 112, cardH - 24); ctx.restore();
-      if (entry.logo) { const scale = Math.min(76 / entry.logo.width, 38 / entry.logo.height, 1); ctx.drawImage(entry.logo, x + cardW - 88, y + 14, entry.logo.width * scale, entry.logo.height * scale); }
-      ctx.fillStyle = '#f4fbff'; ctx.font='800 30px Barlow Condensed, Arial'; ctx.fillText(entry.p.character, x+140, y+82, 172);
-      ctx.fillStyle = '#8fd7ff'; ctx.font='600 22px Barlow Condensed, Arial'; ctx.fillText(entry.p.actor, x+140, y+117, 172);
-      ctx.fillStyle = '#ffb6c4'; ctx.font='700 14px Share Tech Mono, Arial'; ctx.fillText(entry.p.outlet, x+140, y+150, 172);
-    });
-    f += 1;
-    if (f < 180) requestAnimationFrame(draw); else rec.stop();
-  };
-  draw();
-});
+  const mp4Mime = getCastMp4MimeType();
+  if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use Chrome, Edge, or Safari with MP4 MediaRecorder support.'); return; }
+  const btn = document.getElementById('exportCastSpreadMp4Btn');
+  const previousLabel = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = 'RENDERING SOCIAL INTRO MP4…'; }
+  try {
+    const cards = await loadCastCanvasAssets();
+    const canvas = document.createElement('canvas');
+    canvas.width = 1920; canvas.height = 1080;
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const fps = 30;
+    const introSeconds = 1.2;
+    const perCharacterSeconds = 2.35;
+    const outroSeconds = 2.1;
+    const durationSeconds = introSeconds + cards.length * perCharacterSeconds + outroSeconds;
+    const totalFrames = Math.ceil(durationSeconds * fps);
+    const rec = new MediaRecorder(canvas.captureStream(fps), { mimeType: mp4Mime, videoBitsPerSecond: 12000000 });
+    const chunks = [];
+    rec.ondataavailable = e => e.data?.size && chunks.push(e.data);
+    const stopped = new Promise(resolve => { rec.onstop = resolve; });
+    rec.start(1000);
+    let frame = 0;
+    const draw = () => {
+      const elapsed = frame / fps;
+      let revealCount = 0;
+      let focusIndex = -1;
+      if (elapsed > introSeconds) {
+        const sequenceTime = elapsed - introSeconds;
+        focusIndex = Math.min(cards.length - 1, Math.floor(sequenceTime / perCharacterSeconds));
+        revealCount = Math.min(cards.length, Math.max(0, focusIndex) + Math.min(1, (sequenceTime % perCharacterSeconds) / .52));
+        if (sequenceTime >= cards.length * perCharacterSeconds) {
+          revealCount = cards.length;
+          focusIndex = -1;
+        }
+      }
+      drawCastSpreadFrame(ctx, cards, frame, { revealCount, dimmed: focusIndex >= 0, focusIndex, title: 'FULL CAST SPREAD / SOCIAL INTRO MP4 EXPORT' });
+      if (elapsed < introSeconds) {
+        const introEase = easeInOutCubic(elapsed / introSeconds);
+        ctx.save();
+        ctx.globalAlpha = 1 - introEase;
+        ctx.fillStyle = 'rgba(0,0,0,.48)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = introEase;
+        fitCanvasTextBlock(ctx, 'SOCIAL CAST INTRO', { x: 510, y: 448, maxWidth: 900, maxHeight: 90, maxLines: 1, maxSize: 78, minSize: 48, weight: 800, fillStyle: '#f6fbff', textAlign: 'center' });
+        fitCanvasTextBlock(ctx, 'MEET THE CAST', { x: 610, y: 545, maxWidth: 700, maxHeight: 70, maxLines: 1, maxSize: 56, minSize: 34, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: '#7be4ff', textAlign: 'center' });
+        ctx.restore();
+      } else if (focusIndex >= 0 && focusIndex < cards.length) {
+        const localProgress = ((elapsed - introSeconds) - focusIndex * perCharacterSeconds) / perCharacterSeconds;
+        drawCastIntroFeatureFrame(ctx, cards[focusIndex], focusIndex, localProgress, frame);
+      }
+      frame += 1;
+      if (frame <= totalFrames) requestAnimationFrame(draw);
+      else rec.stop();
+    };
+    requestAnimationFrame(draw);
+    await stopped;
+    downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-social-cast-intro-full-spread.mp4');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = previousLabel || 'DOWNLOAD FULL SPREAD MP4'; }
+  }
+}
+document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', exportCastSocialIntroMp4);
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
 document.getElementById('exportCastSheetPngBtn')?.addEventListener('click', async ()=>{
