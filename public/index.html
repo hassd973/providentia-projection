@@ -1642,26 +1642,6 @@ body::after {
   object-fit:cover;
   object-position:center top;
 }
-.cast-solo-card {
-  width:min(100%, 1240px);
-  min-height:min(62vh, 680px);
-  margin:0 auto;
-  grid-template-columns:minmax(240px,.72fr) minmax(300px,1fr);
-}
-.cast-solo-photo img.cast-portrait {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  transform:scale(1.02);
-}
-.cast-solo-info .cast-upload-bar {
-  margin-top:6px;
-  padding-top:10px;
-  border-top:1px solid rgba(126,220,255,.16);
-}
 @keyframes cast-glass-breathe { 0%,100%{filter:saturate(1.02) brightness(1)} 50%{filter:saturate(1.12) brightness(1.06)} }
 @keyframes cast-feature-in { from{opacity:0; transform:translateY(18px) scale(.97)} to{opacity:1; transform:translateY(0) scale(1)} }
 @keyframes cast-feature-photo { from{transform:scale(1.09); filter:saturate(.78) brightness(.72)} to{transform:scale(1.02); filter:saturate(1.08) brightness(1)} }
@@ -2804,7 +2784,7 @@ body::after {
           <button class="action-btn" id="castBackToSpreadBtn" type="button">VIEW FULL SPREAD</button>
           <button class="action-btn" id="castReplayIntroBtn" type="button">REPLAY SOCIAL INTRO</button>
           <button class="action-btn" id="exportCastSpreadPngBtn" type="button">DOWNLOAD FULL SPREAD PNG</button>
-          <button class="action-btn" id="exportCastSpreadMp4Btn" type="button">DOWNLOAD SOCIAL INTRO MP4</button>
+          <button class="action-btn" id="exportCastSpreadMp4Btn" type="button">DOWNLOAD FULL SPREAD MP4</button>
           <button class="action-btn" id="exportCastMemberPngBtn" type="button">DOWNLOAD SOLO PNG</button>
           <button class="action-btn" id="exportCastMemberMp4Btn" type="button">DOWNLOAD SOLO MP4</button>
         </div>
@@ -3405,22 +3385,7 @@ function renderCastSpread() {
   if (intro) intro.hidden = true;
   const c = castProfiles[castIndex];
   solo.hidden = false;
-  solo.innerHTML = `<section class="cast-feature-card cast-solo-card" aria-live="polite">
-    <div class="cast-feature-photo cast-solo-photo">${hasAssignedPortrait(c) ? `<img class="cast-portrait" src="${c.photo}" alt="${escapeAttr(c.character)} portrait">` : `<div class="cast-placeholder">TAP TO ADD AND SAVE CAST PHOTO</div>`}</div>
-    <div class="cast-feature-info cast-solo-info">
-      <div class="cast-feature-kicker">INDIVIDUAL CAST CARD / SOCIAL INTRO STYLE</div>
-      <div class="cast-feature-name">${c.character}</div>
-      <div class="cast-feature-actor">${c.actor}</div>
-      ${c.logo ? `<img class="cast-feature-logo cast-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}
-      <div class="cast-feature-stats">
-        <div class="cast-feature-stat"><span>Signal</span><strong>${castStatValue(c, 'signal')}</strong></div>
-        <div class="cast-feature-stat"><span>Played by</span><strong>${castStatValue(c, 'actor')}</strong></div>
-        <div class="cast-feature-stat"><span>Story load</span><strong>${castStatValue(c, 'beats')}</strong></div>
-      </div>
-      <div class="cast-feature-bio cast-quote" id="castTypedText"></div>
-      <div class="cast-upload-bar"><input id="castPhotoUploadInput" type="file" accept="image/*"><button class="action-btn" id="castPhotoSaveBtn" type="button">SAVE CAST PHOTO</button><span class="cast-upload-note">${hasAssignedPortrait(c) ? 'Photo assigned' : 'No main photo assigned'}</span></div>
-    </div>
-  </section>`;
+  solo.innerHTML = `<div class="cast-solo-media">${hasAssignedPortrait(c) ? `<img class="cast-portrait" src="${c.photo}" alt="${escapeAttr(c.character)}">` : `<div class="cast-placeholder">TAP TO ADD AND SAVE CAST PHOTO</div>`}${c.logo ? `<img class="cast-logo" src="${c.logo}" alt="${escapeAttr(c.outlet)} logo">` : ''}<div class="cast-upload-bar"><input id="castPhotoUploadInput" type="file" accept="image/*"><button class="action-btn" id="castPhotoSaveBtn" type="button">SAVE CAST PHOTO</button><span class="cast-upload-note">${hasAssignedPortrait(c) ? 'Photo assigned' : 'No main photo assigned'}</span></div></div><div><div class="prism-review-title">${c.character} <span style="color:var(--sys-cyan);">/ ${c.actor}</span></div><div class="prism-meta">${c.outlet}</div><div class="cast-quote" id="castTypedText"></div></div>`;
   const el = document.getElementById('castTypedText'); const text = c.bio || '';
   let k = 0; el.textContent = ''; const timer = setInterval(() => { el.textContent = text.slice(0, k++); if (k > text.length) clearInterval(timer); }, 18);
   document.getElementById('castPhotoUploadInput')?.addEventListener('change', (ev) => {
@@ -4064,122 +4029,29 @@ function drawCastBackground(ctx, width, height) {
   for (let x = 0; x < width; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
   for (let y = 0; y < height; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
 }
-function drawCoverImage(ctx, img, x, y, w, h, focalY = 0.5) {
+function drawCoverImage(ctx, img, x, y, w, h) {
   if (!img) return;
   const scale = Math.max(w / img.width, h / img.height);
   const sw = w / scale, sh = h / scale;
-  const sy = Math.max(0, Math.min(img.height - sh, (img.height - sh) * focalY));
-  ctx.drawImage(img, (img.width - sw) / 2, sy, sw, sh, x, y, w, h);
-}
-function bestMp4MimeType() {
-  if (!('MediaRecorder' in window)) return '';
-  return [
-    'video/mp4;codecs="avc1.42E01E"',
-    'video/mp4;codecs=h264',
-    'video/mp4'
-  ].find(type => MediaRecorder.isTypeSupported(type)) || '';
-}
-function drawGlassPanel(ctx, x, y, w, h, r, fill = 'rgba(255,255,255,.10)', stroke = 'rgba(126,220,255,.25)') {
-  ctx.fillStyle = fill;
-  roundRect(ctx, x, y, w, h, r);
-  ctx.fill();
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = 2;
-  roundRect(ctx, x, y, w, h, r);
-  ctx.stroke();
-  const shine = ctx.createLinearGradient(x, y, x + w, y + h);
-  shine.addColorStop(0, 'rgba(255,255,255,.18)'); shine.addColorStop(.32, 'rgba(255,255,255,.02)'); shine.addColorStop(1, 'rgba(0,212,255,.08)');
-  ctx.fillStyle = shine;
-  roundRect(ctx, x + 2, y + 2, w - 4, h - 4, Math.max(0, r - 2));
-  ctx.fill();
-}
-function drawCastStats(ctx, profile, x, y, w, scale = 1) {
-  const gap = 12 * scale;
-  const boxW = (w - gap * 2) / 3;
-  const items = [
-    ['Signal', castStatValue(profile, 'signal')],
-    ['Played by', castStatValue(profile, 'actor')],
-    ['Story load', castStatValue(profile, 'beats')]
-  ];
-  items.forEach(([label, value], i) => {
-    const bx = x + i * (boxW + gap);
-    drawGlassPanel(ctx, bx, y, boxW, 76 * scale, 18 * scale, 'rgba(0,212,255,.065)', 'rgba(0,212,255,.22)');
-    ctx.fillStyle = 'rgba(126,220,255,.72)'; ctx.font = `700 ${10 * scale}px Share Tech Mono, Arial`; ctx.fillText(label.toUpperCase(), bx + 13 * scale, y + 25 * scale, boxW - 26 * scale);
-    ctx.fillStyle = '#fff'; ctx.font = `800 ${Math.max(16, 22 * scale)}px Barlow Condensed, Arial`; ctx.fillText(String(value).toUpperCase(), bx + 13 * scale, y + 57 * scale, boxW - 26 * scale);
-  });
-}
-function drawSocialIntroCastCard(ctx, entry, frame, opts = {}) {
-  const { x = 90, y = 150, w = 1740, h = 780, progress = 1, portrait = false } = opts;
-  const p = entry.p || entry;
-  const img = entry.img || null;
-  const logo = entry.logo || null;
-  const eased = 1 - Math.pow(1 - Math.max(0, Math.min(1, progress)), 3);
-  ctx.save();
-  ctx.globalAlpha = Math.max(.001, eased);
-  const ty = (1 - eased) * 50;
-  const zoom = 1 + (1 - eased) * .035;
-  ctx.translate(x + w / 2, y + h / 2 + ty);
-  ctx.scale(zoom, zoom);
-  ctx.translate(-(x + w / 2), -(y + h / 2));
-  drawGlassPanel(ctx, x, y, w, h, portrait ? 42 : 34, 'rgba(255,255,255,.105)', 'rgba(255,255,255,.17)');
-  const photoW = portrait ? w - 120 : Math.min(660, w * .40);
-  const photoH = portrait ? Math.min(610, h * .47) : h - 90;
-  const photoX = portrait ? x + 60 : x + 48;
-  const photoY = portrait ? y + 74 : y + 45;
-  ctx.save(); roundRect(ctx, photoX, photoY, photoW, photoH, portrait ? 34 : 26); ctx.clip();
-  drawCoverImage(ctx, img, photoX, photoY + Math.sin(frame / 24) * (portrait ? 4 : 7), photoW, photoH, .16);
-  ctx.restore();
-  ctx.strokeStyle = 'rgba(255,255,255,.24)'; ctx.lineWidth = 3; roundRect(ctx, photoX, photoY, photoW, photoH, portrait ? 34 : 26); ctx.stroke();
-  const infoX = portrait ? x + 62 : photoX + photoW + 62;
-  const infoY = portrait ? photoY + photoH + 64 : y + 122;
-  const infoW = portrait ? w - 124 : x + w - infoX - 58;
-  ctx.fillStyle = '#7be4ff'; ctx.font = `700 ${portrait ? 24 : 22}px Share Tech Mono, Arial`; ctx.fillText(opts.kicker || 'CAST DOSSIER / SOCIAL INTRO', infoX, infoY, infoW);
-  ctx.fillStyle = '#f6fbff'; ctx.font = `800 ${portrait ? 76 : 104}px Barlow Condensed, Arial`;
-  wrapCanvasText(ctx, p.character, infoX, infoY + (portrait ? 84 : 112), infoW, portrait ? 78 : 96, portrait ? 2 : 2);
-  ctx.fillStyle = '#ffb6c4'; ctx.font = `700 ${portrait ? 28 : 30}px Share Tech Mono, Arial`; ctx.fillText(String(p.actor || '').toUpperCase(), infoX, infoY + (portrait ? 230 : 262), infoW);
-  if (logo) {
-    const maxLogoW = portrait ? 240 : 250, maxLogoH = portrait ? 82 : 86;
-    const scale = Math.min(maxLogoW / logo.width, maxLogoH / logo.height, 1);
-    ctx.drawImage(logo, infoX, infoY + (portrait ? 262 : 300), logo.width * scale, logo.height * scale);
-  }
-  drawCastStats(ctx, p, infoX, infoY + (portrait ? 374 : 414), infoW, portrait ? .92 : 1);
-  ctx.fillStyle = '#d8edf8'; ctx.font = `500 ${portrait ? 34 : 30}px Cormorant Garamond, Georgia`;
-  wrapCanvasText(ctx, p.bio || '', infoX, infoY + (portrait ? 508 : 545), infoW, portrait ? 42 : 38, portrait ? 5 : 4);
-  ctx.restore();
-}
-function drawCastEnsembleGrid(ctx, cards, frame, reveal = 1) {
-  drawCastBackground(ctx, 1920, 1080);
-  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('FULL CAST SPREAD / SOCIAL INTRO EXPORT', 70, 72);
-  ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
-  ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
-  const cols = 4, cardW = 430, cardH = 365, gap = 26, startX = 70, startY = 250;
-  cards.forEach((entry, i) => {
-    const col = i % cols, row = Math.floor(i / cols);
-    const local = Math.max(0, Math.min(1, reveal * cards.length - i));
-    if (local <= 0) return;
-    ctx.save(); ctx.globalAlpha = local;
-    const x = startX + col * (cardW + gap), y = startY + row * (cardH + gap) + Math.sin((frame / 14) + i * .6) * 7 + (1 - local) * 18;
-    drawGlassPanel(ctx, x, y, cardW, cardH, 26, 'rgba(5,12,24,.72)', `rgba(126,220,255,${.20 + Math.sin(frame/18+i)*.08})`);
-    ctx.save(); roundRect(ctx, x + 14, y + 14, cardW - 28, 210, 20); ctx.clip(); drawCoverImage(ctx, entry.img, x + 14, y + 14, cardW - 28, 210, .16); ctx.restore();
-    const fade = ctx.createLinearGradient(0, y + 132, 0, y + 232); fade.addColorStop(0, 'rgba(2,8,16,0)'); fade.addColorStop(1, 'rgba(2,8,16,.92)'); ctx.fillStyle = fade; ctx.fillRect(x + 14, y + 128, cardW - 28, 96);
-    if (entry.logo) { const scale = Math.min(86 / entry.logo.width, 42 / entry.logo.height, 1); ctx.drawImage(entry.logo, x + cardW - 106, y + 26, entry.logo.width * scale, entry.logo.height * scale); }
-    ctx.fillStyle = '#f4fbff'; ctx.font = '800 34px Barlow Condensed, Arial'; wrapCanvasText(ctx, entry.p.character, x + 24, y + 270, cardW - 48, 35, 2);
-    ctx.fillStyle = '#8fd7ff'; ctx.font = '600 22px Barlow Condensed, Arial'; ctx.fillText(entry.p.actor, x + 24, y + 332, cardW - 48);
-    ctx.fillStyle = '#ffb6c4'; ctx.font = '700 13px Share Tech Mono, Arial'; ctx.fillText(entry.p.outlet || 'PROFILE', x + 24, y + 354, cardW - 48);
-    ctx.restore();
-  });
-}
-async function loadCastCanvasAssets() {
-  await document.fonts?.ready?.catch?.(() => {});
-  return Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto), logo: p.logo ? await preloadImage(p.logo) : null })));
+  ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh, x, y, w, h);
 }
 async function renderCastCardToCanvas(profile) {
   const canvas = document.createElement('canvas');
   canvas.width = 1080; canvas.height = 1350;
   const ctx = canvas.getContext('2d');
   drawCastBackground(ctx, canvas.width, canvas.height);
-  const entry = { p: profile, img: await preloadImage(profile.photo || castPlaceholderPhoto), logo: profile.logo ? await preloadImage(profile.logo) : null };
-  drawSocialIntroCastCard(ctx, entry, 0, { x: 54, y: 58, w: 972, h: 1228, portrait: true, kicker: 'INDIVIDUAL CAST CARD / SOCIAL INTRO STYLE' });
+  const img = await preloadImage(profile.photo || castPlaceholderPhoto);
+  const logo = profile.logo ? await preloadImage(profile.logo) : null;
+  ctx.save(); roundRect(ctx, 60, 150, 960, 650, 34); ctx.clip(); drawCoverImage(ctx, img, 60, 150, 960, 650); ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,.24)'; ctx.lineWidth = 3; roundRect(ctx, 60, 150, 960, 650, 34); ctx.stroke();
+  const fade = ctx.createLinearGradient(0, 600, 0, 840); fade.addColorStop(0, 'rgba(7,11,17,0)'); fade.addColorStop(1, 'rgba(7,11,17,.9)'); ctx.fillStyle = fade; ctx.fillRect(60, 545, 960, 255);
+  if (logo) { const scale = Math.min(270 / logo.width, 120 / logo.height, 1); ctx.drawImage(logo, 1000 - logo.width * scale, 185, logo.width * scale, logo.height * scale); }
+  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('PROVIDENTIA / CHARACTER FILE', 70, 92);
+  ctx.fillStyle = '#f6fbff'; ctx.font = '800 76px Barlow Condensed, Arial'; ctx.fillText(profile.character, 70, 900, 940);
+  ctx.fillStyle = '#9edcff'; ctx.font = '600 42px Barlow Condensed, Arial'; ctx.fillText(`${profile.actor} · ${profile.outlet}`, 70, 960, 940);
+  ctx.fillStyle = 'rgba(255,255,255,.12)'; roundRect(ctx, 60, 1000, 960, 270, 24); ctx.fill();
+  ctx.fillStyle = '#d9edf8'; ctx.font = '400 34px Cormorant Garamond, Georgia';
+  wrapCanvasText(ctx, profile.bio || '', 92, 1060, 900, 44, 5);
   ctx.fillStyle = '#ff9db1'; ctx.font = '700 22px Share Tech Mono, Arial'; ctx.fillText('PNG + MP4 EXPORT CARD', 70, 1310);
   return canvas;
 }
@@ -4187,53 +4059,24 @@ async function renderCastSpreadToCanvas(frame = 0) {
   const canvas = document.createElement('canvas');
   canvas.width = 1920; canvas.height = 1080;
   const ctx = canvas.getContext('2d');
-  const cards = await loadCastCanvasAssets();
-  drawCastEnsembleGrid(ctx, cards, frame, 1);
+  drawCastBackground(ctx, canvas.width, canvas.height);
+  ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('FULL CAST SPREAD / TAP CHARACTER FOR SOLO VIEW', 70, 72);
+  ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
+  ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
+  const cards = await Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto), logo: p.logo ? await preloadImage(p.logo) : null })));
+  const cols = 5, cardW = 330, cardH = 236, gap = 24, startX = 70, startY = 245;
+  cards.forEach((entry, i) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x = startX + col * (cardW + gap), y = startY + row * (cardH + gap) + Math.sin((frame / 12) + i * .6) * 7;
+    ctx.fillStyle = 'rgba(5,12,24,.72)'; roundRect(ctx, x, y, cardW, cardH, 24); ctx.fill();
+    ctx.strokeStyle = 'rgba(126,220,255,.24)'; ctx.lineWidth = 2; roundRect(ctx, x, y, cardW, cardH, 24); ctx.stroke();
+    ctx.save(); roundRect(ctx, x + 12, y + 12, 112, cardH - 24, 18); ctx.clip(); drawCoverImage(ctx, entry.img, x + 12, y + 12, 112, cardH - 24); ctx.restore();
+    if (entry.logo) { const scale = Math.min(76 / entry.logo.width, 38 / entry.logo.height, 1); ctx.drawImage(entry.logo, x + cardW - 88, y + 14, entry.logo.width * scale, entry.logo.height * scale); }
+    ctx.fillStyle = '#f4fbff'; ctx.font = '800 30px Barlow Condensed, Arial'; ctx.fillText(entry.p.character, x + 140, y + 82, 172);
+    ctx.fillStyle = '#8fd7ff'; ctx.font = '600 22px Barlow Condensed, Arial'; ctx.fillText(entry.p.actor, x + 140, y + 117, 172);
+    ctx.fillStyle = '#ffb6c4'; ctx.font = '700 14px Share Tech Mono, Arial'; ctx.fillText(entry.p.outlet, x + 140, y + 150, 172);
+  });
   return canvas;
-}
-async function exportCastIntroMp4() {
-  if (!('MediaRecorder' in window)) { alert('This browser cannot record canvas video. Use Chrome or Edge with MP4 MediaRecorder support.'); return; }
-  const mp4Mime = bestMp4MimeType();
-  if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
-  const button = document.getElementById('exportCastSpreadMp4Btn');
-  const oldLabel = button?.textContent;
-  if (button) { button.disabled = true; button.textContent = 'RENDERING SOCIAL INTRO MP4…'; }
-  try {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1920; canvas.height = 1080;
-    const ctx = canvas.getContext('2d', { alpha: false });
-    const fps = 30;
-    const stream = canvas.captureStream(fps);
-    const recorder = new MediaRecorder(stream, { mimeType: mp4Mime, videoBitsPerSecond: 14000000 });
-    const chunks = [];
-    recorder.ondataavailable = e => e.data?.size && chunks.push(e.data);
-    const cards = await loadCastCanvasAssets();
-    const totalFrames = Math.round((castProfiles.length * 0.9 + 2.2) * fps);
-    const featureFrames = Math.round(.9 * fps);
-    let frame = 0;
-    const stopped = new Promise(resolve => { recorder.onstop = resolve; });
-    recorder.start(1000);
-    const draw = () => {
-      drawCastBackground(ctx, canvas.width, canvas.height);
-      const featureIndex = Math.floor(frame / featureFrames);
-      if (featureIndex < cards.length) {
-        const localFrame = frame - featureIndex * featureFrames;
-        const progress = Math.min(1, localFrame / 10);
-        drawSocialIntroCastCard(ctx, cards[featureIndex], frame, { progress, kicker: `CAST DOSSIER ${String(featureIndex + 1).padStart(2,'0')} / ${String(cards.length).padStart(2,'0')}` });
-        ctx.fillStyle = 'rgba(126,220,255,.65)'; ctx.font = '700 20px Share Tech Mono, Arial'; ctx.fillText('SOCIAL INTRO ANIMATION • HIGH QUALITY MP4', 90, 1000);
-      } else {
-        const gridProgress = Math.min(1, (frame - cards.length * featureFrames) / Math.round(.75 * fps));
-        drawCastEnsembleGrid(ctx, cards, frame, gridProgress);
-      }
-      frame += 1;
-      if (frame <= totalFrames) requestAnimationFrame(draw); else recorder.stop();
-    };
-    draw();
-    await stopped;
-    downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-social-intro-cast-spread.mp4');
-  } finally {
-    if (button) { button.disabled = false; button.textContent = oldLabel || 'DOWNLOAD SOCIAL INTRO MP4'; }
-  }
 }
 async function exportCastCardAsImage(profile, filename, type = "image/png") {
   const canvas = await renderCastCardToCanvas(profile);
@@ -4241,7 +4084,41 @@ async function exportCastCardAsImage(profile, filename, type = "image/png") {
 }
 document.getElementById('exportCastMemberPngBtn')?.addEventListener('click', async ()=>{const c=castProfiles[castIndex]; await exportCastCardAsImage(c,`${c.character.replace(/\s+/g,'-').toLowerCase()}.png`);});
 document.getElementById('exportCastSpreadPngBtn')?.addEventListener('click', async ()=>{ castSolo = false; renderCastSpread(); const canvas = await renderCastSpreadToCanvas(0); downloadCanvas(canvas, 'providentia-full-cast-spread.png'); });
-document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', exportCastIntroMp4);
+document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', async () => {
+  if (!('MediaRecorder' in window)) return;
+  const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
+  if (!mp4Mime) { alert('This browser cannot encode MP4 directly.'); return; }
+  const canvas = await renderCastSpreadToCanvas(0);
+  const ctx = canvas.getContext('2d');
+  const cards = await Promise.all(castProfiles.map(async (p) => ({ p, img: await preloadImage(p.photo || castPlaceholderPhoto), logo: p.logo ? await preloadImage(p.logo) : null })));
+  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime });
+  const chunks = [];
+  rec.ondataavailable = e => e.data?.size && chunks.push(e.data);
+  rec.onstop = () => downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-full-cast-spread.mp4');
+  rec.start();
+  let f = 0;
+  const draw = () => {
+    drawCastBackground(ctx, 1920, 1080);
+    ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('FULL CAST SPREAD / ANIMATED EXPORT', 70, 72);
+    ctx.fillStyle = '#f6fbff'; ctx.font = '800 88px Barlow Condensed, Arial'; ctx.fillText('MEET THE CAST', 70, 155);
+    ctx.fillStyle = '#b8d8ef'; ctx.font = '500 30px Barlow Condensed, Arial'; ctx.fillText('PROVIDENTIA projection deck character ensemble', 72, 202);
+    const cols = 5, cardW = 330, cardH = 236, gap = 24, startX = 70, startY = 245;
+    cards.forEach((entry, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      const x = startX + col * (cardW + gap), y = startY + row * (cardH + gap) + Math.sin((f / 12) + i * .6) * 9;
+      ctx.fillStyle = 'rgba(5,12,24,.74)'; roundRect(ctx, x, y, cardW, cardH, 24); ctx.fill();
+      ctx.strokeStyle = `rgba(126,220,255,${.22 + Math.sin(f/18+i)*.08})`; ctx.lineWidth = 2; roundRect(ctx, x, y, cardW, cardH, 24); ctx.stroke();
+      ctx.save(); roundRect(ctx, x + 12, y + 12, 112, cardH - 24, 18); ctx.clip(); drawCoverImage(ctx, entry.img, x + 12, y + 12, 112, cardH - 24); ctx.restore();
+      if (entry.logo) { const scale = Math.min(76 / entry.logo.width, 38 / entry.logo.height, 1); ctx.drawImage(entry.logo, x + cardW - 88, y + 14, entry.logo.width * scale, entry.logo.height * scale); }
+      ctx.fillStyle = '#f4fbff'; ctx.font='800 30px Barlow Condensed, Arial'; ctx.fillText(entry.p.character, x+140, y+82, 172);
+      ctx.fillStyle = '#8fd7ff'; ctx.font='600 22px Barlow Condensed, Arial'; ctx.fillText(entry.p.actor, x+140, y+117, 172);
+      ctx.fillStyle = '#ffb6c4'; ctx.font='700 14px Share Tech Mono, Arial'; ctx.fillText(entry.p.outlet, x+140, y+150, 172);
+    });
+    f += 1;
+    if (f < 180) requestAnimationFrame(draw); else rec.stop();
+  };
+  draw();
+});
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
 document.getElementById('exportCastSheetPngBtn')?.addEventListener('click', async ()=>{
@@ -4271,29 +4148,38 @@ document.getElementById('castReplayIntroBtn')?.addEventListener('click', () => s
 document.getElementById('exportCastMemberMp4Btn')?.addEventListener('click', async () => {
   const c = castProfiles[castIndex];
   if (!('MediaRecorder' in window)) return;
-  const mp4Mime = bestMp4MimeType();
+  const mp4Mime = MediaRecorder.isTypeSupported('video/mp4;codecs=h264') ? 'video/mp4;codecs=h264' : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : '');
   if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
   const canvas = document.createElement('canvas');
   canvas.width = 1080; canvas.height = 1350;
-  const ctx = canvas.getContext('2d', { alpha: false });
-  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime, videoBitsPerSecond: 10000000 });
+  const ctx = canvas.getContext('2d');
+  const rec = new MediaRecorder(canvas.captureStream(30), { mimeType: mp4Mime });
   const chunks = [];
   rec.ondataavailable = ev => ev.data.size && chunks.push(ev.data);
-  const done = new Promise(resolve => { rec.onstop = resolve; });
-  const entry = { p: c, img: await preloadImage(c.photo || castPlaceholderPhoto), logo: c.logo ? await preloadImage(c.logo) : null };
+  rec.onstop = () => downloadBlob(new Blob(chunks, { type: 'video/mp4' }), `${c.character.toLowerCase().replace(/\s+/g,'-')}-animated.mp4`);
+  const img = await preloadImage(c.photo || castPlaceholderPhoto);
+  const logo = c.logo ? await preloadImage(c.logo) : null;
+  const text = c.bio || '';
   let frame = 0;
-  rec.start(1000);
+  rec.start();
   const draw = () => {
     drawCastBackground(ctx, canvas.width, canvas.height);
-    const progress = Math.min(1, frame / 18);
-    drawSocialIntroCastCard(ctx, entry, frame, { x: 54, y: 58, w: 972, h: 1228, portrait: true, progress, kicker: 'INDIVIDUAL CAST CARD / SOCIAL INTRO STYLE' });
-    ctx.fillStyle = frame % 32 < 16 ? '#ff9db1' : 'rgba(255,157,177,.35)'; ctx.fillRect(70, 1300, 18, 30);
-    frame += 1;
-    if (frame < 150) requestAnimationFrame(draw); else rec.stop();
+    ctx.save(); roundRect(ctx, 60, 140, 960, 650, 34); ctx.clip(); drawCoverImage(ctx, img, 60, 145 + Math.sin(frame / 24) * 8, 960, 650); ctx.restore();
+    ctx.strokeStyle = 'rgba(126,220,255,.32)'; ctx.lineWidth = 3; roundRect(ctx, 60, 140, 960, 650, 34); ctx.stroke();
+    const fade = ctx.createLinearGradient(0, 560, 0, 815); fade.addColorStop(0, 'rgba(7,11,17,0)'); fade.addColorStop(1, 'rgba(7,11,17,.92)'); ctx.fillStyle = fade; ctx.fillRect(60, 540, 960, 260);
+    if (logo) { const pulse = 1 + Math.sin(frame / 18) * .025; const scale = Math.min((285 * pulse) / logo.width, (126 * pulse) / logo.height, 1); ctx.drawImage(logo, 1000 - logo.width * scale, 180, logo.width * scale, logo.height * scale); }
+    ctx.fillStyle = '#7be4ff'; ctx.font = '700 24px Share Tech Mono, Arial'; ctx.fillText('ANIMATED CHARACTER CARD / MP4', 70, 90);
+    ctx.fillStyle = '#f6fbff'; ctx.font = '800 76px Barlow Condensed, Arial'; ctx.fillText(c.character, 70, 895, 940);
+    ctx.fillStyle = '#9edcff'; ctx.font = '600 42px Barlow Condensed, Arial'; ctx.fillText(`${c.actor} · ${c.outlet}`, 70, 955, 940);
+    ctx.fillStyle = 'rgba(255,255,255,.12)'; roundRect(ctx, 60, 995, 960, 278, 24); ctx.fill();
+    ctx.fillStyle = '#d9edf8'; ctx.font = '400 34px Cormorant Garamond, Georgia';
+    const show = text.slice(0, Math.min(text.length, Math.floor(frame * 1.35)));
+    wrapCanvasText(ctx, show, 92, 1055, 900, 44, 5);
+    ctx.fillStyle = frame % 32 < 16 ? '#ff9db1' : 'rgba(255,157,177,.35)'; ctx.fillRect(92, 1236, 18, 38);
+    frame++;
+    if (frame < 240) requestAnimationFrame(draw); else rec.stop();
   };
   draw();
-  await done;
-  downloadBlob(new Blob(chunks, { type: 'video/mp4' }), `${c.character.toLowerCase().replace(/\s+/g,'-')}-social-card.mp4`);
 });
 document.getElementById('openCastSlideBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-cast-module'))));
 document.getElementById('backToToolsBtn')?.addEventListener('click', () => goTo(slides.findIndex(sl => sl.classList.contains('slide-crew-menu'))));
