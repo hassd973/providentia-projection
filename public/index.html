@@ -2685,7 +2685,7 @@ body::after {
   <div class="prism-carousel-wrap">
     <button class="prism-view-switch" id="carouselViewSwitch">SWITCH TO PRISM ASSESSMENT →</button>
     <div class="prism-carousel">
-      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Download Personal Story character cases and Providentia scoring MP4 export" title="Hidden download: character cases + Providentia scoring MP4">⬇</button>
+      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Fast download MP4 export for Personal Story character case review" title="Fast MP4 export: Personal Story character case review">⬇</button>
       <button class="carousel-nav-btn" id="charPrev" aria-label="Previous character">‹</button>
       <div class="prism-character-card" id="characterCard"></div>
       <button class="carousel-nav-btn" id="charNext" aria-label="Next character">›</button>
@@ -2899,8 +2899,14 @@ document.addEventListener('keydown', e => {
 
 // Touch / swipe
 let touchStart = 0;
-document.addEventListener('touchstart', e => { touchStart = e.touches[0].clientX; }, { passive: true });
+let touchSwipeBlocked = false;
+document.addEventListener('touchstart', e => {
+  touchStart = e.touches[0].clientX;
+  const el = e.target;
+  touchSwipeBlocked = !!el?.closest('button, a, input, textarea, select, .prism-stage-toggle, .carousel-nav-btn, .prism-view-switch, .slide17-download-toggle, .cast-spread, .cast-solo, .crew-glass-nav, .tg-thread-block');
+}, { passive: true });
 document.addEventListener('touchend', e => {
+  if (touchSwipeBlocked) { touchSwipeBlocked = false; return; }
   const diff = touchStart - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
 });
