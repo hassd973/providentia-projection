@@ -1197,6 +1197,8 @@ body::after {
   min-height: 48px;
 }
 .character-action-box span { display:block; color: rgba(255,255,255,.48); font-size: 8px; letter-spacing: 1px; margin-bottom: 4px; }
+.slide17-download-toggle { position:absolute; right:10px; bottom:8px; width:22px; height:22px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.22); color:rgba(255,255,255,.26); font:700 12px/1 'Share Tech Mono', monospace; display:grid; place-items:center; cursor:pointer; opacity:.35; transition:opacity .2s ease, transform .2s ease, border-color .2s ease; }
+.slide17-download-toggle:hover, .slide17-download-toggle:focus-visible { opacity:.85; border-color:rgba(0,212,255,.55); color:rgba(223,243,255,.85); transform:translateY(-1px); }
 .prism-score.low { border-color: #6b9bb8; color: #6b9bb8; }
 .prism-score.critical { border-color: #ff2d55; color: #ff2d55; box-shadow: 0 0 16px rgba(255,45,85,.25); }
 .prism-stage-toggle { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
@@ -2677,6 +2679,7 @@ body::after {
   <div class="prism-carousel-wrap">
     <button class="prism-view-switch" id="carouselViewSwitch">SWITCH TO PRISM ASSESSMENT →</button>
     <div class="prism-carousel">
+      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Download Personal Story character cases MP4 export" title="Download Personal Story character cases MP4">d</button>
       <button class="carousel-nav-btn" id="charPrev" aria-label="Previous character">‹</button>
       <div class="prism-character-card" id="characterCard"></div>
       <button class="carousel-nav-btn" id="charNext" aria-label="Next character">›</button>
@@ -2811,7 +2814,7 @@ body::after {
         <div class="cast-module-intro" id="castModuleIntro">
           <div class="cast-module-kicker">FULL CAST SPREAD / TAP A CHARACTER</div>
           <div class="cast-module-heading">MEET THE CAST</div>
-          <div class="cast-module-copy">A smooth character intro sequence introduces every role, returns to the ensemble, and keeps portraits and play information clear for projection and social sharing.</div>
+          <div class="cast-module-copy">A smooth character intro sequence introduces every role, returns to the ensemble, and keeps portraits plus full character reviews clear for projection and social sharing.</div>
         </div>
         <div class="cast-feature-stage" id="castFeatureStage" hidden></div>
         <div class="cast-spread" id="castSpread"></div>
@@ -4408,6 +4411,12 @@ document.getElementById('castExportOrientationBtn')?.addEventListener('click', (
 });
 updateCastExportOrientationButton();
 document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', exportCastSocialIntroMp4);
+document.getElementById('slide17DownloadToggle')?.addEventListener('click', async () => {
+  const isCastSlideOpen = slides[current]?.classList.contains('slide-cast-module');
+  if (!isCastSlideOpen) goToSlideNumber(20);
+  await new Promise(resolve => setTimeout(resolve, isCastSlideOpen ? 120 : 620));
+  await exportCastSocialIntroMp4();
+});
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
 document.getElementById('exportCastSheetPngBtn')?.addEventListener('click', async ()=>{
