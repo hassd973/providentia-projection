@@ -1197,7 +1197,7 @@ body::after {
   min-height: 48px;
 }
 .character-action-box span { display:block; color: rgba(255,255,255,.48); font-size: 8px; letter-spacing: 1px; margin-bottom: 4px; }
-.slide17-download-toggle { position:absolute; right:10px; bottom:8px; width:22px; height:22px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.22); color:rgba(255,255,255,.26); font:700 12px/1 'Share Tech Mono', monospace; display:grid; place-items:center; cursor:pointer; opacity:.35; transition:opacity .2s ease, transform .2s ease, border-color .2s ease; }
+.slide17-download-toggle { position:absolute; right:10px; bottom:10px; width:24px; height:24px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.22); color:rgba(255,255,255,.24); font:700 11px/1 'Share Tech Mono', monospace; display:grid; place-items:center; cursor:pointer; opacity:.28; transition:opacity .2s ease, transform .2s ease, border-color .2s ease; z-index:6; }
 .slide17-download-toggle:hover, .slide17-download-toggle:focus-visible { opacity:.85; border-color:rgba(0,212,255,.55); color:rgba(223,243,255,.85); transform:translateY(-1px); }
 .prism-score.low { border-color: #6b9bb8; color: #6b9bb8; }
 .prism-score.critical { border-color: #ff2d55; color: #ff2d55; box-shadow: 0 0 16px rgba(255,45,85,.25); }
@@ -1242,6 +1242,12 @@ body::after {
   .character-review-photo { min-height: 180px; max-height: 32vh; }
   .character-profile-top, .character-meta-grid, .character-score-grid, .character-action-grid { grid-template-columns: 1fr; }
   .character-score-badge { width: 92px; justify-self: start; }
+  .slide17-download-toggle {
+    right: auto;
+    left: 8px;
+    bottom: 72px;
+    opacity: .2;
+  }
 }
 
 /* ══════════════════════════════════
@@ -2679,7 +2685,7 @@ body::after {
   <div class="prism-carousel-wrap">
     <button class="prism-view-switch" id="carouselViewSwitch">SWITCH TO PRISM ASSESSMENT →</button>
     <div class="prism-carousel">
-      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Download Personal Story character cases MP4 export" title="Download Personal Story character cases MP4">d</button>
+      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Download Personal Story character cases MP4 export" title="Download Personal Story character cases MP4">⬇</button>
       <button class="carousel-nav-btn" id="charPrev" aria-label="Previous character">‹</button>
       <div class="prism-character-card" id="characterCard"></div>
       <button class="carousel-nav-btn" id="charNext" aria-label="Next character">›</button>
