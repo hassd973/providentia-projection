@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROVIDENTIA — Projection Slides</title>
+<title>Repatriation — Projection Slides</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -100,7 +100,9 @@ body::after {
   color: rgba(107,155,184,0.2); font-size: clamp(20px,2.5vw,28px);
   z-index: 600; padding: clamp(12px,2vw,24px);
   transition: color 0.3s;
+  touch-action: manipulation;
 }
+#prev-btn::before, #next-btn::before { content:''; position:absolute; inset:-16px; }
 #prev-btn:hover, #next-btn:hover { color: rgba(107,155,184,0.6); }
 #prev-btn { left: 0; }
 #next-btn { right: 0; }
@@ -111,6 +113,27 @@ body::after {
   font-size: 8px; color: rgba(107,155,184,0.15);
   letter-spacing: 2px; z-index: 600;
 }
+
+
+#show-preload {
+  position: fixed; inset: 0; z-index: 12000;
+  background: radial-gradient(circle at 72% 18%, rgba(232,45,85,.25), transparent 45%), linear-gradient(155deg,#05070e 0%,#0b1220 45%,#170b16 100%);
+  display: grid; place-items: center; padding: 24px;
+}
+.preload-shell {
+  width: min(860px, 94vw); border: 1px solid rgba(255,255,255,.24);
+  background: rgba(5,10,18,.72); backdrop-filter: blur(10px);
+  border-radius: 20px; padding: clamp(22px,3.2vw,44px); text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,.52);
+}
+.preload-kicker { font: 700 10px 'Share Tech Mono', monospace; letter-spacing: 3px; color: rgba(180,214,241,.72); margin-bottom: 12px; }
+.preload-title { font: 700 clamp(44px,8.4vw,110px)/.92 'Cormorant Garamond', serif; color:#fff; text-transform: uppercase; letter-spacing: .02em; }
+.preload-sub { font: 500 clamp(13px,1.6vw,20px)/1.35 'Barlow Condensed', sans-serif; color: rgba(232,241,250,.86); margin-top: 14px; }
+#startShowBtn { margin-top: 24px; border:1px solid rgba(0,212,255,.55); background:rgba(0,212,255,.12); color:#dff7ff; font:700 12px 'Share Tech Mono', monospace; letter-spacing:2px; padding:12px 20px; border-radius:999px; cursor:pointer; text-transform:uppercase; }
+#startShowBtn:hover{background:rgba(0,212,255,.2);}
+body.show-armed #show-preload { opacity:0; pointer-events:none; transition: opacity .55s ease; }
+body.show-armed .slide { transition: opacity .8s cubic-bezier(.22,1,.36,1); }
+@media (max-width: 680px){ #prev-btn, #next-btn { font-size: 28px; padding: 20px; color: rgba(107,155,184,.38);} }
 
 /* ══════════════════════════════════
    SLIDE CONTAINER
@@ -2107,6 +2130,15 @@ body::after {
 </style>
 </head>
 <body>
+
+<div id="show-preload" aria-live="polite">
+  <div class="preload-shell">
+    <div class="preload-kicker">FULL STAGE PLAY</div>
+    <div class="preload-title">Repatriation</div>
+    <div class="preload-sub">Projection sequence armed and ready. Tap to begin performance playback.</div>
+    <button id="startShowBtn" type="button">Start Show</button>
+  </div>
+</div>
 
 <!-- LETTERBOX -->
 <div class="letterbox-top"></div>
@@ -4433,11 +4465,11 @@ async function exportPersonalStorySlidesMp4() {
   const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4;codecs=h264', 'video/mp4'];
   const mp4Mime = types.find(t => MediaRecorder.isTypeSupported(t));
   if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
-  const width = 1080, height = 1920, fps = 30;
+  const width = 1440, height = 2560, fps = 30;
   const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
   const ctx = canvas.getContext('2d');
   const stream = canvas.captureStream(fps);
-  const rec = new MediaRecorder(stream, { mimeType: mp4Mime, videoBitsPerSecond: 12000000 });
+  const rec = new MediaRecorder(stream, { mimeType: mp4Mime, videoBitsPerSecond: 16000000 });
   const chunks = []; rec.ondataavailable = e => { if (e.data?.size) chunks.push(e.data); };
   const stopped = new Promise(resolve => { rec.onstop = resolve; });
   const btn = document.getElementById('slide17DownloadToggle');
@@ -4445,7 +4477,7 @@ async function exportPersonalStorySlidesMp4() {
   if (btn) { btn.disabled = true; btn.textContent = '…'; }
   const profiles = prismProfiles.map((p, i) => ({ p, h: humanProfiles[i] || {} }));
   const photos = await Promise.all(profiles.map(({h}) => loadImageToPromise(h.photo || '')));
-  const perCharacterSeconds = 0.9;
+  const perCharacterSeconds = 0.72;
   const totalFrames = Math.ceil(perCharacterSeconds * fps * profiles.length);
   try {
     rec.start();
@@ -4462,7 +4494,7 @@ async function exportPersonalStorySlidesMp4() {
       fitCanvasTextBlock(ctx, 'PERSONAL STORY', { x: 90, y: 120, maxWidth: width-180, maxHeight: 80, maxLines: 1, maxSize: 52, minSize: 34, weight: 800, fillStyle: '#7be4ff' });
       fitCanvasTextBlock(ctx, String(h.name || p.name || '').toUpperCase(), { x: 90, y: 188, maxWidth: width-180, maxHeight: 130, maxLines: 2, maxSize: 74, minSize: 42, weight: 800, fillStyle: '#f6fbff' });
       fitCanvasTextBlock(ctx, `CASE ${String(idx+1).padStart(2,'0')} / ${profiles.length}`, { x: 90, y: 300, maxWidth: width-180, maxHeight: 46, maxLines: 1, maxSize: 28, minSize: 20, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: 'rgba(155,203,233,.9)' });
-      fitCanvasTextBlock(ctx, h.humanDesc || 'Profile unavailable.', { x: 90, y: 360, maxWidth: width-180, maxHeight: height-470, maxLines: 12, maxSize: 38, minSize: 24, weight: 600, fillStyle: '#ebf4ff', lineHeightRatio: 1.08 });
+      fitCanvasTextBlock(ctx, p.personalStory || h.humanDesc || 'Profile unavailable.', { x: 90, y: 360, maxWidth: width-180, maxHeight: height-470, maxLines: 12, maxSize: 38, minSize: 24, weight: 600, fillStyle: '#ebf4ff', lineHeightRatio: 1.08 });
       const prog = Math.min(1, local / .7); ctx.fillStyle = 'rgba(0,212,255,.16)'; ctx.fillRect(90, height-110, (width-180)*prog, 10);
       await new Promise(r => setTimeout(r, 1000 / fps));
     }
@@ -4829,6 +4861,18 @@ async function exportSlidesThrough18Video(preferredType = 'video/mp4') {
   if (status) status.textContent = `Saved live UI export for slides 1–18 as ${mimeType.includes('mp4') ? 'MP4' : 'WebM'}. ${mp4Ok ? '' : 'MP4 was not supported by this browser, so WebM was used.'}`;
 }
 document.getElementById('exportSlidesTo18Mp4Btn')?.addEventListener('click', () => exportSlidesThrough18Video('video/mp4'));
+
+const showPreload = document.getElementById('show-preload');
+const startShowBtn = document.getElementById('startShowBtn');
+function armShowStart() {
+  document.body.classList.add('show-armed');
+  goToSlide(0, false);
+}
+startShowBtn?.addEventListener('click', armShowStart);
+showPreload?.addEventListener('click', (ev) => {
+  if (ev.target === showPreload) armShowStart();
+});
+
 
 
 const telegramPanel = document.getElementById('glassChat');
