@@ -1235,7 +1235,7 @@ body::after {
 @media (max-width: 600px) {
   .s3-detail { font-size: 12px; line-height: 1.35; max-width: 100%; }
   .s3-col { padding: 16px 12px; }
-  .prism-carousel { grid-template-columns: 38px 1fr 38px; }
+  .prism-carousel { grid-template-columns: 52px 1fr 52px; }
   .prism-character-card { padding: 12px; max-height: calc(100vh - var(--film-top) - var(--film-bot) - 20px); }
   .character-review-layout { grid-template-columns: 1fr; }
   .character-portrait-panel { grid-template-rows: auto auto; }
@@ -2685,7 +2685,7 @@ body::after {
   <div class="prism-carousel-wrap">
     <button class="prism-view-switch" id="carouselViewSwitch">SWITCH TO PRISM ASSESSMENT →</button>
     <div class="prism-carousel">
-      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Fast download MP4 export for Personal Story character case review" title="Fast MP4 export: Personal Story character case review">⬇</button>
+      <button class="slide17-download-toggle" id="slide17DownloadToggle" type="button" aria-label="Fast MP4 export of all Personal Story character slides" title="Fast MP4 export: all Personal Story character slides">⬇</button>
       <button class="carousel-nav-btn" id="charPrev" aria-label="Previous character">‹</button>
       <div class="prism-character-card" id="characterCard"></div>
       <button class="carousel-nav-btn" id="charNext" aria-label="Next character">›</button>
@@ -2903,7 +2903,7 @@ let touchSwipeBlocked = false;
 document.addEventListener('touchstart', e => {
   touchStart = e.touches[0].clientX;
   const el = e.target;
-  touchSwipeBlocked = !!el?.closest('button, a, input, textarea, select, .prism-stage-toggle, .carousel-nav-btn, .prism-view-switch, .slide17-download-toggle, .cast-spread, .cast-solo, .crew-glass-nav, .tg-thread-block');
+  touchSwipeBlocked = !!el?.closest('button, a, input, textarea, select, .prism-stage-toggle, .carousel-nav-btn, .prism-view-switch, .slide17-download-toggle, .cast-spread, .cast-solo, .crew-glass-nav, .tg-thread-block, .prism-carousel, .prism-carousel-wrap');
 }, { passive: true });
 document.addEventListener('touchend', e => {
   if (touchSwipeBlocked) { touchSwipeBlocked = false; return; }
@@ -3325,6 +3325,12 @@ document.getElementById('charPrev')?.addEventListener('click', () => {
 document.getElementById('charNext')?.addEventListener('click', () => {
   carouselIndex = (carouselIndex + 1) % prismProfiles.length;
   renderCharacterCarousel();
+});
+
+['charPrev','charNext'].forEach(id => {
+  const btn = document.getElementById(id);
+  btn?.addEventListener('touchstart', ev => { ev.stopPropagation(); }, { passive: true });
+  btn?.addEventListener('touchend', ev => { ev.preventDefault(); ev.stopPropagation(); }, { passive: false });
 });
 document.getElementById('carouselViewSwitch')?.addEventListener('click', () => {
   carouselPrismView = !carouselPrismView;
@@ -4422,9 +4428,57 @@ document.getElementById('castExportOrientationBtn')?.addEventListener('click', (
   updateCastExportOrientationButton();
 });
 updateCastExportOrientationButton();
+
+async function exportPersonalStorySlidesMp4() {
+  const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4;codecs=h264', 'video/mp4'];
+  const mp4Mime = types.find(t => MediaRecorder.isTypeSupported(t));
+  if (!mp4Mime) { alert('This browser cannot encode MP4 directly. Please use a browser/runtime with MP4 MediaRecorder support.'); return; }
+  const width = 1080, height = 1920, fps = 30;
+  const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  const stream = canvas.captureStream(fps);
+  const rec = new MediaRecorder(stream, { mimeType: mp4Mime, videoBitsPerSecond: 12000000 });
+  const chunks = []; rec.ondataavailable = e => { if (e.data?.size) chunks.push(e.data); };
+  const stopped = new Promise(resolve => { rec.onstop = resolve; });
+  const btn = document.getElementById('slide17DownloadToggle');
+  const prevText = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  const profiles = prismProfiles.map((p, i) => ({ p, h: humanProfiles[i] || {} }));
+  const photos = await Promise.all(profiles.map(({h}) => loadImageToPromise(h.photo || '')));
+  const perCharacterSeconds = 0.9;
+  const totalFrames = Math.ceil(perCharacterSeconds * fps * profiles.length);
+  try {
+    rec.start();
+    for (let frame = 0; frame < totalFrames; frame += 1) {
+      const idx = Math.min(profiles.length - 1, Math.floor(frame / (perCharacterSeconds * fps)));
+      const local = (frame % Math.ceil(perCharacterSeconds * fps)) / (perCharacterSeconds * fps);
+      const { p, h } = profiles[idx];
+      const img = photos[idx];
+      const bg = ctx.createLinearGradient(0,0,0,height); bg.addColorStop(0,'#070d18'); bg.addColorStop(1,'#02060d');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,width,height);
+      if (img) { ctx.globalAlpha = .24; ctx.drawImage(img,0,0,width,height); ctx.globalAlpha = 1; }
+      ctx.fillStyle = 'rgba(5,14,26,.74)'; ctx.fillRect(44, 70, width-88, height-140);
+      ctx.strokeStyle = 'rgba(0,212,255,.4)'; ctx.lineWidth = 2; ctx.strokeRect(44, 70, width-88, height-140);
+      fitCanvasTextBlock(ctx, 'PERSONAL STORY', { x: 90, y: 120, maxWidth: width-180, maxHeight: 80, maxLines: 1, maxSize: 52, minSize: 34, weight: 800, fillStyle: '#7be4ff' });
+      fitCanvasTextBlock(ctx, String(h.name || p.name || '').toUpperCase(), { x: 90, y: 188, maxWidth: width-180, maxHeight: 130, maxLines: 2, maxSize: 74, minSize: 42, weight: 800, fillStyle: '#f6fbff' });
+      fitCanvasTextBlock(ctx, `CASE ${String(idx+1).padStart(2,'0')} / ${profiles.length}`, { x: 90, y: 300, maxWidth: width-180, maxHeight: 46, maxLines: 1, maxSize: 28, minSize: 20, weight: 700, family: 'Share Tech Mono, Arial', fillStyle: 'rgba(155,203,233,.9)' });
+      fitCanvasTextBlock(ctx, h.humanDesc || 'Profile unavailable.', { x: 90, y: 360, maxWidth: width-180, maxHeight: height-470, maxLines: 12, maxSize: 38, minSize: 24, weight: 600, fillStyle: '#ebf4ff', lineHeightRatio: 1.08 });
+      const prog = Math.min(1, local / .7); ctx.fillStyle = 'rgba(0,212,255,.16)'; ctx.fillRect(90, height-110, (width-180)*prog, 10);
+      await new Promise(r => setTimeout(r, 1000 / fps));
+    }
+    rec.stop();
+    await stopped;
+    downloadBlob(new Blob(chunks, { type: 'video/mp4' }), 'providentia-personal-story-character-slides.mp4');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = prevText || '⬇'; }
+  }
+}
+
 document.getElementById('exportCastSpreadMp4Btn')?.addEventListener('click', exportCastSocialIntroMp4);
 document.getElementById('slide17DownloadToggle')?.addEventListener('click', async () => {
-  await exportCastSocialIntroMp4();
+  carouselPrismView = false;
+  renderCharacterCarousel();
+  await exportPersonalStorySlidesMp4();
 });
 document.getElementById('exportAllCastPngBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.png`),i*250));});
 document.getElementById('exportAllCastJpgBtn')?.addEventListener('click',()=>{castProfiles.forEach((c,i)=>setTimeout(()=>exportCastCardAsImage(c,`cast-${String(i+1).padStart(2,'0')}-${c.character.replace(/\s+/g,'-').toLowerCase()}.jpg`, 'image/jpeg'),i*250));});
